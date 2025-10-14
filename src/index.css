@@ -11,3 +11,258 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.fade-in {
+  opacity: 1;
+}
+
+.fade-out {
+  opacity: 0;
+}
+
+.product-big-img {
+  position: relative;
+  transition: opacity 0.25s ease-in-out;
+}
+
+.list-style1 ul {
+  display: grid;
+  grid-template-columns: repeat(2, auto);
+  column-gap: 3rem;
+  row-gap: 0.75rem;
+}
+
+.list-style1 li {
+  white-space: nowrap;
+}
+
+.video-style1 {
+  position: relative;
+  overflow: hidden;
+  height: 500px;
+}
+
+/* --- VIDEO --- */
+.background-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: translate(-50%, -50%);
+  z-index: 0;
+}
+
+/* --- LỚP PHỦ MỜ --- */
+.video-style1::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.20);
+  z-index: 1;
+}
+
+/* --- CHỮ --- */
+.video-style1 .container {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.video-style1 h2 {
+  font-size: 3.2rem; /* to hơn một chút */
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 4px 12px rgba(0, 0, 0, 0.7);
+  margin-bottom: 15px;
+}
+
+/* --- ĐOẠN VĂN DƯỚI --- */
+.about-subtext {
+  color: white;
+  font-size: 1.3rem;
+  line-height: 1.8;
+  max-width: 1000px;
+  opacity: 0.95;
+  text-shadow: 0 3px 8px rgba(0, 0, 0, 0.6);
+}
+
+.video-style1 h2,
+.video-style1 .about-subtext {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeUp 1.2s ease forwards;
+}
+
+.video-style1 .about-subtext:nth-of-type(2) {
+  animation-delay: 0.4s;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.product-style1 {
+  border-radius: 20px;
+  overflow: hidden;
+  background: #ffffff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s ease;
+}
+
+.product-style1:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.product-img img {
+  width: 100%;
+  height: auto;
+  border-radius: 18px 18px 0 0;
+  transition: transform 0.4s ease;
+}
+
+.product-style1:hover .product-img img {
+  transform: scale(1.04);
+}
+
+.product-content {
+  border-top: 1px solid #f1f1f1;
+  border-radius: 0 0 18px 18px;
+  padding: 15px;
+  text-align: center;
+  background: #fafafa;
+}
+
+.product-title a {
+  color: #333;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.product-title a:hover {
+  color: #007bff;
+}
+
+.price-list li {
+  color: #555;
+}
+
+.product-btns {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.icon-btn:hover {
+  background: #ffffff;
+  transform: scale(1.1);
+}
+
+.post-box li {
+  background: #ff6b6b;
+  color: #fff;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.8rem;
+}
+
+.post-box li:nth-child(2) {
+  background: #4ecdc4;
+}
+
+/* Ẩn border riêng của từng tab */
+.nav-pills .nav-link {
+  border: none !important;
+  border-radius: 0 !important;
+  margin: 0 !important;
+  color: #333;
+}
+
+/* Viền cho tab đang active */
+.nav-pills .nav-link.active {
+  background-color: #e0f2e9;
+  color: #1b4d3e;
+  border: 1px solid #2f7d65; /* xanh đậm hơn */
+  border-bottom: none;
+}
+
+/* Viền bao ngoài nội dung tab */
+.tab-content {
+  border: 1px solid #2f7d65; /* cùng màu xanh đậm */
+  border-top: none;
+  padding: 20px;
+  border-radius: 0 0 8px 8px;
+  margin-top: 0 !important;
+}
+
+
+/* Optional - hiệu ứng hover cho tab */
+.nav-pills .nav-link:hover {
+  background-color: #eef8ee;
+  color: #111;
+}
+
+.icon-arraw {
+  display: inline-block;
+}
+
+.icon-btn {
+  background: #0b4b32; /* Màu nền nút */
+  color: white;         /* Màu icon */
+  border: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.icon-btn:hover {
+  background: #13965c;
+  transform: scale(1.1);
+}
+
+.dropdown-menu {
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+

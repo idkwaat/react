@@ -1,0 +1,99 @@
+/* Toàn màn hình đen */
+.preloader {
+  position: fixed;
+  inset: 0;
+  background: #0d0d0d;
+  z-index: 9999;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  animation: fadeOutWrapper 1s ease-in-out 2.5s forwards; /* mờ dần */
+}
+
+/* Hai nửa mở ngang */
+.preloader-left,
+.preloader-right {
+  position: absolute;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  background: #111;
+  z-index: 2;
+  transition: transform 1s ease-in-out;
+}
+
+.preloader-left {
+  left: 0;
+  transform: translateX(0);
+}
+.preloader-right {
+  right: 0;
+  transform: translateX(0);
+}
+
+.preloader.loaded .preloader-left {
+  transform: translateX(-100%);
+}
+.preloader.loaded .preloader-right {
+  transform: translateX(100%);
+}
+
+/* Logo + Loader giữa */
+.preloader-inner {
+  position: relative;
+  z-index: 5;
+  text-align: center;
+  animation: fadeIn 0.6s ease-in-out 0.3s both;
+}
+
+.preloader-inner img {
+  width: 120px;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeInUp 1s ease-out 0.5s forwards;
+}
+
+.loader {
+  display: inline-block;
+  width: 40px;
+  height: 40px;
+  border: 3px solid #fff;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: spin 1s linear infinite, fadeIn 1s ease 0.8s forwards;
+}
+
+/* Hiệu ứng mượt */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeOutWrapper {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}

@@ -1,0 +1,17 @@
+/* Màu chữ trong input và select */
+input, select, textarea {
+  color: #222 !important;          /* Màu chữ chính */
+  background-color: #fdfdfd;       /* Nền trắng nhẹ */
+}
+
+/* Placeholder rõ ràng hơn */
+::placeholder {
+  color: #666 !important;
+  opacity: 1; /* Bắt trình duyệt hiển thị đúng độ đậm */
+}
+
+/* Đổi màu chữ trong select option */
+select option {
+  color: #222 !important;
+  background-color: #fff;
+}
