@@ -56,41 +56,36 @@ const handleSubmit = async (e) => {
   e.preventDefault();
   const token = localStorage.getItem("token");
 
+  if (!form.name || !form.categoryId) {
+    alert("⚠️ Vui lòng nhập tên và chọn danh mục!");
+    return;
+  }
+
   const formData = new FormData();
   formData.append("Name", form.name);
   formData.append("Description", form.description);
-  formData.append("CategoryId", form.categoryId);
+  formData.append("CategoryId", Number(form.categoryId));
 
   variants.forEach((v) => {
-    formData.append("VariantNames", v.name);
-    formData.append("VariantPrices", v.price);
+    if (v.name) formData.append("VariantNames", v.name);
+    if (v.price !== "" && !isNaN(v.price)) formData.append("VariantPrices", Number(v.price));
     if (v.image) formData.append("VariantImages", v.image);
     if (v.model) formData.append("VariantModels", v.model);
   });
 
   try {
-    const res = await axios.post(
-      `${API_BASE_URL}/api/products/create`,
-      formData,
-      {
-        headers: {
-          Authorization: token ? `Bearer ${token}` : undefined,
-          // KHÔNG set Content-Type, axios tự thêm multipart/form-data + boundary
-        },
-      }
-    );
+    const res = await axios.post(`${API_BASE_URL}/api/products/create`, formData, {
+      headers: { Authorization: token ? `Bearer ${token}` : undefined },
+    });
 
     alert("✅ Tạo sản phẩm thành công!");
     navigate("/admin/products");
   } catch (err) {
     console.error("❌ Lỗi khi thêm sản phẩm:", err);
-    alert(
-      `❌ Lỗi khi thêm sản phẩm: ${
-        err.response?.data?.message || err.message
-      }`
-    );
+    alert(`❌ Lỗi khi thêm sản phẩm: ${err.response?.data?.message || err.message}`);
   }
 };
+
 
 
 
