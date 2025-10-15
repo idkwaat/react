@@ -63,27 +63,33 @@ const handleSubmit = async (e) => {
   const formData = new FormData();
   formData.append("Name", form.name);
   formData.append("Description", form.description);
-  formData.append("CategoryId", form.categoryId.toString());
+  formData.append("CategoryId", form.categoryId);
 
-  variants.forEach((v, i) => {
-    if (v.name) formData.append(`VariantNames[${i}]`, v.name);
-    if (v.price !== "" && !isNaN(v.price)) formData.append(`VariantPrices[${i}]`, Number(v.price));
-    if (v.image) formData.append(`VariantImages[${i}]`, v.image);
-    if (v.model) formData.append(`VariantModels[${i}]`, v.model);
+  variants.forEach((v) => {
+    if (v.name) formData.append("VariantNames", v.name);
+    if (v.price !== "" && !isNaN(v.price))
+      formData.append("VariantPrices", Number(v.price));
+    if (v.image) formData.append("VariantImages", v.image);
+    if (v.model) formData.append("VariantModels", v.model);
   });
 
   try {
     const res = await axios.post(`${API_BASE_URL}/api/products/create`, formData, {
       headers: {
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        "Content-Type": "multipart/form-data",
       },
     });
 
     alert("✅ Tạo sản phẩm thành công!");
     navigate("/admin/products");
   } catch (err) {
-    console.error("❌ Lỗi khi thêm sản phẩm:", err);
-    alert(`❌ Lỗi khi thêm sản phẩm: ${err.response?.data?.message || err.message}`);
+    console.error("❌ Lỗi khi thêm sản phẩm:", {
+      message: err.message,
+      status: err.response?.status,
+      data: err.response?.data,
+    });
+    alert(`❌ Lỗi khi thêm sản phẩm: ${err.response?.data || err.message}`);
   }
 };
 
