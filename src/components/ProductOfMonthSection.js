@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { FaStar, FaHeart, FaBasketShopping } from "react-icons/fa6";
 import { useCart } from "../context/CartContext";
 
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function ProductOfMonthSection() {
     const [variants, setVariants] = useState([]);
@@ -14,7 +14,7 @@ export default function ProductOfMonthSection() {
     // ✅ Lấy dữ liệu sản phẩm từ API
    // ✅ Đổi API call
 useEffect(() => {
-    fetch(`${BASE_URL}/api/Products/top-month`)
+    fetch(`${API_BASE_URL}/api/Products/top-month`)
         .then((res) => res.json())
         .then((res) => {
             const data = res.data || res.Data; // đảm bảo lấy đúng field từ backend
@@ -72,7 +72,7 @@ useEffect(() => {
                                     data-wow-delay={`${0.3 + i * 0.1}s`}
                                 >
                                     <div className="product-img">
-                                        <img src={`${BASE_URL}${v.imageUrl}`} alt={v.name}
+                                        <img src={`${API_BASE_URL}${v.imageUrl}`} alt={v.name}
                                             style={{ width: "100%", borderRadius: "8px" }}
                                         />
                                         <div className="product-btns">

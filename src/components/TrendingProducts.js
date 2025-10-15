@@ -5,7 +5,7 @@ import { FaStar } from "react-icons/fa";
 import { useCart } from "../context/CartContext"; // ✅ nhớ import context giỏ hàng nếu có
 import Background from "three/src/renderers/common/Background.js";
 
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function TrendingProducts() {
   const [variants, setVariants] = useState([]);
@@ -13,7 +13,7 @@ export default function TrendingProducts() {
   const { addToCart } = useCart(); // ✅ dùng context giỏ hàng
 
   useEffect(() => {
-    fetch(`${BASE_URL}/api/products`)
+    fetch(`${API_BASE_URL}/api/products`)
       .then((res) => res.json())
       .then((data) => {
   const products = data.data || []; // ✅ Lấy mảng sản phẩm thật
@@ -114,7 +114,7 @@ export default function TrendingProducts() {
                     <img
                       src={
                         v.imageUrl
-                          ? `${BASE_URL}${v.imageUrl}`
+                          ? `${API_BASE_URL}${v.imageUrl}`
                           : "/images/default.jpg"
                       }
                       alt={v.name}
