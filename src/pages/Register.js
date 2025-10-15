@@ -1,5 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
@@ -9,6 +11,8 @@ export default function Register() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const navigate = useNavigate();
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -26,6 +30,7 @@ export default function Register() {
         password,
       });
       alert("✅ Đăng ký thành công!");
+      navigate("/login");
       setUsername("");
       setEmail("");
       setPhone("");

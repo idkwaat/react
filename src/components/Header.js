@@ -53,9 +53,9 @@ const Header = () => {
   }, []);
 
   return (
-<header className="vs-header header-layout1 style2" style={{ backgroundColor: "#1b4332" }}>
-  <div className="sticky-wrapper header-bottom shadow-sm" style={{ backgroundColor: "#1b4332" }}>
-    <div className="sticky-active py-3" style={{ backgroundColor: "#1b4332" }}>
+<header className="vs-header header-layout1 style2" style={{ backgroundColor: "#5a201d" }}>
+  <div className="sticky-wrapper header-bottom shadow-sm" style={{ backgroundColor: "#5a201d" }}>
+    <div className="sticky-active py-3" style={{ backgroundColor: "#5a201d" }}>
       <div className="container d-flex align-items-center justify-content-between">
 
         {/* LOGO */}
@@ -74,7 +74,7 @@ const Header = () => {
       { path: "/", label: "Home" },
       { path: "/shop", label: "Shop" },
       { path: "/about", label: "About Us" },
-      { path: "/contact", label: "Contact" },
+      { path: "/policy", label: "Policy" },
     ].map((item) => (
       <li key={item.path}>
         <Link

@@ -22,9 +22,10 @@ const LoginClient = () => {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          identifier, // backend có thể xử lý email hoặc phone
-          password,
-        }),
+  username: identifier,
+  password,
+}),
+
       });
 
       const data = await res.json();

@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import WOW from "wowjs";
+import { Link} from "react-router-dom";
 
 import HeroSection from "../components/HeroSection";
 import TrendingProducts from "../components/TrendingProducts";
@@ -30,9 +31,25 @@ function Home() {
   return (
     <>
     <HeroSection/>
+<div
+  style={{
+    backgroundColor: "#fef6e9",   // 👈 màu nền bao quanh
+    padding: "30px 0",            // tạo khoảng cách trên dưới
+  }}
+>
+  <div
+    style={{
+      width: "60%",
+      height: "2px",
+      backgroundColor: "#a33a2c",
+      margin: "0 auto",
+      borderRadius: "2px"
+    }}
+  ></div>
+</div>
     <TrendingProducts/>
  
-  <div className="offer-layout1 space-bottom">
+  <div className="offer-layout1 space-bottom" style={{backgroundColor:"#fef6e9"}}>
     <div className="container">
       <div className="row g-4">
         <div className="col-xl-6 col-lg-6">
@@ -48,9 +65,9 @@ function Home() {
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
               </div>
-              <h2 className="offer-title">E Emeher Mme</h2>
+              <h2 className="offer-title">Emeher Mme</h2>
               <p className="offer-price">Only From <span>$85.00</span></p>
-              <a className="vs-btn" href="shop.html">Shop Now</a>
+              <Link className="vs-btn" to="/shop">Mua Ngay</Link>
             </div>
             <span className="shape-mockup element1 z-index1  d-xxl-block d-none" data-wow-delay="0.80s" style={{right: "0px", bottom: "-5px" }}><img src="assets/img/shapes/offer-shape1.png" alt="offer shape"/></span>
           </div>
@@ -70,7 +87,7 @@ function Home() {
               </div>
               <h2 className="offer-title">Viving Moneme</h2>
               <p className="offer-price">Only From <span>$85.00</span></p>
-              <a className="vs-btn" href="shop.html">Shop Now</a>
+              <Link className="vs-btn" to="/shop">Mua Ngay</Link>
             </div>
             <span className="shape-mockup element1 z-index1  d-xxl-block d-none" data-wow-delay="0.80s" style={{right: "0px", bottom: "-5px" }}><img src="assets/img/shapes/offer-shape2.png" alt="offer shape"/></span>
           </div>
@@ -148,7 +165,7 @@ function Home() {
             <span className="sec-subtitle left-shape justify-content-center title-anime__title">
               Phản Hồi Khách Hàng
             </span>
-            <h2 className="sec-title title-anime__title">
+            <h2 className="sec-title title-anime__title" style={{color:"#641414ff"}}>
               Cảm nhận từ những người yêu Trúc Chỉ
             </h2>
             <p className="sec-text">
@@ -160,7 +177,7 @@ function Home() {
             className="vs-testi__items wow animate__fadeInUp"
             data-wow-delay="0.35s"
           >
-            <div className="vs-carousel testi-slider" data-autoplay="true" data-fade="true">
+            <div className="vs-carousel testi-slider" data-autoplay="true" data-fade="true" >
                             {/* Feedback 2 */}
               <div className="vs-testi__style1">
                 <span className="vs-testi__icon">
@@ -178,7 +195,7 @@ function Home() {
                       <i className="fa-solid fa-star"></i>
                       <i className="fa-solid fa-star"></i>
                     </div>
-                    <h3 className="vs-testi__title">Trần Bảo Ngọc</h3>
+                    <h3 className="vs-testi__title" style={{color:"#641414ff"}}>Trần Bảo Ngọc</h3>
                     <span className="vs-testi__desi">Chủ quán cà phê Ánh Giấy</span>
                   </div>
                 </div>
@@ -213,7 +230,7 @@ function Home() {
                       <i className="fa-solid fa-star"></i>
                       <i className="fa-regular fa-star"></i>
                     </div>
-                    <h3 className="vs-testi__title">Nguyễn Minh Anh</h3>
+                    <h3 className="vs-testi__title" style={{color:"#641414ff"}}>Nguyễn Minh Anh</h3>
                     <span className="vs-testi__desi">Kiến trúc sư nội thất</span>
                   </div>
                 </div>

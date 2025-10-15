@@ -1,4 +1,7 @@
+
 @charset "UTF-8";
+@import url('https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500&family=Crimson+Pro:wght@400;500;600;700&display=swap');
+
 /*
 Template Name: TechBiz
 Template URL: https://html.vecuro.com/techbiz
@@ -78,26 +81,29 @@ a {
 
 
 :root {
-  /* ==== Deep Forest Green Theme ==== */
-  --theme-color: #14532d;        /* Chủ đạo - header, button */
-  --secondary-color: #1e4620;    /* Footer, section nền đậm */
-  --accent-color: #256d33;       /* Hover, icon */
-  --highlight-color: #9ccc65;    /* Điểm nhấn (link, nút phụ) */
-  --title-color: #10351e;        /* Tiêu đề */
-  --body-color: #f1f8e9;         /* Nền sáng */
-  --text-color: #1b1b1b;         /* Màu chữ */
-  --border-color: #c8e6c9;       /* Viền nhẹ xanh lục */
-  --white-color: #ffffff;
+--theme-color: #651C17;        /* Nâu đỏ đậm – header, button chính */
+  --secondary-color: #8B2F2F;    /* Đỏ rượu vang – hover, nhấn mạnh */
+  --accent-color: #A54034;       /* Nâu đỏ sáng – icon, nút phụ */
+  --highlight-color: #F5EDE2;    /* Be nhạt – nền sáng tinh tế */
+  --title-color: #3C1E17;        /* Nâu đậm – tiêu đề */
+  --body-color: #e7e3d8;         /* Kem sáng – nền chính */
+  --text-color: #3C1E17;         /* Nâu đậm – chữ chính */
+  --border-color: #e9dfc8;       /* Be trung tính – viền */
+  --white-color: #FFFFFF;
   --black-color: #000000;
 
-  /* ==== Status ==== */
-  --success-color: #2e7d32;
-  --error-color: #c62828;
-  --warning-color: #fbc02d;
+  /* ==== Status Colors ==== */
+  --success-color: #A54034;      /* Giữ đồng bộ với accent */
+  --error-color: #C62828;
+  --warning-color: #EBA937;
 
+  
   /* ==== Font ==== */
-  --title-font: "Josefin Sans", sans-serif;
-  --body-font: "Poppins", sans-serif;
+:root {
+  --title-font: "Crimson Pro", serif;
+  --body-font: "Be Vietnam Pro", sans-serif;
+}
+
 
   /* ==== Layout ==== */
   --main-container: 1320px;

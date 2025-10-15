@@ -1,22 +1,38 @@
-// src/pages/ShopSidebar.jsx
 import React, { useEffect, useState } from "react";
 import { FaStar } from "react-icons/fa";
 import Select from "react-select";
 import { useNavigate } from "react-router-dom";
+import PriceFilter from "../components/PriceFilter";
 
 const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function Shop() {
   const [variants, setVariants] = useState([]);
   const [sortOption, setSortOption] = useState("recent_product");
+  const [search, setSearch] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [categories, setCategories] = useState([]);
+  const [selectedCategory, setSelectedCategory] = useState(null);
+  const [minPrice, setMinPrice] = useState(0);
+  const [maxPrice, setMaxPrice] = useState(0);
+  const [topProducts, setTopProducts] = useState([]);
   const navigate = useNavigate();
 
-  // 🔹 Lấy sản phẩm từ API
+  // 🔹 Gọi API sản phẩm (có tìm kiếm, phân trang, lọc)
   useEffect(() => {
-    fetch(`${BASE_URL}/api/products`)
-      .then((res) => res.json())
-      .then((data) => {
-        const allVariants = data.flatMap((p) =>
+    const fetchProducts = async () => {
+      try {
+        const res = await fetch(
+          `${BASE_URL}/api/products?search=${encodeURIComponent(search)}&page=${page}&pageSize=9` +
+            (selectedCategory ? `&categoryId=${selectedCategory}` : "") +
+            (minPrice ? `&minPrice=${minPrice}` : "") +
+            (maxPrice ? `&maxPrice=${maxPrice}` : "")
+        );
+        const data = await res.json();
+
+        const products = data.data || [];
+        const allVariants = products.flatMap((p) =>
           (p.variants || []).map((v) => ({
             ...v,
             productId: p.id,
@@ -27,12 +43,45 @@ export default function Shop() {
             productDescription: p.description,
           }))
         );
+
         setVariants(allVariants);
-      })
-      .catch((err) => console.error("Fetch error:", err));
+        setTotalPages(data.totalPages || 1);
+      } catch (err) {
+        console.error("❌ Fetch products error:", err);
+      }
+    };
+
+    fetchProducts();
+  }, [search, page, selectedCategory, minPrice, maxPrice]);
+
+  // 🔹 Lấy danh mục
+  useEffect(() => {
+    fetch(`${BASE_URL}/api/categories`)
+      .then((res) => res.json())
+      .then(setCategories)
+      .catch((err) => console.error("❌ Fetch categories error:", err));
   }, []);
 
-  // 🔹 Sắp xếp
+  // 🔹 Lấy top sản phẩm tháng (ngay cả khi chưa có ai mua)
+  useEffect(() => {
+    fetch(`${BASE_URL}/api/products/top-month`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("✅ Top tháng API response:", data);
+        // nếu không có data hoặc data rỗng → fallback sang danh sách sản phẩm thường
+        if (!data?.data?.length && !data?.Data?.length) {
+          console.warn("⚠️ Không có top-month, fallback sang /api/products");
+          return fetch(`${BASE_URL}/api/products?page=1&pageSize=5`)
+            .then((res2) => res2.json())
+            .then((fallbackData) => setTopProducts(fallbackData.data || []))
+            .catch((err) => console.error("Fallback fetch error:", err));
+        }
+        setTopProducts(data.data || data.Data || []);
+      })
+      .catch((err) => console.error("❌ Fetch top-month error:", err));
+  }, []);
+
+  // 🔹 Sắp xếp sản phẩm
   const sortOptions = [
     { value: "recent_product", label: "Sắp xếp: Mới nhất" },
     { value: "price", label: "Giá: Thấp đến cao" },
@@ -45,6 +94,7 @@ export default function Shop() {
     return b.id - a.id;
   });
 
+  // 🔹 Style cho Select filter
   const customSelectStyles = {
     control: (base, state) => ({
       ...base,
@@ -57,6 +107,17 @@ export default function Shop() {
     }),
   };
 
+  // 🔹 Submit tìm kiếm
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    setPage(1);
+    const input = e.target.elements.searchInput.value.trim();
+    setSearch(input);
+  };
+
+  const handleFilter = () => {
+    setPage(1);
+  };
   return (
     <section className="books-layout1 space-top space-extra-bottom">
       <div className="container">
@@ -168,137 +229,176 @@ export default function Shop() {
                 ))
               ) : (
                 <div className="text-center py-5 col-12">
-                  😴 Chưa có sản phẩm để hiển thị
+                  😴 Không có sản phẩm phù hợp
                 </div>
               )}
             </div>
+
+            {/* ======== PHÂN TRANG ======== */}
+            {totalPages > 1 && (
+              <div className="pagination mt-5 d-flex justify-content-center gap-2">
+                <button
+                  className="vs-btn"
+                  disabled={page <= 1}
+                  onClick={() => setPage((p) => p - 1)}
+                >
+                  ← Trang trước
+                </button>
+                <span className="align-self-center">
+                  Trang {page} / {totalPages}
+                </span>
+                <button
+                  className="vs-btn"
+                  disabled={page >= totalPages}
+                  onClick={() => setPage((p) => p + 1)}
+                >
+                  Trang sau →
+                </button>
+              </div>
+            )}
           </div>
 
           {/* ======== SIDEBAR ======== */}
-<div className="col-xl-4 col-lg-5">
-  <aside className="sidebar-area">
-    <div className="widget widget_search wow animate__fadeInUp" data-wow-delay="0.30s">
-      <h3 className="wp-block-heading widget_title title-shep">Search</h3>
-      <form className="search-form">
-        <input type="text" placeholder="Search Here..." />
-        <button className="vs-btn" type="submit">Search</button>
-      </form>
-    </div>
+          {/* ======== SIDEBAR ======== */}
+          <div className="col-xl-4 col-lg-5">
+            <aside className="sidebar-area">
 
-    <div className="widget wow animate__fadeInUp" data-wow-delay="0.40s">
-      <h3 className="widget_title mb-35 title-shep">Filter By Price</h3>
-      <div className="slider-area">
-        <div className="slider-area-wrapper">
-          <div id="skipstep" className="slider mb-20"></div>
-          <div className="range-btn">
-            <button className="vs-btn" type="submit">Filter</button>
-            <div className="price-range">
-              Price: $<span className="price" id="skip-value-lower"></span>-$<span className="price" id="skip-value-upper"></span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+              {/* 🔍 TÌM KIẾM */}
+              <div className="widget widget_search wow animate__fadeInUp" data-wow-delay="0.30s">
+                <h3 className="wp-block-heading widget_title title-shep">Tìm kiếm</h3>
+                <form className="search-form d-flex" onSubmit={handleSearchSubmit}>
+                  <input
+                    type="text"
+                    name="searchInput"
+                    placeholder="Nhập từ khóa..."
+                    className="form-control"
+                  />
+                  <button className="vs-btn ms-2" type="submit">Tìm</button>
+                </form>
+              </div>
 
-    <div className="widget wow animate__fadeInUp" data-wow-delay="0.50s">
-      <div className="wp-block-group widget_categories is-layout-constrained wp-block-group-is-layout-constrained">
-        <div className="wp-block-group__inner-container">
-          <h3 className="wp-block-heading widget_title title-shep">Categories</h3>
-          <ul className="wp-block-categories-list wp-block-categories">
-            <li className="cat-item">
-              <a href="shop.html">Romance</a>
-            </li>
-            <li className="cat-item">
-              <a href="shop.html">Thriller</a>
-            </li>
-            <li className="cat-item">
-              <a href="shop.html">Fantasy</a>
-            </li>
-            <li className="cat-item">
-              <a href="shop.html">Since Fiction</a>
-            </li>
-            <li className="cat-item">
-              <a href="shop.html">Since</a>
-            </li>
-            <li className="cat-item">
-              <a href="shop.html">Astronomy</a>
-            </li>
-            <li className="cat-item">
-              <a href="shop.html">Kids</a>
-            </li>
-            <li className="cat-item">
-              <a href="shop.html">Cartoon &amp; Story</a>
-            </li>
-            <li className="cat-item">
-              <a href="shop.html">Educational</a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+              {/* 💰 LỌC THEO GIÁ */}
+<PriceFilter
+  minPrice={minPrice}
+  maxPrice={maxPrice}
+  setMinPrice={setMinPrice}
+  setMaxPrice={setMaxPrice}
+  onFilter={handleFilter}
+/>
 
-    <div className="widget product-sidebar wow animate__fadeInUp" data-wow-delay="0.60s">
-      <h3 className="widget_title title-shep">top Books This Week</h3>
-      <div className="recent-post-wrap">
-        <div className="recent-post">
-          <div className="media-img">
-            <a href="blog-details.html">
-              <img src="assets/img/product/product-sidebar-1-1.jpg" alt="Blog Image" />
-            </a>
-          </div>
-          <div className="media-body">
-            <span className="product-author"><strong>By:</strong> Fahim Al Bashar</span>
-            <h4 className="post-title">
-              <a className="text-inherit" href="blog-details.html">Rat Phnory Mttke Srial Tofairle</a>
-            </h4>
-            <ul className="price-list">
-              <li><del>$39.99</del></li>
-              <li>$30.00</li>
-            </ul>
-          </div>
-        </div>
 
-        <div className="recent-post">
-          <div className="media-img">
-            <a href="blog-details.html">
-              <img src="assets/img/product/product-sidebar-1-2.jpg" alt="Blog Image" />
-            </a>
-          </div>
-          <div className="media-body">
-            <span className="product-author"><strong>By:</strong> Fahim Al Bashar</span>
-            <h4 className="post-title">
-              <a className="text-inherit" href="blog-details.html">Amazona Book Cover</a>
-            </h4>
-            <ul className="price-list">
-              <li><del>$39.99</del></li>
-              <li>$30.00</li>
-            </ul>
-          </div>
-        </div>
 
-        <div className="recent-post">
-          <div className="media-img">
-            <a href="blog-details.html">
-              <img src="assets/img/product/product-sidebar-1-3.jpg" alt="Blog Image" />
-            </a>
-          </div>
-          <div className="media-body">
-            <span className="product-author"><strong>By:</strong> Fahim Al Bashar</span>
-            <h4 className="post-title">
-              <a className="text-inherit" href="blog-details.html">Quantum Entanglement</a>
-            </h4>
-            <ul className="price-list">
-              <li><del>$39.99</del></li>
-              <li>$30.00</li>
-            </ul>
-          </div>
-        </div>
+              {/* 📚 DANH MỤC */}
+              <div className="widget wow animate__fadeInUp" data-wow-delay="0.50s">
+                <div className="wp-block-group widget_categories is-layout-constrained wp-block-group-is-layout-constrained">
+                  <div className="wp-block-group__inner-container">
+                    <h3 className="wp-block-heading widget_title title-shep">Danh mục</h3>
+                    <ul className="wp-block-categories-list wp-block-categories list-unstyled mb-0">
+                      <li className="cat-item">
+  <a
+    href="#"
+    onClick={(e) => {
+      e.preventDefault();
+      setSelectedCategory(null);
+      setPage(1);
+    }}
+    style={{
+      fontWeight: !selectedCategory ? "600" : "normal",
+      color: !selectedCategory ? "#0b4b32" : "#333",
+    }}
+  >
+    Tất cả sản phẩm
+  </a>
+</li>
 
-        <a className="vs-btn wow animate__flipInX" data-wow-delay="0.70s" href="#">View More</a>
-      </div>
-    </div>
-  </aside>
-</div>
+                      {categories.length > 0 ? (
+                        categories.map((c) => (
+                          <li key={c.id} className="cat-item">
+                            <a
+                              href="#"
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setSelectedCategory(c.id);
+                                setSearch(""); // reset tìm kiếm nếu cần
+                                setPage(1);
+                              }}
+                              style={{
+                                fontWeight: c.id === selectedCategory ? "600" : "normal",
+                                color: c.id === selectedCategory ? "#0b4b32" : "#333",
+                                cursor: "pointer",
+                              }}
+                            >
+                              {c.name}
+                            </a>
+
+                          </li>
+                        ))
+                      ) : (
+                        <li>Đang tải...</li>
+                      )}
+                    </ul>
+                  </div>
+                </div>
+              </div>
+
+              {/* 🌟 TOP SÁCH TUẦN */}
+              <div className="widget product-sidebar wow animate__fadeInUp" data-wow-delay="0.60s">
+                <h3 className="widget_title title-shep">Top sách tháng</h3>
+                <div className="recent-post-wrap">
+                  {topProducts.length > 0 ? (
+                    topProducts.map((p) => (
+                      <div key={p.id} className="recent-post d-flex mb-3">
+                        <div className="media-img">
+                          <a onClick={() => navigate(`/shop/${p.id}`)} role="button">
+                            <img
+                              src={`${BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`}
+                              alt={p.name}
+                              width="70"
+                              className="rounded"
+                            />
+                          </a>
+                        </div>
+                        <div className="media-body ms-3">
+                          <h4 className="post-title mb-1">
+                            <a
+                              className="text-inherit"
+                              onClick={() => navigate(`/shop/${p.id}`)}
+                              role="button"
+                            >
+                              {p.name}
+                            </a>
+                          </h4>
+                          <ul className="price-list list-inline mb-0">
+                            <li className="list-inline-item text-muted">
+                              <del>{p.oldPrice?.toLocaleString()}₫</del>
+                            </li>
+                            <li className="list-inline-item fw-semibold">
+                              {p.variants?.[0]?.price?.toLocaleString()}₫
+                            </li>
+                          </ul>
+                          <div style={{ fontSize: "0.85rem", color: "#777" }}>
+                            ⭐ {p.averageRating?.toFixed(1) || 0}/5 ({p.reviewCount || 0})
+                          </div>
+                        </div>
+                      </div>
+                    ))
+                  ) : (
+                    <p>Đang tải...</p>
+                  )}
+
+                  <a
+                    className="vs-btn wow animate__flipInX"
+                    data-wow-delay="0.70s"
+                    onClick={() => navigate("/shop")}
+                    role="button"
+                  >
+                    Xem thêm
+                  </a>
+                </div>
+              </div>
+
+            </aside>
+          </div>
 
 
         </div>

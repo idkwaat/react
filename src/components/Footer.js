@@ -1,6 +1,9 @@
 export default function Footer() {
   return (
-    <footer className="footer-layout1 style2 z-index-common">
+    <footer
+      className="footer-layout1 style2 z-index-common"
+      style={{ backgroundColor: "#ede5d8" }}
+    >
       {/* CTA AREA */}
       <div className="container">
         <div className="cta-layout1 style2 z-index-common blog-title">
@@ -33,7 +36,11 @@ export default function Footer() {
                         type="email"
                         placeholder="Nhập email của bạn"
                       />
-                      <button type="submit" className="vs-btn">
+                      <button
+                        type="submit"
+                        className="vs-btn"
+                        style={{ backgroundColor: "#9e3a2f", color: "#FAF5F0" }}
+                      >
                         <i className="fa-solid fa-paper-plane"></i> Đăng ký
                       </button>
                     </div>
@@ -49,19 +56,22 @@ export default function Footer() {
       <div className="footer-top">
         <div className="container">
           <div className="row g-5 justify-content-between">
-            {/* Giới thiệu */}
+            {/* Về chúng tôi */}
             <div className="col-md-6 col-lg-4">
               <div className="widget footer-widget">
-                <h3 className="widget_title">
+                <h3 className="widget_title" style={{ color: "#8B2F2F" }}>
                   Về chúng tôi
                   <span className="title-shape">
-                    <img src="/assets/img/shapes/footer-line-shape.svg" alt="Shape" />
+                    <img
+                      src="/assets/img/shapes/footer-line-shape.svg"
+                      alt="Shape"
+                    />
                   </span>
                 </h3>
-                <p>
-                  <strong>Trúc Họa Viên LLC</strong> — nơi lưu giữ tinh hoa nghệ thuật
-                  thủ công Việt Nam. Chúng tôi tự hào mang đến những sản phẩm
-                  tinh tế, chan chứa hồn Việt.
+                <p style={{ color: "#3C1E17" }}>
+                  <strong>Trúc Họa Viên LLC</strong> — nơi lưu giữ tinh hoa nghệ
+                  thuật thủ công Việt Nam. Chúng tôi tự hào mang đến những sản
+                  phẩm tinh tế, chan chứa hồn Việt.
                 </p>
                 <ul className="social-links">
                   <li><a href="#"><i className="fab fa-facebook-f"></i></a></li>
@@ -74,46 +84,130 @@ export default function Footer() {
             {/* Liên kết nhanh */}
             <div className="col-md-6 col-lg-3">
               <div className="widget widget_nav_menu footer-widget">
-                <h3 className="widget_title">
+                <h3 className="widget_title" style={{ color: "#8B2F2F" }}>
                   Liên kết nhanh
                   <span className="title-shape">
-                    <img src="/assets/img/shapes/footer-line-shape.svg" alt="Shape" />
+                    <img
+                      src="/assets/img/shapes/footer-line-shape.svg"
+                      alt="Shape"
+                    />
                   </span>
                 </h3>
                 <ul className="menu">
-                  <li><a href="/about"><i className="fa-solid fa-leaf me-2 text-success"></i> Giới thiệu</a></li>
-<li><a href="/products"><i className="fa-solid fa-leaf me-2 text-success"></i> Sản phẩm</a></li>
-<li><a href="/contact"><i className="fa-solid fa-leaf me-2 text-success"></i> Liên hệ</a></li>
-
+                  <li>
+                    <a href="/about" style={{ color: "#3C1E17" }}>
+                      <i
+                        className="fa-solid fa-leaf me-2"
+                        style={{ color: "#A54034" }}
+                      ></i>{" "}
+                      Giới thiệu
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/products" style={{ color: "#3C1E17" }}>
+                      <i
+                        className="fa-solid fa-leaf me-2"
+                        style={{ color: "#A54034" }}
+                      ></i>{" "}
+                      Sản phẩm
+                    </a>
+                  </li>
+                  <li>
+                    <a href="/contact" style={{ color: "#3C1E17" }}>
+                      <i
+                        className="fa-solid fa-leaf me-2"
+                        style={{ color: "#A54034" }}
+                      ></i>{" "}
+                      Liên hệ
+                    </a>
+                  </li>
                 </ul>
               </div>
             </div>
 
-            {/* Thông tin liên hệ */}
+            {/* Thông tin liên hệ + Bản đồ */}
             <div className="col-md-6 col-lg-4">
               <div className="widget footer-widget">
-                <h3 className="widget_title">
+                <h3 className="widget_title" style={{ color: "#8B2F2F" }}>
                   Thông tin liên hệ
                   <span className="title-shape">
-                    <img src="/assets/img/shapes/footer-line-shape.svg" alt="Shape" />
+                    <img
+                      src="/assets/img/shapes/footer-line-shape.svg"
+                      alt="Shape"
+                    />
                   </span>
                 </h3>
-                <ul className="list-unstyled list-style1">
+                <ul className="list-unstyled list-style1 mb-3">
                   <li>
-                    <i className="fas fa-map-marked-alt" style={{marginRight: "5px"}}></i>
-                    <span>
-                      Số 28 ngõ 8, Xóm Lục, Xã Bình Minh, Thành phố Hà Nội
+                    <i
+                      className="fas fa-map-marked-alt"
+                      style={{ marginRight: "5px", color: "#8B2F2F" }}
+                    ></i>
+                    <span style={{ color: "#3C1E17" }}>
+                      Số 28, Ngõ 8, Xã Bình Minh, Hà Nội
                     </span>
                   </li>
                   <li>
-                    <i className="fas fa-user" style={{marginRight: "5px"}}></i>
-                    <span>Người đại diện: <strong>Ms. Nguyễn Thị Thảo</strong></span>
+                    <i
+                      className="fas fa-user"
+                      style={{ marginRight: "5px", color: "#8B2F2F" }}
+                    ></i>
+                    <span style={{ color: "#3C1E17" }}>
+                      Người đại diện: <strong>Ms. Nguyễn Thị Thảo</strong>
+                    </span>
                   </li>
                   <li>
-                    <i className="fas fa-envelope" style={{marginRight: "5px"}}></i>
-                    <a href="mailto:Truchoavien@gmail.com">Truchoavien@gmail.com</a>
+                    <i
+                      className="fas fa-phone"
+                      style={{ marginRight: "5px", color: "#8B2F2F" }}
+                    ></i>
+                    <a href="tel:+84912345678" style={{ color: "#3C1E17" }}>
+                      +84 912 345 678
+                    </a>
+                  </li>
+                  <li>
+                    <i
+                      className="fas fa-envelope"
+                      style={{ marginRight: "5px", color: "#8B2F2F" }}
+                    ></i>
+                    <a
+                      href="mailto:Truchoavien@gmail.com"
+                      style={{ color: "#3C1E17" }}
+                    >
+                      Truchoavien@gmail.com
+                    </a>
                   </li>
                 </ul>
+
+                <h4
+                  style={{
+                    color: "#8B2F2F",
+                    fontSize: "18px",
+                    marginBottom: "10px",
+                  }}
+                >
+                  Bản đồ
+                </h4>
+                <div
+                  style={{
+                    borderRadius: "10px",
+                    overflow: "hidden",
+                    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+                  }}
+                >
+<iframe
+  title="Bản đồ Trúc Họa Viên"
+  src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.0045057200637!2d105.91210857486194!3d21.03574478748492!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135abddf92e9cb5%3A0x6d9a0630e6e6e808!2zU-G7kSAyOCBOZ-G7jSA4LCBCw6xuaCBNaW5oLCBIw6AgTuG7mWkg!5e0!3m2!1svi!2s!4v1739599180000!5m2!1svi!2s"
+  width="100%"
+  height="250"
+  style={{ border: "2px solid #a33a2c", borderRadius: "10px" }}
+  allowFullScreen=""
+  loading="lazy"
+  referrerPolicy="no-referrer-when-downgrade"
+/>
+
+
+                </div>
               </div>
             </div>
           </div>
@@ -123,8 +217,12 @@ export default function Footer() {
       {/* COPYRIGHT */}
       <div className="copyright-wrap">
         <div className="container">
-          <p className="copyright-text text-center">
-            © {new Date().getFullYear()} <strong>Trúc Họa Viên LLC</strong> — All rights reserved.
+          <p
+            className="copyright-text text-center"
+            style={{ color: "#3C1E17", margin: 0 }}
+          >
+            © {new Date().getFullYear()} <strong>Trúc Họa Viên LLC</strong> — All
+            rights reserved.
           </p>
         </div>
       </div>

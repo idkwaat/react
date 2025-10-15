@@ -1,7 +1,7 @@
 import React from "react";
 import { useCart } from "../context/CartContext";
 
-const BASE_URL = "http://localhost:5186";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function Cart() {
   const { cartItems, removeFromCart, updateQuantity, getCartTotal } = useCart();

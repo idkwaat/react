@@ -12,28 +12,31 @@ export default function ProductOfMonthSection() {
     const { addToCart } = useCart();
 
     // ✅ Lấy dữ liệu sản phẩm từ API
-    useEffect(() => {
-        fetch(`${BASE_URL}/api/Products`)
-            .then((res) => res.json())
-            .then((data) => {
-                const allVariants = data.flatMap((p) =>
-                    (p.variants || []).map((v) => ({
-                        ...v,
-                        productId: p.id,
-                        productName: p.name,
-                        categoryName: p.categoryName,
-                        averageRating: p.averageRating,
-                        reviewCount: p.reviewCount,
-                        description: p.description,
-                    }))
-                );
+   // ✅ Đổi API call
+useEffect(() => {
+    fetch(`${BASE_URL}/api/Products/top-month`)
+        .then((res) => res.json())
+        .then((res) => {
+            const data = res.data || res.Data; // đảm bảo lấy đúng field từ backend
 
-                // 👉 Lọc ra 8 sản phẩm nổi bật
-                const featured = allVariants.slice(0, 8);
-                setVariants(featured);
-            })
-            .catch((err) => console.error("❌ API error:", err));
-    }, []);
+            // Backend trả về dạng: Product -> Variants[] -> Chỉ cần lấy từng variant kèm thông tin product
+            const allVariants = data.flatMap((p) =>
+                (p.variants || []).map((v) => ({
+                    ...v,
+                    productId: p.id,
+                    productName: p.name,
+                    categoryName: p.categoryName,
+                    averageRating: p.averageRating,
+                    reviewCount: p.reviewCount,
+                    description: p.description,
+                }))
+            );
+
+            setVariants(allVariants.slice(0, 8));
+        })
+        .catch((err) => console.error("❌ API error:", err));
+}, []);
+
 
     // ✅ WOW.js khởi tạo + background image
     useEffect(() => {
@@ -145,7 +148,7 @@ export default function ProductOfMonthSection() {
                         data-wow-delay="0.4s"
                         onClick={() => navigate("/shop")}
                     >
-                        View More
+                        Xem Thêm
                     </button>
                 </div>
             </div>

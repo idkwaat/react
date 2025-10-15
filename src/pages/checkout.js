@@ -3,7 +3,7 @@ import { useCart } from "../context/CartContext";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../context/AuthContext";
 
-const BASE_URL = "http://localhost:5186";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function CheckOut() {
   const { cartItems, getCartTotal, clearCart } = useCart();
@@ -56,7 +56,7 @@ export default function CheckOut() {
       };
 
       // ✅ Gửi request tới API
-      const res = await fetch(`${BASE_URL}/api/orders`, {
+      const res = await fetch(`${API_BASE_URL}/api/orders`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -148,7 +148,7 @@ export default function CheckOut() {
                                 src={
                                   item.imageUrl?.startsWith("http")
                                     ? item.imageUrl
-                                    : `${BASE_URL}${item.imageUrl}`
+                                    : `${API_BASE_URL}${item.imageUrl}`
                                 }
                                 alt={item.productName}
                                 style={{

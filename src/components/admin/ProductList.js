@@ -7,17 +7,20 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 const ProductList = () => {
   const [products, setProducts] = useState([]);
 
-  const fetchProducts = async () => {
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/products`);
-      if (!res.ok) throw new Error("Lỗi khi tải danh sách sản phẩm");
-      const data = await res.json();
-      setProducts(data);
-    } catch (err) {
-      console.error(err);
-      alert("⚠️ Không thể tải sản phẩm từ server!");
-    }
-  };
+const fetchProducts = async () => {
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/products`);
+    if (!res.ok) throw new Error("Lỗi khi tải danh sách sản phẩm");
+    const data = await res.json();
+
+    // ✅ Lấy đúng danh sách sản phẩm
+    setProducts(data.data || []);
+  } catch (err) {
+    console.error(err);
+    alert("⚠️ Không thể tải sản phẩm từ server!");
+  }
+};
+
 
   useEffect(() => {
     fetchProducts();

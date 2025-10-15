@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaStar } from "react-icons/fa";
 import { useCart } from "../context/CartContext"; // ✅ nhớ import context giỏ hàng nếu có
+import Background from "three/src/renderers/common/Background.js";
 
 const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
@@ -15,25 +16,28 @@ export default function TrendingProducts() {
     fetch(`${BASE_URL}/api/products`)
       .then((res) => res.json())
       .then((data) => {
-        const allVariants = data.flatMap((p) =>
-          (p.variants || []).map((v) => ({
-            ...v,
-            productId: p.id,
-            productName: p.name,
-            categoryName: p.categoryName,
-            productDescription: p.description,
-            averageRating: p.averageRating,
-            reviewCount: p.reviewCount,
-          }))
-        );
+  const products = data.data || []; // ✅ Lấy mảng sản phẩm thật
 
-        const trending = allVariants.filter(
-  (v) => v.isHot || v.discount > 0 || true // test hiển thị tất cả
-).slice(0, 6);
+  const allVariants = products.flatMap((p) =>
+    (p.variants || []).map((v) => ({
+      ...v,
+      productId: p.id,
+      productName: p.name,
+      categoryName: p.categoryName,
+      productDescription: p.description,
+      averageRating: p.averageRating,
+      reviewCount: p.reviewCount,
+    }))
+  );
 
+  // ✅ Lọc top 6 sản phẩm hot (hoặc tạm hiển thị hết)
+  const trending = allVariants
+    .filter((v) => v.isHot || v.discount > 0 || true)
+    .slice(0, 6);
 
-        setVariants(trending);
-      })
+  setVariants(trending);
+})
+
       .catch((err) => console.error("Fetch trending error:", err));
   }, []);
 
@@ -74,7 +78,8 @@ export default function TrendingProducts() {
   };
 
   return (
-    <section className="trending-layout1 space">
+    <section className="trending-layout1 space" style={{backgroundColor:"#fef6e9"}}>
+      
       <div className="container">
         <div className="title-area2 animation-style1 title-anime">
           <span className="border-line d-xxl-block d-none"></span>
@@ -88,7 +93,7 @@ export default function TrendingProducts() {
             }}
             href="/shop"
           >
-            View More
+            Xem Thêm
           </a>
         </div>
 
@@ -138,7 +143,7 @@ export default function TrendingProducts() {
                   <div className="product-content">
                     <div className="product-rating">
                       <span className="star">
-                        <FaStar color="#f5c518" /> (
+                        <FaStar color="#52c761ff" /> (
                         {v.averageRating?.toFixed(1) || "0.0"})
                       </span>
                       <ul className="price-list">

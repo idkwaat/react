@@ -233,7 +233,7 @@ code {
 }
 
 .icon-btn {
-  background: #0b4b32; /* Màu nền nút */
+  background: #3C1E17; /* Màu nền nút */
   color: white;         /* Màu icon */
   border: none;
   width: 40px;
@@ -247,7 +247,7 @@ code {
 }
 
 .icon-btn:hover {
-  background: #13965c;
+  background: #8B2F2F;
   transform: scale(1.1);
 }
 
@@ -266,3 +266,10 @@ code {
   }
 }
 
+.policy-card {
+  transition: all 0.3s ease;
+}
+.policy-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08) !important;
+}

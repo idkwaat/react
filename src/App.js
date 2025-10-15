@@ -157,7 +157,7 @@ role?.toLowerCase() === "admin" ? (
             <Route path="/blog" element={<Blog />} />
             <Route path="/cart" element={<Cart />} />
             <Route path="/checkout" element={<Checkout />} />
-            <Route path="/contact" element={<Contact />} />
+            <Route path="/policy" element={<Contact />} />
             <Route path="/shop/:productId/:variantId?" element={<ShopDetails />} />
             <Route path="/shop" element={<Shop />} />
             <Route path="/vendor-details" element={<VendorDetails />} />

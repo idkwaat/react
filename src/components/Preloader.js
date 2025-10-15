@@ -31,7 +31,7 @@ export default function Preloader() {
   return (
     <div ref={preloaderRef} className="preloader">
       <div className="preloader-inner">
-        <img src="/assets/img/dark-logo.svg" alt="logo" />
+        <img src="/assets/img/logo-01.svg" alt="logo" />
         <span className="loader"></span>
       </div>
     </div>
