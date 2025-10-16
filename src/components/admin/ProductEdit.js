@@ -218,7 +218,9 @@ variants.forEach((v, i) => {
             {(v.previewImage || v.imageUrl) && (
               <div className="mb-2">
                 <img
-                  src={v.previewImage || `${API_BASE_URL}${v.imageUrl}`}
+                  src={v.previewImage || 
+     (v.imageUrl?.startsWith("http") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`)}
+
                   alt={v.name}
                   style={{
                     width: 100,
