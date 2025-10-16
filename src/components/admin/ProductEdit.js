@@ -48,7 +48,8 @@ const ProductEdit = () => {
             previewImage: null,
           })) || []
         );
-      });
+      })
+      .catch((err) => console.error("Lỗi khi load sản phẩm:", err));
   }, [id]);
 
   // 🔹 Xử lý input chung
@@ -57,7 +58,7 @@ const ProductEdit = () => {
     setForm({ ...form, [name]: value });
   };
 
-  // 🔹 Xử lý biến thể
+  // 🔹 Xử lý thay đổi dữ liệu của biến thể
   const handleVariantChange = (index, field, value) => {
     const updated = [...variants];
     updated[index][field] = value;
@@ -65,23 +66,21 @@ const ProductEdit = () => {
   };
 
   const handleImageChange = (index, e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const updated = [...variants];
-  updated[index].image = file; // 👈 quan trọng: gửi file thật
-  updated[index].previewImage = URL.createObjectURL(file); // để hiển thị trước
-  setVariants(updated);
-};
+    const file = e.target.files[0];
+    if (!file) return;
+    const updated = [...variants];
+    updated[index].image = file;
+    updated[index].previewImage = URL.createObjectURL(file);
+    setVariants(updated);
+  };
 
-const handleModelChange = (index, e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const updated = [...variants];
-  updated[index].model = file;
-  setVariants(updated);
-};
-
-
+  const handleModelChange = (index, e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const updated = [...variants];
+    updated[index].model = file;
+    setVariants(updated);
+  };
 
   const addVariant = () => {
     setVariants([
@@ -92,6 +91,8 @@ const handleModelChange = (index, e) => {
         price: "",
         image: null,
         model: null,
+        imageUrl: "",
+        modelUrl: "",
         previewImage: null,
       },
     ]);
@@ -110,53 +111,64 @@ const handleModelChange = (index, e) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
-    const formData = new FormData();
 
+    if (!form.name || !form.categoryId) {
+      alert("⚠️ Vui lòng nhập tên và chọn danh mục!");
+      return;
+    }
+
+    const formData = new FormData();
     formData.append("Name", form.name);
     formData.append("Description", form.description);
     formData.append("CategoryId", form.categoryId);
     formData.append("DeletedVariantIds", JSON.stringify(deletedVariantIds));
-    
-// phần tạo formData (theo code của bạn sửa lại như dưới)
-variants.forEach((v, i) => {
-  formData.append(`VariantIds[${i}]`, v.id || 0);
-  formData.append(`VariantNames[${i}]`, v.name);
-  formData.append(`VariantPrices[${i}]`, v.price || 0);
 
-  if (v.image instanceof File) {
-    // IMPORTANT: append with indexed field name so server can find Request.Form.Files[name]
-    formData.append(`VariantImages[${i}]`, v.image);
-  } else if (v.imageUrl) {
-    formData.append(`VariantImageUrls[${i}]`, v.imageUrl);
-  }
+    // 🧩 Append dữ liệu biến thể theo đúng index để backend ánh xạ đúng
+    variants.forEach((v, i) => {
+      formData.append(`VariantIds[${i}]`, v.id || 0);
+      formData.append(`VariantNames[${i}]`, v.name || "");
+      formData.append(`VariantPrices[${i}]`, v.price || 0);
 
-  if (v.model instanceof File) {
-    formData.append(`VariantModels[${i}]`, v.model);
-  } else if (v.modelUrl) {
-    formData.append(`VariantModelUrls[${i}]`, v.modelUrl);
-  }
-});
+      // Ảnh: nếu có file mới thì gửi file, không thì gửi URL cũ
+      if (v.image instanceof File) {
+        formData.append(`VariantImages[${i}]`, v.image);
+      } else if (v.imageUrl) {
+        formData.append(`VariantImageUrls[${i}]`, v.imageUrl);
+      }
 
-
-
-
-
-
-    const res = await fetch(`${API_BASE_URL}/api/products/${id}`, {
-      method: "PUT",
-      headers: { Authorization: `Bearer ${token}` },
-      body: formData,
+      // Model: nếu có file mới thì gửi file, không thì gửi URL cũ
+      if (v.model instanceof File) {
+        formData.append(`VariantModels[${i}]`, v.model);
+      } else if (v.modelUrl) {
+        formData.append(`VariantModelUrls[${i}]`, v.modelUrl);
+      }
     });
 
-    if (res.ok) {
-      alert("✅ Cập nhật thành công!");
-      navigate("/admin/products");
-    } else {
-      const err = await res.text();
-      alert("❌ Lỗi: " + err);
+    // 🧾 Debug xem đúng dữ liệu chưa
+    for (const [key, val] of formData.entries()) {
+      console.log(key, val);
+    }
+
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/products/${id}`, {
+        method: "PUT",
+        headers: { Authorization: `Bearer ${token}` },
+        body: formData,
+      });
+
+      if (res.ok) {
+        alert("✅ Cập nhật thành công!");
+        navigate("/admin/products");
+      } else {
+        const errText = await res.text();
+        console.error("❌ Lỗi khi cập nhật:", errText);
+        alert("❌ " + errText);
+      }
+    } catch (err) {
+      console.error("❌ Lỗi fetch:", err);
+      alert("❌ Lỗi kết nối máy chủ!");
     }
   };
-
   return (
     <div className="container mt-4">
       <h2>✏️ Chỉnh sửa sản phẩm</h2>

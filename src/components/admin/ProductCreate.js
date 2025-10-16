@@ -65,13 +65,15 @@ const handleSubmit = async (e) => {
   formData.append("Description", form.description);
   formData.append("CategoryId", form.categoryId);
 
-  variants.forEach((v) => {
-    if (v.name) formData.append("VariantNames", v.name);
-    if (v.price !== "" && !isNaN(v.price))
-      formData.append("VariantPrices", Number(v.price));
-    if (v.image) formData.append("VariantImages", v.image);
-    if (v.model) formData.append("VariantModels", v.model);
-  });
+variants.forEach((v, index) => {
+  formData.append(`VariantNames[${index}]`, v.name || "");
+  formData.append(`VariantPrices[${index}]`, v.price || 0);
+
+  // Giữ thứ tự file bằng cách chỉ append nếu có
+  if (v.image) formData.append(`VariantImages[${index}]`, v.image);
+  if (v.model) formData.append(`VariantModels[${index}]`, v.model);
+});
+
 
   try {
     const res = await axios.post(`${API_BASE_URL}/api/products/create`, formData, {
