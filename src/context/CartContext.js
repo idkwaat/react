@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from "react";
+import React, { createContext, useContext, useState, useEffect, useRef } from "react";
 import { AuthContext } from "./AuthContext";
 
 const CartContext = createContext();
@@ -6,6 +6,7 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const { user } = useContext(AuthContext);
   const [cartItems, setCartItems] = useState([]);
+  const cartIconRef = useRef(null);
 
   // 🧩 Load giỏ khi user thay đổi hoặc khi mới vào
   useEffect(() => {

@@ -3931,7 +3931,7 @@ a.text-theme:hover,
   padding: 0 50px 0 25px;
 }
 .cat-item a::after {
-  content: "\f061";
+   content: "→";
   position: absolute;
   right: 10px;
   top: 50%;
@@ -4230,9 +4230,10 @@ a.text-theme:hover,
 
 .widget_shopping_cart {
   text-align: left;
+  margin-top: 10px;
 }
 .widget_shopping_cart ul {
-  margin: 0;
+  
   padding: 0;
   list-style-type: none;
 }

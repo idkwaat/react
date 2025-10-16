@@ -1,86 +1,79 @@
-import { useState } from "react";
-import axios from "axios";
+import React, { useContext, useState } from "react";
+import { AuthContext } from "../../context/AuthContext";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function AvatarUpload() {
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const { user, setUser } = useContext(AuthContext);
+  const [avatarPreview, setAvatarPreview] = useState(
+    user?.avatar || "/assets/img/default-avatar.png"
+  );
+  const [uploading, setUploading] = useState(false);
 
-  const handleUpload = async () => {
-    if (!file) {
-      setMessage("Vui lòng chọn ảnh trước khi tải lên!");
-      return;
-    }
+  const handleFileChange = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
 
-    const token = localStorage.getItem("token");
-    if (!token) {
-      setMessage("Bạn cần đăng nhập để tải ảnh đại diện!");
-      return;
-    }
+    setUploading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
 
     try {
-      setLoading(true);
-      const formData = new FormData();
-      formData.append("file", file);
+      const res = await fetch(`${API_BASE_URL}/api/users/upload-avatar`, {
+        method: "POST",
+        body: formData,
+      });
 
-      const res = await axios.post(
-        "http://localhost:5186/api/profile/avatar",
-        formData,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      if (!res.ok) throw new Error("Upload thất bại");
+      const data = await res.json();
 
-      setPreview(`http://localhost:5186${res.data.avatarUrl}`);
+      const newUrl = data.url || `${API_BASE_URL}${data.path}`;
+      setAvatarPreview(newUrl);
 
-      setMessage("🎉 Upload thành công!");
+      // ✅ Cập nhật context và localStorage
+      setUser((prev) => ({ ...prev, avatar: newUrl }));
+      localStorage.setItem("avatar", newUrl);
+
+      const storedUser = JSON.parse(localStorage.getItem("user")) || {};
+      localStorage.setItem("user", JSON.stringify({ ...storedUser, avatar: newUrl }));
+
+      // 🔔 Báo toàn app cập nhật
+      window.dispatchEvent(new Event("authChanged"));
+
+      alert("✅ Cập nhật ảnh đại diện thành công!");
     } catch (err) {
-      console.error(err);
-      setMessage("❌ Upload thất bại! Kiểm tra lại file hoặc token.");
+      console.error("Lỗi upload avatar:", err);
+      alert("❌ Không thể tải ảnh lên!");
     } finally {
-      setLoading(false);
+      setUploading(false);
     }
   };
 
   return (
     <div className="text-center">
-      <input
-        type="file"
-        accept="image/*"
-        className="form-control mb-3"
-        onChange={(e) => {
-          const f = e.target.files[0];
-          setFile(f);
-          setPreview(URL.createObjectURL(f));
-          setMessage("");
+      <img
+        src={avatarPreview}
+        alt="Avatar"
+        style={{
+          width: "150px",
+          height: "150px",
+          borderRadius: "50%",
+          objectFit: "cover",
+          boxShadow: "0 0 10px rgba(0,0,0,0.2)",
         }}
       />
-
-      {preview && (
-        <img
-          src={preview}
-          alt="Avatar preview"
-          width="120"
-          height="120"
-          className="mt-2 rounded-circle border"
-        />
-      )}
-
       <div className="mt-3">
-        <button
-          className="btn btn-success"
-          onClick={handleUpload}
-          disabled={loading}
-        >
-          {loading ? "Đang tải lên..." : "Tải ảnh lên"}
-        </button>
+        <label className="vs-btn" htmlFor="avatarInput">
+          {uploading ? "Đang tải..." : "Chọn ảnh mới"}
+        </label>
+        <input
+          type="file"
+          id="avatarInput"
+          accept="image/*"
+          style={{ display: "none" }}
+          onChange={handleFileChange}
+        />
       </div>
-
-      {message && <p className="mt-3 text-muted">{message}</p>}
     </div>
   );
 }

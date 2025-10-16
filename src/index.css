@@ -137,7 +137,6 @@ code {
 }
 
 .product-content {
-  border-top: 1px solid #f1f1f1;
   border-radius: 0 0 18px 18px;
   padding: 15px;
   text-align: center;
@@ -152,7 +151,7 @@ code {
 }
 
 .product-title a:hover {
-  color: #007bff;
+  color: #580e0ecc;
 }
 
 .price-list li {
@@ -273,3 +272,191 @@ code {
   transform: translateY(-4px);
   box-shadow: 0 6px 18px rgba(0,0,0,0.08) !important;
 }
+
+/* Nền đen mờ phủ toàn màn hình */
+.vs-menu-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: 1050;
+  display: flex;
+  justify-content: flex-start;
+  backdrop-filter: blur(2px);
+}
+
+/* Khu vực menu */
+.vs-menu-area {
+  width: 80%;
+  max-width: 320px;
+  height: 100%;
+  background: linear-gradient(160deg, #262626, #1b1b1b);
+  box-shadow: 4px 0 15px rgba(0, 0, 0, 0.4);
+  border-right: 2px solid rgba(255, 222, 173, 0.2);
+  animation: slideInLeft 0.35s ease forwards;
+  overflow-y: auto;
+}
+
+/* Ẩn menu trên desktop */
+@media (min-width: 992px) {
+  .vs-menu-overlay {
+    display: none !important;
+  }
+}
+
+/* Hiệu ứng trượt từ bên trái */
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+    opacity: 0.3;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Vùng bên trong menu */
+.vs-mobile-menu {
+  padding: 1rem 1.25rem;
+  color: #f8e9c6;
+  font-family: "Poppins", sans-serif;
+}
+
+/* Link menu */
+.mobile-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 0;
+  font-size: 1.05rem;
+  color: #f8e9c6;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.25s ease;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.mobile-menu-link i {
+  width: 24px;
+  text-align: center;
+  opacity: 0.85;
+  font-size: 1.1rem;
+  color: #ffdf9a;
+}
+
+.mobile-menu-link:hover {
+  color: #fff4d6;
+  transform: translateX(6px);
+}
+
+.mobile-menu-link:hover i {
+  color: #ffe2a7;
+  opacity: 1;
+}
+
+/* Phần user info */
+.vs-mobile-menu p {
+  color: #e7d6b7 !important;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* Nút đăng xuất */
+.btn-outline-light {
+  border: 1px solid #f8e9c6;
+  color: #f8e9c6;
+  background: transparent;
+  transition: all 0.25s ease;
+}
+
+.btn-outline-light:hover {
+  background: #f8e9c6;
+  color: #2b2b2b;
+  font-weight: 600;
+}
+
+/* Scroll mượt, thanh cuộn tinh tế */
+.vs-menu-area::-webkit-scrollbar {
+  width: 6px;
+}
+
+.vs-menu-area::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+}
+
+.mobile-menu-list {
+  padding-top: 0.5rem;
+}
+
+.mobile-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #f8e9c6;
+  font-weight: 500;
+  font-size: 1.05rem;
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.mobile-menu-link i {
+  width: 22px;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #ffdc99;
+  transition: all 0.25s ease;
+}
+
+.mobile-menu-link span {
+  flex: 1;
+  transition: all 0.25s ease;
+}
+
+.mobile-menu-link:hover {
+  color: #fff6d6;
+  transform: translateX(5px);
+}
+
+.mobile-menu-link:hover i {
+  color: #ffe7ad;
+  transform: scale(1.1);
+}
+
+ul.mobile-menu-list li a.mobile-menu-link::before {
+  content: none !important;
+  display: none !important;
+}
+
+
+
+.books-layout1 .container {
+  position: relative;
+  z-index: 1;
+}
+
+.sidebar-area {
+  overflow: visible !important;
+  max-height: none !important;
+  height: auto !important;
+}
+
+.cart-icon-btn {
+  width: 60px;
+  height: 60px;
+  border: 2px solid #fff;
+  border-radius: 50%;
+  color: #fff;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 26px; /* 👈 tăng kích thước icon */
+  cursor: pointer;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+

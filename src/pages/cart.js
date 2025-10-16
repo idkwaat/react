@@ -14,7 +14,7 @@ export default function Cart() {
   const cartTotal = getCartTotal();
 
   return (
-    <div className="vs-cart-wrapper space-top space-extra-bottom">
+    <div className="vs-cart-wrapper space-top space-extra-bottom" style={{marginBottom:"80px"}}>
       <div className="container">
         <form className="woocommerce-cart-form">
           <table className="cart_table">

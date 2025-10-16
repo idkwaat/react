@@ -305,175 +305,30 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 
-/* ============================= */
-/* 🎯 HEADER CART DROPDOWN FIX */
-/* ============================= */
-
-.header-cart {
-  position: relative;
-}
-
 .header-cart .woocommerce.widget_shopping_cart {
   position: absolute;
   top: 100%;
   right: 0;
-  width: 340px;
-  background: #fff;
-  border: 1px solid #dce5dd;
+  width: 380px; /* hoặc 400px nếu bạn thích */
+  background-color: #fff;
   border-radius: 12px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.15);
-  padding: 18px;
-  z-index: 2000;
-  animation: fadeIn 0.25s ease-in-out;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  padding: 20px;
+  z-index: 9999;
 }
 
 .header-cart .cart_list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  max-height: 280px;
+  max-height: 300px;
   overflow-y: auto;
+  margin-bottom: 15px;
 }
 
-.header-cart .mini_cart_item {
-  display: flex;
-  flex-direction: column;
-  padding: 10px 0;
-  border-bottom: 1px solid #eee;
-  position: relative;
+.product-style1 .product-img img {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
-.header-cart .mini_cart_item:last-child {
-  border-bottom: none;
-}
 
-.header-cart .mini_cart_item .remove {
-  position: absolute;
-  top: 6px;
-  right: 6px;
-  background: transparent;
-  border: none;
-  color: #999;
-  cursor: pointer;
-  transition: color 0.2s;
-}
-
-.header-cart .mini_cart_item .remove:hover {
-  color: #d33;
-}
-
-.header-cart .mini_cart_item .img img {
-  width: 60px;
-  height: 60px;
-  object-fit: cover;
-  border-radius: 8px;
-  margin-bottom: 6px;
-}
-
-.header-cart .mini_cart_item .product-title {
-  font-size: 15px;
-  font-weight: 500;
-  color: #14532d;
-  text-decoration: none;
-}
-
-.header-cart .mini_cart_item .product-title:hover {
-  color: #1b4332;
-}
-
-.header-cart .mini_cart_item .amount {
-  color: #1b4332;
-  font-weight: 600;
-  font-size: 15px;
-}
-
-.header-cart .quantity {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  margin-top: 5px;
-}
-
-.header-cart .quantity .qut-btn {
-  background: #e8f3ec;
-  border: none;
-  color: #14532d;
-  padding: 4px 8px;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.2s ease;
-}
-
-.header-cart .quantity .qut-btn:hover {
-  background: #cce3d7;
-}
-
-.header-cart .quantity .qty-input {
-  width: 45px;
-  height: 28px;
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  text-align: center;
-}
-
-.header-cart .subtotal {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 5px;
-  font-size: 14px;
-  color: #333;
-}
-
-.header-cart .total {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 12px;
-  padding-top: 10px;
-  border-top: 1px solid #ddd;
-  font-weight: 600;
-  color: #1b4332;
-}
-
-.header-cart .buttons {
-  display: flex;
-  justify-content: space-between;
-  gap: 10px;
-  margin-top: 12px;
-}
-
-.header-cart .vs-btn {
-  flex: 1;
-  text-align: center;
-  background: #1b4332;
-  color: #fff !important;
-  padding: 8px 10px;
-  border-radius: 8px;
-  font-weight: 500;
-  transition: background 0.3s;
-}
-
-.header-cart .vs-btn.checkout {
-  background: #2a7740;
-}
-
-.header-cart .vs-btn:hover {
-  background: #14532d;
-}
-
-.header-cart .dropdown-menu {
-  border-radius: 12px;
-  border: 1px solid #e6efe6;
-  background: #fff;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
-
-.header-cart .dropdown-menu ul::-webkit-scrollbar {
-  width: 6px;
-}
-.header-cart .dropdown-menu ul::-webkit-scrollbar-thumb {
-  background: #ccc;
-  border-radius: 4px;
-}
 
 

@@ -98,72 +98,115 @@ export default function TrendingProducts() {
         </div>
 
         <div className="row g-4">
-          {variants.length > 0 ? (
-            variants.map((v, i) => (
-              <div
-                key={v.id}
-                className="col-xl-2 col-md-4 col-sm-6"
-                style={{ cursor: "pointer" }}
-              >
-                <div
-                  className="product-style1 wow animate__fadeInUp"
-                  data-wow-delay={`${0.3 + i * 0.1}s`}
-                  onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
-                >
-                  <div className="product-img">
-                    <img
-                      src={
-                        v.imageUrl
-                          ? `${API_BASE_URL}${v.imageUrl}`
-                          : "/images/default.jpg"
-                      }
-                      alt={v.name}
-                    />
-                    <div className="product-btns">
-                      
-                      <a
-                        href="#"
-                        className="icon-btn cart"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleAddToCart(v);
-                        }}
-                      >
-                        <i className="fa-solid fa-basket-shopping"></i>
-                      </a>
-                    </div>
+{variants.length > 0 ? (
+  variants.map((v, i) => (
+    <div
+      key={v.id}
+      className="col-xl-2 col-md-4 col-sm-6"
+      style={{ cursor: "pointer" }}
+    >
+      <div
+        className="product-style1 wow animate__fadeInUp"
+        data-wow-delay={`${0.3 + i * 0.1}s`}
+      >
+        <div
+          className="product-img"
+          role="button"
+          onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
+        >
+          <img
+            src={
+              v.imageUrl
+                ? `${API_BASE_URL}${v.imageUrl}`
+                : "/images/default.jpg"
+            }
+            alt={v.name}
+          />
+          <div className="product-btns">
+            <a
+              href="#"
+              className="icon-btn cart"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleAddToCart(v);
+              }}
+            >
+              <i className="fa-solid fa-basket-shopping"></i>
+            </a>
+          </div>
 
-                    <ul className="post-box">
-                      {v.isHot && <li>Hot</li>}
-                      {v.discount > 0 && <li>-{v.discount}%</li>}
-                    </ul>
-                  </div>
+          <ul className="post-box">
+            {v.isHot && <li>Hot</li>}
+            {v.discount > 0 && <li>-{v.discount}%</li>}
+          </ul>
+        </div>
 
-                  <div className="product-content">
-                    <div className="product-rating">
-                      <span className="star">
-                        <FaStar color="#52c761ff" /> (
-                        {v.averageRating?.toFixed(1) || "0.0"})
-                      </span>
-                      <ul className="price-list">
-                        {v.oldPrice && (
-                          <li>
-                            <del>{v.oldPrice.toLocaleString()}₫</del>
-                          </li>
-                        )}
-                        <li>{v.price?.toLocaleString()}₫</li>
-                      </ul>
-                    </div>
+        <div className="product-content">
+<div
+  className="product-rating"
+  style={{
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+    flexWrap: "nowrap",
+    overflow: "hidden",
+  }}
+>
+  <div className="stars d-flex align-items-center" style={{ gap: "2px", flexShrink: 0 }}>
+    {[1, 2, 3, 4, 5].map((s) => (
+      <FaStar
+        key={s}
+        size={14}
+        color={v.averageRating >= s ? "#52c761ff" : "#ddd"}
+      />
+    ))}
+    <span style={{ fontSize: "0.85rem", color: "#666", marginLeft: "4px" }}>
+      ({v.averageRating?.toFixed(1) || "0.0"})
+    </span>
+  </div>
 
-                    <h2 className="product-title" style={{ marginTop: "5px"}}>{v.name}</h2>
-                  </div>
-                </div>
-              </div>
-            ))
-          ) : (
-            <div className="text-center py-5">💤 Chưa có sản phẩm trending</div>
-          )}
+  <ul
+    className="price-list mb-0"
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "4px",
+      marginLeft: "auto",
+      whiteSpace: "nowrap",
+      flexShrink: 0,
+    }}
+  >
+    {v.oldPrice && (
+      <li>
+        <del>{v.oldPrice.toLocaleString()}₫</del>
+      </li>
+    )}
+    <li>{v.price?.toLocaleString()}₫</li>
+  </ul>
+</div>
+
+
+
+          <h2 className="product-title mt-1">
+            <a
+              href={`/shop/${v.productId}/${v.id}`}
+              onClick={(e) => {
+                e.preventDefault();
+                navigate(`/shop/${v.productId}/${v.id}`);
+              }}
+            >
+              {v.name}
+            </a>
+          </h2>
+        </div>
+      </div>
+    </div>
+  ))
+) : (
+  <div className="text-center py-5">💤 Chưa có sản phẩm trending</div>
+)}
+
         </div>
       </div>
 

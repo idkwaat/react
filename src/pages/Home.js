@@ -65,8 +65,8 @@ function Home() {
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
               </div>
-              <h2 className="offer-title">Emeher Mme</h2>
-              <p className="offer-price">Only From <span>$85.00</span></p>
+              <h2 className="offer-title">Tranh Trúc Chỉ</h2>
+              <p className="offer-price">Chỉ từ <span>800k</span></p>
               <Link className="vs-btn" to="/shop">Mua Ngay</Link>
             </div>
             <span className="shape-mockup element1 z-index1  d-xxl-block d-none" data-wow-delay="0.80s" style={{right: "0px", bottom: "-5px" }}><img src="assets/img/shapes/offer-shape1.png" alt="offer shape"/></span>
@@ -85,8 +85,8 @@ function Home() {
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
               </div>
-              <h2 className="offer-title">Viving Moneme</h2>
-              <p className="offer-price">Only From <span>$85.00</span></p>
+              <h2 className="offer-title">Tranh Trúc Chỉ</h2>
+              <p className="offer-price">Chỉ từ <span>800k</span></p>
               <Link className="vs-btn" to="/shop">Mua Ngay</Link>
             </div>
             <span className="shape-mockup element1 z-index1  d-xxl-block d-none" data-wow-delay="0.80s" style={{right: "0px", bottom: "-5px" }}><img src="assets/img/shapes/offer-shape2.png" alt="offer shape"/></span>

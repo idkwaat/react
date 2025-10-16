@@ -84,6 +84,53 @@ export default function About() {
         </div>
       </section>
 
+        <section class="about-layout1 space-top" style={{ backgroundColor: "#fef6e9" }}>
+    <div class="container space-bottom">
+      <div class="row g-5 justify-content-center align-items-center">
+        <div class="col-lg-4">
+          <div class="about-img wow animate__fadeInUp" data-wow-delay="0.45s">
+            <img src="assets/img/about/about-img-1-1.jpg" alt="about image"/>
+          </div>
+        </div>
+        <div class="col-lg-8">
+          <div class="about-content">
+            <div class="wow animate__fadeInUp" data-wow-delay="0.35s">
+              <div class="title-area animation-style1 title-anime">
+                <h2 class="sec-title text-title title-anime__title">Một giá trị văn hóa Việt mới</h2>
+              </div>
+              <p class="about-text wow animate__fadeInUp" data-wow-delay="0.30s">
+                Mang lại cho giấy thêm khả năng, “thoát” khỏi thân phận làm “nền” để trở thành một tác phẩm tự thân và độc lập.
+              </p>
+            </div>
+<div class="list-style1 wow animate__fadeInUp" data-wow-delay="0.50s">
+  <ul class="list-unstyled">
+    <li><i class="fa-solid fa-leaf"></i> Khơi nguồn tinh hoa từ trang giấy Việt.</li>
+    <li><i class="fa-solid fa-scroll"></i> Gìn giữ hồn xưa trong hình hài mới.</li>
+    <li><i class="fa-solid fa-paint-brush"></i> Khi văn hóa chạm đến từng sợi giấy.</li>
+    <li><i class="fa-solid fa-star"></i> Từ truyền thống – viết tiếp tương lai.</li>
+  </ul>
+</div>
+
+            <div class="about-content wow animate__fadeInUp" data-wow-delay="0.75s">
+              <div class="about-box">
+                <div class="about-img wow animate__fadeInUp" data-wow-delay="0.55s">
+                  <img src="assets/img/about/about-img-1-2.jpg" alt="about image"/>
+                </div>
+                <div class="about-inner mb-0 wow animate__fadeInUp" data-wow-delay="0.95s">
+                  <p class="about-text mb-20">
+                    Trúc Chỉ là tên gọi của loại Nghệ thuật - giấy, Giấy - nghệ thuật mới của Việt Nam dựa trên cơ sở nghề giấy truyền thống; với hàm ý Tre trúc là biểu tượng của Văn hóa và tinh thần Việt.
+Trúc Chỉ là kết quả của công trình khoa học do Họa sĩ Phan Hải Bằng cùng các cộng sự nghiên cứu và phát triển từ năm 2000 đến nay.
+                  </p>
+                  <a class="vs-btn" href="about.html">Xem thêm</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
       {/* --- TẦM NHÌN --- */}
       <section className="py-5" style={{ backgroundColor: "#fef6e9" }}>
         <div className="container">
@@ -232,6 +279,22 @@ export default function About() {
           </div>
         </div>
       </section>
+              <div
+  style={{
+    backgroundColor: "#fef6e9",   // 👈 màu nền bao quanh
+    padding: "30px 0",            // tạo khoảng cách trên dưới
+  }}
+>
+  <div
+    style={{
+      width: "60%",
+      height: "2px",
+      backgroundColor: "#a33a2c",
+      margin: "0 auto",
+      borderRadius: "2px"
+    }}
+  ></div>
+</div>
 
       {/* --- ĐỘI NGŨ --- */}
 <section
@@ -286,6 +349,13 @@ export default function About() {
             ))}
           </div>
         </div>
+        <div
+  style={{
+    backgroundColor: "#fef6e9",   // 👈 màu nền bao quanh
+    padding: "50px 0",            // tạo khoảng cách trên dưới
+  }}
+>
+</div>
       </section>
     </>
   );

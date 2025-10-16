@@ -9,9 +9,9 @@ export default function Footer() {
         <div className="cta-layout1 style2 z-index-common blog-title">
           <div className="row gx-60 align-items-center">
             <div className="col-lg-3">
-              <div className="cta-logo">
+              <div className="cta-logo" >
                 <a href="/">
-                  <img src="/assets/img/logo.svg" alt="Trúc Họa Viên" className="logo" />
+                  <img src="/assets/img/logo-04.svg" alt="Trúc Họa Viên" className="logo" />
                 </a>
               </div>
             </div>

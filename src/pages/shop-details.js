@@ -106,12 +106,17 @@ export default function ShopDetails() {
     };
 
     addToCart(cartItem);
+    
 
     // Hiệu ứng +1
-    const cartIcon = document.querySelector(".header-cart .vs-icon i");
-    const fallbackIcon = document.querySelector(".vs-btn .fa-basket-shopping");
-    const targetIcon = cartIcon || fallbackIcon;
-    if (!targetIcon) return;
+    // 🌟 Hiệu ứng +1 bay lên và rung icon giỏ
+const cartIcon = document.querySelector(
+  ".header-cart .cart-icon-btn i, .header-cart i.fa-basket-shopping, .header-cart .vs-icon i"
+);
+const fallbackIcon = document.querySelector(".fa-basket-shopping"); // phòng khi header chưa mount
+const targetIcon = cartIcon || fallbackIcon;
+if (!targetIcon) return;
+
 
     const cartRect = targetIcon.getBoundingClientRect();
     const plusOne = document.createElement("div");

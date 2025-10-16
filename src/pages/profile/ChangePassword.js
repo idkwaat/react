@@ -3,7 +3,7 @@ import axios from "axios";
 
 export default function ChangePassword() {
   const [form, setForm] = useState({ currentPassword: "", newPassword: "" });
-  const API_BASE_URL = "http://localhost:5186";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
   const handleChange = (e) =>
     setForm({ ...form, [e.target.name]: e.target.value });
