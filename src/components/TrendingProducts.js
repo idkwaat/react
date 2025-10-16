@@ -115,11 +115,7 @@ export default function TrendingProducts() {
           onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
         >
           <img
-            src={
-              v.imageUrl
-                ? `${API_BASE_URL}${v.imageUrl}`
-                : "/images/default.jpg"
-            }
+            src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
             alt={v.name}
           />
           <div className="product-btns">

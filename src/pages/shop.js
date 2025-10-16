@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { useCart } from "../context/CartContext";
 
 
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function Shop() {
   const [variants, setVariants] = useState([]);
@@ -33,7 +33,7 @@ export default function Shop() {
     const fetchProducts = async () => {
       try {
         const res = await fetch(
-          `${BASE_URL}/api/products?search=${encodeURIComponent(search)}&page=${page}&pageSize=9` +
+          `${API_BASE_URL}/api/products?search=${encodeURIComponent(search)}&page=${page}&pageSize=9` +
           (selectedCategory ? `&categoryId=${selectedCategory}` : "") +
           (minPrice ? `&minPrice=${minPrice}` : "") +
           (maxPrice ? `&maxPrice=${maxPrice}` : "")
@@ -65,7 +65,7 @@ export default function Shop() {
 
   // 🔹 Lấy danh mục
   useEffect(() => {
-    fetch(`${BASE_URL}/api/categories`)
+    fetch(`${API_BASE_URL}/api/categories`)
       .then((res) => res.json())
       .then(setCategories)
       .catch((err) => console.error("❌ Fetch categories error:", err));
@@ -73,14 +73,14 @@ export default function Shop() {
 
   // 🔹 Lấy top sản phẩm tháng (ngay cả khi chưa có ai mua)
   useEffect(() => {
-    fetch(`${BASE_URL}/api/products/top-month`)
+    fetch(`${API_BASE_URL}/api/products/top-month`)
       .then((res) => res.json())
       .then((data) => {
         console.log("✅ Top tháng API response:", data);
         // nếu không có data hoặc data rỗng → fallback sang danh sách sản phẩm thường
         if (!data?.data?.length && !data?.Data?.length) {
           console.warn("⚠️ Không có top-month, fallback sang /api/products");
-          return fetch(`${BASE_URL}/api/products?page=1&pageSize=5`)
+          return fetch(`${API_BASE_URL}/api/products?page=1&pageSize=5`)
             .then((res2) => res2.json())
             .then((fallbackData) => setTopProducts(fallbackData.data || []))
             .catch((err) => console.error("Fallback fetch error:", err));
@@ -224,7 +224,7 @@ if (!targetIcon) {
                         onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
                       >
                         <img
-                          src={v.imageUrl ? `${BASE_URL}${v.imageUrl}` : "/images/default.jpg"}
+                          src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
                           alt={v.name}
                         />
 <div className="product-btns">
@@ -447,7 +447,11 @@ if (!targetIcon) {
                               <div className="media-img">
                                 <a onClick={() => navigate(`/shop/${p.id}`)} role="button">
                                   <img
-                                    src={`${BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`}
+                                     src={
+    (p.imageUrl && p.imageUrl.startsWith("https"))
+      ? p.imageUrl
+      : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`
+  }
                                     alt={p.name}
                                     width="70"
                                     className="rounded"

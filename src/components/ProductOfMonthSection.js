@@ -72,7 +72,7 @@ useEffect(() => {
                                     data-wow-delay={`${0.3 + i * 0.1}s`}
                                 >
                                     <div className="product-img">
-                                        <img src={`${API_BASE_URL}${v.imageUrl}`} alt={v.name}
+                                        <img src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`} alt={v.name}
                                             style={{ width: "100%", borderRadius: "8px" }}
                                         />
                                         <div className="product-btns">

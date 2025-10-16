@@ -6,7 +6,7 @@ import { useCart } from "../context/CartContext";
 import axios from "axios";
 import { FaStar } from "react-icons/fa";
 
-const BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function ShopDetails() {
   const { productId, variantId } = useParams();
@@ -27,7 +27,7 @@ export default function ShopDetails() {
   // Fetch reviews
   const fetchReviews = async (prodId) => {
     try {
-      const res = await axios.get(`${BASE_URL}/api/reviews/product/${prodId}`);
+      const res = await axios.get(`${API_BASE_URL}/api/reviews/product/${prodId}`);
       setReviews(res.data);
     } catch (err) {
       console.error("Lỗi khi tải reviews:", err);
@@ -39,7 +39,7 @@ export default function ShopDetails() {
   // Fetch product & select variant
   useEffect(() => {
     if (!productId) return;
-    fetch(`${BASE_URL}/api/products/${productId}`)
+    fetch(`${API_BASE_URL}/api/products/${productId}`)
       .then((res) => res.json())
       .then((data) => {
         setProduct(data);
@@ -56,28 +56,34 @@ export default function ShopDetails() {
   }, [productId, variantId]);
 
   // -----------------------------
-  // Model viewer logic (3D)
-  useEffect(() => {
-    const modelViewer = document.querySelector("model-viewer");
-    if (!modelViewer) return;
+// Model viewer logic (3D)
+useEffect(() => {
+  const modelViewer = document.querySelector("model-viewer");
+  if (!modelViewer) return;
 
-    if (show3D && selectedVariant?.modelUrl) {
-      modelViewer.src = `${BASE_URL}${selectedVariant.modelUrl}`;
+  if (show3D && selectedVariant?.modelUrl) {
+    const modelUrl = selectedVariant.modelUrl.startsWith("https")
+      ? selectedVariant.modelUrl
+      : `${API_BASE_URL}${selectedVariant.modelUrl}`;
+
+    modelViewer.src = modelUrl;
+  }
+
+  const handleWheel = (e) => {
+    if (modelViewer.matches(":hover")) {
+      e.stopPropagation();
+      e.preventDefault();
     }
+  };
 
-    const handleWheel = (e) => {
-      if (modelViewer.matches(":hover")) {
-        e.stopPropagation();
-        e.preventDefault();
-      }
-    };
-    modelViewer.addEventListener("wheel", handleWheel, { passive: false });
+  modelViewer.addEventListener("wheel", handleWheel, { passive: false });
 
-    return () => {
-      modelViewer.removeEventListener("wheel", handleWheel);
-      modelViewer.src = "";
-    };
-  }, [show3D, selectedVariant]);
+  return () => {
+    modelViewer.removeEventListener("wheel", handleWheel);
+    // Chỉ reset src khi thực sự tắt 3D, tránh reload liên tục khi đổi variant
+    if (!show3D) modelViewer.src = "";
+  };
+}, [show3D, selectedVariant]);
 
 
 
@@ -151,7 +157,7 @@ export default function ShopDetails() {
 
     try {
       await axios.post(
-        `${BASE_URL}/api/reviews`,
+        `${API_BASE_URL}/api/reviews`,
         { productId: product.id, rating, comment },
         {
           headers: {
@@ -186,70 +192,85 @@ export default function ShopDetails() {
         <div className="row gx-60">
           <div className="col-lg-6">
             <div className="product-slide-row wow animate__fadeInUp" data-wow-delay="0.30s">
-             <div
-  className={`product-big-img position-relative ${fadeClass}`}
-  style={{
-    transition: "opacity 0.25s ease-in-out",
-    background: "#f4f1eb", // màu be nhẹ dịu
-    padding: "10px",       // viền be nhỏ gọn
-    borderRadius: "12px",
-    aspectRatio: "1 / 1",  // ✅ ép khung thành hình vuông
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-  }}
->
-  {show3D && selectedVariant.modelUrl ? (
-    <model-viewer
-      src={`${BASE_URL}${selectedVariant.modelUrl}`}
-      alt={product.name}
-      camera-controls
-      auto-rotate
-      style={{
-        width: "100%",
-        height: "100%",
-        borderRadius: "8px",
-        background: "transparent",
-        objectFit: "contain",
-      }}
-    />
-  ) : (
-    <img
-      ref={imageRef}
-      src={selectedVariant.imageUrl ? `${BASE_URL}${selectedVariant.imageUrl}` : "/images/default.jpg"}
-      alt={`${product.name} - ${selectedVariant.name}`}
-      className="rounded"
-      style={{
-        width: "100%",
-        height: "100%",
-        objectFit: "contain",  // không bị méo/cắt
-        borderRadius: "8px",
-        background: "#f4f1eb",
-      }}
-    />
-  )}
+              <div
+                className={`product-big-img position-relative ${fadeClass}`}
+                style={{
+                  transition: "opacity 0.25s ease-in-out",
+                  background: "#f4f1eb", // màu be nhẹ dịu
+                  padding: "10px",       // viền be nhỏ gọn
+                  borderRadius: "12px",
+                  aspectRatio: "1 / 1",  // ✅ ép khung thành hình vuông
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                {show3D && selectedVariant.modelUrl ? (
+                  <model-viewer
+                    src={
+                      selectedVariant.modelUrl.startsWith("https")
+                        ? selectedVariant.modelUrl
+                        : `${API_BASE_URL}${selectedVariant.modelUrl}`
+                    }
+                    alt={product.name}
+                    camera-controls
+                    auto-rotate
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      borderRadius: "8px",
+                      background: "transparent",
+                      objectFit: "contain",
+                    }}
+                  />
+                ) : (
+                  <img
+                    ref={imageRef}
+                    src={
+                      selectedVariant.imageUrl
+                        ? selectedVariant.imageUrl.startsWith("https")
+                          ? selectedVariant.imageUrl
+                          : `${API_BASE_URL}${selectedVariant.imageUrl}`
+                        : "/images/default.jpg"
+                    }
+                    alt={`${product.name} - ${selectedVariant.name}`}
+                    className="rounded"
+                    style={{
+                      width: "100%",
+                      height: "100%",
+                      objectFit: "contain", // không bị méo/cắt
+                      borderRadius: "8px",
+                      background: "#f4f1eb",
+                    }}
+                  />
+                )}
 
-  <button
-    className="vs-btn position-absolute"
-    style={{
-      top: "12px",
-      right: "12px",
-      padding: "6px 12px",
-      fontSize: "14px",
-      borderRadius: "6px",
-    }}
-    onClick={() => triggerFade(() => setShow3D((p) => !p))}
-  >
-    {show3D ? "Xem ảnh 2D" : "Xem mô hình 3D"}
-  </button>
-</div>
+
+                <button
+                  className="vs-btn position-absolute"
+                  style={{
+                    top: "12px",
+                    right: "12px",
+                    padding: "6px 12px",
+                    fontSize: "14px",
+                    borderRadius: "6px",
+                  }}
+                  onClick={() => triggerFade(() => setShow3D((p) => !p))}
+                >
+                  {show3D ? "Xem ảnh 2D" : "Xem mô hình 3D"}
+                </button>
+              </div>
 
 
 
               {/* thumbnails variants */}
               <div className="d-flex gap-3 mt-3 flex-wrap">
                 {product.variants?.map((v) => {
-                  const variantImage = v.imageUrl ? `${BASE_URL}${v.imageUrl}` : "/images/default.jpg";
+                  const variantImage = v.imageUrl
+                    ? v.imageUrl.startsWith("https")
+                      ? v.imageUrl
+                      : `${API_BASE_URL}${v.imageUrl}`
+                    : "/images/default.jpg";
                   return (
                     <div key={v.id} className="text-center">
                       <img
@@ -427,7 +448,7 @@ export default function ShopDetails() {
                     <p>3D Model</p>{" "}
                     {selectedVariant?.modelUrl ? (
                       <a
-                        href={`${BASE_URL}${selectedVariant?.modelUrl}`}
+                        href={`${API_BASE_URL}${selectedVariant?.modelUrl}`}
                         target="_blank"
                         rel="noreferrer"
                       >
@@ -456,11 +477,13 @@ export default function ShopDetails() {
                       <li key={r.id} className="review vs-comment-item">
                         <div className="vs-post-comment">
                           <img
-                            src={
-                              r.user?.avatarUrl
-                                ? `${BASE_URL}${r.user.avatarUrl.startsWith("/") ? "" : "/"}${r.user.avatarUrl}`
-                                : "/assets/img/default-avatar.png"
-                            }
+ src={
+    r.user?.avatarUrl
+      ? r.user.avatarUrl.startsWith("https")
+        ? r.user.avatarUrl
+        : `${API_BASE_URL}${r.user.avatarUrl.startsWith("/") ? "" : "/"}${r.user.avatarUrl}`
+      : "/assets/img/default-avatar.png"
+  }
                             alt="avatar"
                             style={{
                               width: 120,

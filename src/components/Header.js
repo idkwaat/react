@@ -319,7 +319,7 @@ const Header = () => {
                   href="#"
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate(`/product/${item.productId}`);
+                    navigate(`/shop/${item.productId}/${item.variantId}`);
                   }}
                   className="img"
                 >

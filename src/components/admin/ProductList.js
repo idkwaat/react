@@ -118,7 +118,7 @@ const ProductList = () => {
                                 }}
                               >
                                 <img
-                                  src={`${API_BASE_URL}${v.imageUrl}`}
+                                  src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
                                   alt={v.name}
                                   style={{
                                     width: "100%",
@@ -159,7 +159,7 @@ const ProductList = () => {
                                 }}
                               >
                                 <model-viewer
-                                  src={`${API_BASE_URL}${v.modelUrl}`}
+                                  src={v.modelUrl?.startsWith("https") ? v.modelUrl : `${API_BASE_URL}${v.modelUrl}`}
                                   camera-controls
                                   auto-rotate
                                   style={{
