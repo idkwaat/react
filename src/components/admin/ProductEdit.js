@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
@@ -121,7 +122,10 @@ const ProductEdit = () => {
     formData.append("Name", form.name);
     formData.append("Description", form.description);
     formData.append("CategoryId", form.categoryId);
-    formData.append("DeletedVariantIds", JSON.stringify(deletedVariantIds));
+    deletedVariantIds.forEach((id, i) => {
+  formData.append(`DeletedVariantIds[${i}]`, id);
+});
+
 
     // 🧩 Append dữ liệu biến thể theo đúng index để backend ánh xạ đúng
     variants.forEach((v, i) => {
@@ -149,26 +153,27 @@ const ProductEdit = () => {
       console.log(key, val);
     }
 
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/products/${id}`, {
-        method: "PUT",
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData,
-      });
+ try {
+    const res = await axios.put(`${API_BASE_URL}/api/products/${id}`, formData, {
+      headers: {
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        "Content-Type": "multipart/form-data",
+      },
+      maxBodyLength: Infinity,
+      maxContentLength: Infinity,
+      onUploadProgress: (evt) => {
+        const percent = Math.round((evt.loaded * 100) / evt.total);
+        console.log(`Uploading: ${percent}%`);
+      },
+    });
 
-      if (res.ok) {
-        alert("✅ Cập nhật thành công!");
-        navigate("/admin/products");
-      } else {
-        const errText = await res.text();
-        console.error("❌ Lỗi khi cập nhật:", errText);
-        alert("❌ " + errText);
-      }
-    } catch (err) {
-      console.error("❌ Lỗi fetch:", err);
-      alert("❌ Lỗi kết nối máy chủ!");
-    }
-  };
+    alert("✅ Cập nhật thành công!");
+    navigate("/admin/products");
+  } catch (err) {
+    console.error("❌ Lỗi khi cập nhật:", err.response?.data || err.message);
+    alert("❌ Lỗi khi cập nhật sản phẩm!");
+  }
+};
   return (
     <div className="container mt-4">
       <h2>✏️ Chỉnh sửa sản phẩm</h2>
