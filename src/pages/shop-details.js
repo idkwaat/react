@@ -106,16 +106,16 @@ export default function ShopDetails() {
     };
 
     addToCart(cartItem);
-    
+
 
     // Hiệu ứng +1
     // 🌟 Hiệu ứng +1 bay lên và rung icon giỏ
-const cartIcon = document.querySelector(
-  ".header-cart .cart-icon-btn i, .header-cart i.fa-basket-shopping, .header-cart .vs-icon i"
-);
-const fallbackIcon = document.querySelector(".fa-basket-shopping"); // phòng khi header chưa mount
-const targetIcon = cartIcon || fallbackIcon;
-if (!targetIcon) return;
+    const cartIcon = document.querySelector(
+      ".header-cart .cart-icon-btn i, .header-cart i.fa-basket-shopping, .header-cart .vs-icon i"
+    );
+    const fallbackIcon = document.querySelector(".fa-basket-shopping"); // phòng khi header chưa mount
+    const targetIcon = cartIcon || fallbackIcon;
+    if (!targetIcon) return;
 
 
     const cartRect = targetIcon.getBoundingClientRect();
@@ -186,33 +186,65 @@ if (!targetIcon) return;
         <div className="row gx-60">
           <div className="col-lg-6">
             <div className="product-slide-row wow animate__fadeInUp" data-wow-delay="0.30s">
-              <div className={`product-big-img position-relative ${fadeClass}`} style={{ transition: "opacity 0.25s ease-in-out" }}>
-                {show3D && selectedVariant.modelUrl ? (
-                  <model-viewer
-                    src={`${BASE_URL}${selectedVariant.modelUrl}`}
-                    alt={product.name}
-                    camera-controls
-                    auto-rotate
-                    style={{ width: "100%", height: "400px", borderRadius: "10px", background: "#f8f9fa" }}
-                  />
-                ) : (
-                  <img
-                    ref={imageRef}
-                    src={selectedVariant.imageUrl ? `${BASE_URL}${selectedVariant.imageUrl}` : "/images/default.jpg"}
-                    alt={`${product.name} - ${selectedVariant.name}`}
-                    className="w-100 rounded"
-                    style={{ height: "450px", objectFit: "cover" }}
-                  />
-                )}
+             <div
+  className={`product-big-img position-relative ${fadeClass}`}
+  style={{
+    transition: "opacity 0.25s ease-in-out",
+    background: "#f4f1eb", // màu be nhẹ dịu
+    padding: "10px",       // viền be nhỏ gọn
+    borderRadius: "12px",
+    aspectRatio: "1 / 1",  // ✅ ép khung thành hình vuông
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
+>
+  {show3D && selectedVariant.modelUrl ? (
+    <model-viewer
+      src={`${BASE_URL}${selectedVariant.modelUrl}`}
+      alt={product.name}
+      camera-controls
+      auto-rotate
+      style={{
+        width: "100%",
+        height: "100%",
+        borderRadius: "8px",
+        background: "transparent",
+        objectFit: "contain",
+      }}
+    />
+  ) : (
+    <img
+      ref={imageRef}
+      src={selectedVariant.imageUrl ? `${BASE_URL}${selectedVariant.imageUrl}` : "/images/default.jpg"}
+      alt={`${product.name} - ${selectedVariant.name}`}
+      className="rounded"
+      style={{
+        width: "100%",
+        height: "100%",
+        objectFit: "contain",  // không bị méo/cắt
+        borderRadius: "8px",
+        background: "#f4f1eb",
+      }}
+    />
+  )}
 
-                <button
-                  className="vs-btn position-absolute"
-                  style={{ top: "10px", right: "10px", padding: "6px 12px", fontSize: "14px" }}
-                  onClick={() => triggerFade(() => setShow3D((p) => !p))}
-                >
-                  {show3D ? "Xem ảnh 2D" : "Xem mô hình 3D"}
-                </button>
-              </div>
+  <button
+    className="vs-btn position-absolute"
+    style={{
+      top: "12px",
+      right: "12px",
+      padding: "6px 12px",
+      fontSize: "14px",
+      borderRadius: "6px",
+    }}
+    onClick={() => triggerFade(() => setShow3D((p) => !p))}
+  >
+    {show3D ? "Xem ảnh 2D" : "Xem mô hình 3D"}
+  </button>
+</div>
+
+
 
               {/* thumbnails variants */}
               <div className="d-flex gap-3 mt-3 flex-wrap">
@@ -251,31 +283,31 @@ if (!targetIcon) return;
               <h2 className="product-title">
                 {product.name} <small style={{ fontSize: "0.9rem", color: "#666" }}>({selectedVariant.name})</small>
               </h2>
-{product.averageRating > 0 && (
-  <div className="rating-display" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-    <div className="stars" style={{ display: "flex", gap: "4px" }}>
-      {[1, 2, 3, 4, 5].map((s) => (
-        <FaStar
-          key={s}
-          size={22}
-          color={product.averageRating >= s ? "#0b4b32" : "#dcdcdc"}
-          style={{
-            transition: "0.2s",
-            transform: product.averageRating >= s ? "scale(1.1)" : "scale(1)",
-          }}
-        />
-      ))}
-    </div>
-    <span style={{ color: "#555", fontSize: "0.9rem" }}>
-      {product.averageRating.toFixed(1)} / 5 ({product.reviewCount} đánh giá)
-    </span>
-  </div>
-)}
+              {product.averageRating > 0 && (
+                <div className="rating-display" style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                  <div className="stars" style={{ display: "flex", gap: "4px" }}>
+                    {[1, 2, 3, 4, 5].map((s) => (
+                      <FaStar
+                        key={s}
+                        size={22}
+                        color={product.averageRating >= s ? "#0b4b32" : "#dcdcdc"}
+                        style={{
+                          transition: "0.2s",
+                          transform: product.averageRating >= s ? "scale(1.1)" : "scale(1)",
+                        }}
+                      />
+                    ))}
+                  </div>
+                  <span style={{ color: "#555", fontSize: "0.9rem" }}>
+                    {product.averageRating.toFixed(1)} / 5 ({product.reviewCount} đánh giá)
+                  </span>
+                </div>
+              )}
 
               <span className="product-author">
                 <strong>Category:</strong> <a href="#">{product.categoryName}</a>
               </span>
-              
+
 
               <p className="product-price">{(selectedVariant.price ?? 0).toLocaleString()}₫</p>
               <p className="text">{product.description}</p>
@@ -335,179 +367,179 @@ if (!targetIcon) return;
         </div>
 
         {/* TAB MÔ TẢ / REVIEWS */}
-{/* TAB MÔ TẢ / REVIEWS */}
-<div
-  className="product-description wow animate__fadeInUp wow-animated mt-5"
-  data-wow-delay="0.50s"
-  style={{
-    visibility: "visible",
-    animationDelay: "0.5s",
-    animationName: "fadeInUp",
-  }}
->
-  <div className="product-description__tab">
-    <ul className="nav nav-pills" id="pills-tab" role="tablist">
-      <li className="nav-item" role="presentation">
-        <button
-          className={`nav-link ${activeTab === "description" ? "active" : ""}`}
-          id="pills-description-tab"
-          type="button"
-          role="tab"
-          aria-controls="pills-description"
-          aria-selected={activeTab === "description"}
-          onClick={() => setActiveTab("description")}
+        {/* TAB MÔ TẢ / REVIEWS */}
+        <div
+          className="product-description wow animate__fadeInUp wow-animated mt-5"
+          data-wow-delay="0.50s"
+          style={{
+            visibility: "visible",
+            animationDelay: "0.5s",
+            animationName: "fadeInUp",
+          }}
         >
-          Description
-        </button>
-      </li>
-      <li className="nav-item" role="presentation">
-        <button
-          className={`nav-link ${activeTab === "reviews" ? "active" : ""}`}
-          id="pills-reviews-tab"
-          type="button"
-          role="tab"
-          aria-controls="pills-reviews"
-          aria-selected={activeTab === "reviews"}
-          onClick={() => setActiveTab("reviews")}
-        >
-          Reviews ({reviews.length})
-        </button>
-      </li>
-    </ul>
-  </div>
-
-  <div className="tab-content mt-3" id="pills-tabContent">
-    {/* TAB DESCRIPTION */}
-    <div
-      className={`tab-pane fade ${activeTab === "description" ? "show active" : ""}`}
-      id="pills-description"
-      role="tabpanel"
-      aria-labelledby="pills-description-tab"
-    >
-      <div className="description">
-        <p className="text">{product?.description || "No description available."}</p>
-
-        <div className="product_meta">
-          <span className="sku_wrapper">
-            <p>Category</p> <span>{product?.categoryName}</span>
-          </span>
-          <span className="posted_in">
-            <p>3D Model</p>{" "}
-            {selectedVariant?.modelUrl ? (
-              <a
-                href={`${BASE_URL}${selectedVariant?.modelUrl}`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                View 3D Model
-              </a>
-            ) : (
-              <span>Không có</span>
-            )}
-          </span>
-        </div>
-      </div>
-    </div>
-
-    {/* TAB REVIEWS */}
-    <div
-      className={`tab-pane fade ${activeTab === "reviews" ? "show active" : ""}`}
-      id="pills-reviews"
-      role="tabpanel"
-      aria-labelledby="pills-reviews-tab"
-    >
-      <div className="woocommerce-reviews mt-4">
-        <div className="vs-comments-wrap">
-          <ul className="comment-list">
-            {reviews.length === 0 && <span>Chưa có đánh giá nào.</span>}
-            {reviews.map((r) => (
-              <li key={r.id} className="review vs-comment-item">
-                <div className="vs-post-comment">
-<img
-  src={
-    r.user?.avatarUrl
-      ? `${BASE_URL}${r.user.avatarUrl.startsWith("/") ? "" : "/"}${r.user.avatarUrl}`
-      : "/assets/img/default-avatar.png"
-  }
-  alt="avatar"
-  style={{
-    width: 120,
-    height: 120,
-    borderRadius: "50%",
-    objectFit: "cover",
-    border: "1px solid #ddd",
-  }}
-/>
-
-                  <div className="comment-content" style={{ marginLeft: "15px" }}>
-                    <div className="comment-content__header">
-                      <div className="review-rating" style={{ display: "flex", gap: "4px" }}>
-                        {[1, 2, 3, 4, 5].map((s) => (
-                          <FaStar
-                            key={s}
-                            size={20}
-                            color={s <= r.rating ? "#0b4b32" : "#dcdcdc"}
-                          />
-                        ))}
-                      </div>
-                      <h4 className="name h4">{r.user?.name || "Ẩn danh"}</h4>
-                    </div>
-                    <p className="text">{r.comment}</p>
-                    <span className="commented-on">
-                      {new Date(r.createdAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </div>
+          <div className="product-description__tab">
+            <ul className="nav nav-pills" id="pills-tab" role="tablist">
+              <li className="nav-item" role="presentation">
+                <button
+                  className={`nav-link ${activeTab === "description" ? "active" : ""}`}
+                  id="pills-description-tab"
+                  type="button"
+                  role="tab"
+                  aria-controls="pills-description"
+                  aria-selected={activeTab === "description"}
+                  onClick={() => setActiveTab("description")}
+                >
+                  Description
+                </button>
               </li>
-            ))}
-          </ul>
-        </div>
+              <li className="nav-item" role="presentation">
+                <button
+                  className={`nav-link ${activeTab === "reviews" ? "active" : ""}`}
+                  id="pills-reviews-tab"
+                  type="button"
+                  role="tab"
+                  aria-controls="pills-reviews"
+                  aria-selected={activeTab === "reviews"}
+                  onClick={() => setActiveTab("reviews")}
+                >
+                  Reviews ({reviews.length})
+                </button>
+              </li>
+            </ul>
+          </div>
 
-        {/* FORM ADD REVIEW */}
-        <div className="vs-comment-form review-form mt-4">
-          <div id="respond" className="comment-respond">
-            <div className="form-title">
-              <h3 className="blog-inner-title">Add A Review</h3>
-              <div className="rating-select">
-                <label>Your Rating</label>
-                <div className="stars" style={{ display: "flex", gap: "4px", cursor: "pointer" }}>
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <FaStar
-                      key={s}
-                      size={22}
-                      color={rating >= s ? "#0b4b32" : "#dcdcdc"}
-                      onClick={() => setRating(s)}
-                      style={{
-                        transition: "0.2s",
-                        transform: rating >= s ? "scale(1.2)" : "scale(1)",
-                      }}
-                    />
-                  ))}
+          <div className="tab-content mt-3" id="pills-tabContent">
+            {/* TAB DESCRIPTION */}
+            <div
+              className={`tab-pane fade ${activeTab === "description" ? "show active" : ""}`}
+              id="pills-description"
+              role="tabpanel"
+              aria-labelledby="pills-description-tab"
+            >
+              <div className="description">
+                <p className="text">{product?.description || "No description available."}</p>
+
+                <div className="product_meta">
+                  <span className="sku_wrapper">
+                    <p>Category</p> <span>{product?.categoryName}</span>
+                  </span>
+                  <span className="posted_in">
+                    <p>3D Model</p>{" "}
+                    {selectedVariant?.modelUrl ? (
+                      <a
+                        href={`${BASE_URL}${selectedVariant?.modelUrl}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        View 3D Model
+                      </a>
+                    ) : (
+                      <span>Không có</span>
+                    )}
+                  </span>
                 </div>
               </div>
             </div>
 
-            <div className="row mt-3">
-              <div className="col-12 form-group">
-                <textarea
-                  className="form-control"
-                  placeholder="Review của bạn"
-                  value={comment}
-                  onChange={(e) => setComment(e.target.value)}
-                />
-              </div>
-              <div className="col-12 form-group mb-0">
-                <button className="vs-btn" onClick={submitReview}>
-                  <span className="vs-btn__bar"></span>Submit
-                </button>
+            {/* TAB REVIEWS */}
+            <div
+              className={`tab-pane fade ${activeTab === "reviews" ? "show active" : ""}`}
+              id="pills-reviews"
+              role="tabpanel"
+              aria-labelledby="pills-reviews-tab"
+            >
+              <div className="woocommerce-reviews mt-4">
+                <div className="vs-comments-wrap">
+                  <ul className="comment-list">
+                    {reviews.length === 0 && <span>Chưa có đánh giá nào.</span>}
+                    {reviews.map((r) => (
+                      <li key={r.id} className="review vs-comment-item">
+                        <div className="vs-post-comment">
+                          <img
+                            src={
+                              r.user?.avatarUrl
+                                ? `${BASE_URL}${r.user.avatarUrl.startsWith("/") ? "" : "/"}${r.user.avatarUrl}`
+                                : "/assets/img/default-avatar.png"
+                            }
+                            alt="avatar"
+                            style={{
+                              width: 120,
+                              height: 120,
+                              borderRadius: "50%",
+                              objectFit: "cover",
+                              border: "1px solid #ddd",
+                            }}
+                          />
+
+                          <div className="comment-content" style={{ marginLeft: "15px" }}>
+                            <div className="comment-content__header">
+                              <div className="review-rating" style={{ display: "flex", gap: "4px" }}>
+                                {[1, 2, 3, 4, 5].map((s) => (
+                                  <FaStar
+                                    key={s}
+                                    size={20}
+                                    color={s <= r.rating ? "#0b4b32" : "#dcdcdc"}
+                                  />
+                                ))}
+                              </div>
+                              <h4 className="name h4">{r.user?.name || "Ẩn danh"}</h4>
+                            </div>
+                            <p className="text">{r.comment}</p>
+                            <span className="commented-on">
+                              {new Date(r.createdAt).toLocaleDateString()}
+                            </span>
+                          </div>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* FORM ADD REVIEW */}
+                <div className="vs-comment-form review-form mt-4">
+                  <div id="respond" className="comment-respond">
+                    <div className="form-title">
+                      <h3 className="blog-inner-title">Add A Review</h3>
+                      <div className="rating-select">
+                        <label>Your Rating</label>
+                        <div className="stars" style={{ display: "flex", gap: "4px", cursor: "pointer" }}>
+                          {[1, 2, 3, 4, 5].map((s) => (
+                            <FaStar
+                              key={s}
+                              size={22}
+                              color={rating >= s ? "#0b4b32" : "#dcdcdc"}
+                              onClick={() => setRating(s)}
+                              style={{
+                                transition: "0.2s",
+                                transform: rating >= s ? "scale(1.2)" : "scale(1)",
+                              }}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="row mt-3">
+                      <div className="col-12 form-group">
+                        <textarea
+                          className="form-control"
+                          placeholder="Review của bạn"
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                        />
+                      </div>
+                      <div className="col-12 form-group mb-0">
+                        <button className="vs-btn" onClick={submitReview}>
+                          <span className="vs-btn__bar"></span>Submit
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
-  </div>
-</div>
 
 
       </div>

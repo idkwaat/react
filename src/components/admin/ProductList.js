@@ -7,19 +7,19 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 const ProductList = () => {
   const [products, setProducts] = useState([]);
 
-const fetchProducts = async () => {
-  try {
-    const res = await fetch(`${API_BASE_URL}/api/products`);
-    if (!res.ok) throw new Error("Lỗi khi tải danh sách sản phẩm");
-    const data = await res.json();
+  const fetchProducts = async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/api/products`);
+      if (!res.ok) throw new Error("Lỗi khi tải danh sách sản phẩm");
+      const data = await res.json();
 
-    // ✅ Lấy đúng danh sách sản phẩm
-    setProducts(data.data || []);
-  } catch (err) {
-    console.error(err);
-    alert("⚠️ Không thể tải sản phẩm từ server!");
-  }
-};
+      // ✅ Lấy đúng danh sách sản phẩm
+      setProducts(data.data || []);
+    } catch (err) {
+      console.error(err);
+      alert("⚠️ Không thể tải sản phẩm từ server!");
+    }
+  };
 
 
   useEffect(() => {
@@ -103,67 +103,83 @@ const fetchProducts = async () => {
                             </div>
 
                             {v.imageUrl ? (
-                              <img
-                                src={`${API_BASE_URL}${v.imageUrl}`}
-                                alt={v.name}
-                                style={{
-                                  width: "100%",
-                                  height: "100px",
-                                  objectFit: "cover",
-                                  borderRadius: "6px",
-                                  border: "1px solid #eee",
-                                }}
-                              />
-                            ) : (
                               <div
                                 style={{
                                   width: "100%",
-                                  height: "100px",
-                                  background: "#f0f0f0",
-                                  borderRadius: "6px",
+                                  aspectRatio: "1 / 1", // ✅ khung vuông
+                                  borderRadius: "10px",
+                                  overflow: "hidden",
+                                  background: "#f8f8f8",
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
-                                  color: "#aaa",
-                                  fontSize: "0.9rem",
+                                  border: "1px solid #eee",
+                                  marginBottom: "8px",
                                 }}
                               >
-                                Không ảnh
-                              </div>
-                            )}
-
-                            <div
-                              style={{
-                                fontSize: "0.9rem",
-                                color: "#666",
-                                margin: "6px 0",
-                              }}
-                            >
-                              Giá {v.price?.toLocaleString() || 0} đ
-                            </div>
-
-                            {v.modelUrl ? (
-                              <div
-                                style={{
-                                  width: "100%",
-                                  height: "100px",
-                                  background: "#fff",
-                                  borderRadius: "8px",
-                                  border: "1px solid #ddd",
-                                  overflow: "hidden",
-                                }}
-                              >
-                                <ModelViewer
-                                  modelUrl={`${API_BASE_URL}${v.modelUrl}`}
+                                <img
+                                  src={`${API_BASE_URL}${v.imageUrl}`}
+                                  alt={v.name}
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "cover", // giữ tỉ lệ, lấp khung
+                                  }}
                                 />
                               </div>
                             ) : (
                               <div
                                 style={{
                                   width: "100%",
-                                  height: "100px",
+                                  aspectRatio: "1 / 1",
+                                  borderRadius: "10px",
+                                  background: "#f0f0f0",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  color: "#aaa",
+                                  fontSize: "0.9rem",
+                                  marginBottom: "8px",
+                                }}
+                              >
+                                Không ảnh
+                              </div>
+                            )}
+
+                            {v.modelUrl ? (
+                              <div
+                                style={{
+                                  width: "100%",
+                                  aspectRatio: "1 / 1", // ✅ khung vuông
+                                  borderRadius: "10px",
+                                  background: "#fff",
+                                  border: "1px solid #ddd",
+                                  overflow: "hidden",
+                                  position: "relative",
+                                }}
+                              >
+                                <model-viewer
+                                  src={`${API_BASE_URL}${v.modelUrl}`}
+                                  camera-controls
+                                  auto-rotate
+                                  style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    objectFit: "contain",
+                                    background: "transparent",
+                                    position: "absolute",
+                                    top: 0,
+                                    left: 0,
+                                  }}
+                                />
+                              </div>
+                            ) : (
+                              <div
+                                style={{
+                                  width: "100%",
+                                  aspectRatio: "1 / 1",
+                                  borderRadius: "10px",
                                   background: "#f3f3f3",
-                                  borderRadius: "8px",
                                   display: "flex",
                                   alignItems: "center",
                                   justifyContent: "center",
@@ -174,6 +190,7 @@ const fetchProducts = async () => {
                                 Không có model
                               </div>
                             )}
+
                           </div>
                         ))}
                       </div>
