@@ -108,10 +108,11 @@ const qrUrl = useMemo(() => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-              <p>
-                Quét mã QR để thanh toán{" "}
-                <strong>{amount ? amount.toLocaleString() : "0"}₫</strong>
-              </p>
+             <p>
+  Quét mã QR để thanh toán{" "}
+  <strong>{Number(amount || 0).toLocaleString("vi-VN")}₫</strong>
+</p>
+
 
               <img
                 src={qrUrl}
@@ -159,7 +160,7 @@ const qrUrl = useMemo(() => {
               transition={{ duration: 0.3 }}
               className="text-success"
             >
-              <h4>🎉 Thanh toán thành công!</h4>
+              <h4> Thanh toán thành công!</h4>
               <p>Đơn hàng #{orderId} đã được xác nhận.</p>
               <p className="text-muted small">Chuyển hướng sau 3 giây...</p>
             </motion.div>

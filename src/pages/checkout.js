@@ -67,10 +67,15 @@ export default function CheckOut() {
       });
 
       if (res.ok) {
-        const result = await res.json();
-        setCreatedOrder(result);
-        setShowPopup(true); // ✅ bật popup
-      } else if (res.status === 401) {
+  const result = await res.json();
+  setCreatedOrder({
+    ...result,
+    totalAmount: getCartTotal(), // ✅ gán tổng tiền từ giỏ hàng vào đây
+  });
+  clearCart();
+  setShowPopup(true);
+}
+ else if (res.status === 401) {
         alert("⚠️ Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.");
         localStorage.removeItem("token");
       } else {
