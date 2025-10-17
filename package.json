@@ -5,6 +5,7 @@
   "dependencies": {
     "@fortawesome/fontawesome-free": "^7.1.0",
     "@google/model-viewer": "^4.1.0",
+    "@microsoft/signalr": "^9.0.6",
     "@react-three/drei": "^10.7.6",
     "@react-three/fiber": "^9.3.0",
     "@studio-freight/lenis": "^1.0.42",

@@ -44,6 +44,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ProfilePage from "./pages/profile/ProfilePage.js";
 import OrderList from "./components/admin/OrderList.js";
 import MyOrders from "./pages/myorders.js";
+import OrderSuccess from "./pages/OrderSuccess.js";
 
 function AppContent() {
   const location = useLocation();
@@ -168,6 +169,7 @@ role?.toLowerCase() === "admin" ? (
             <Route path="/register" element={<Register />} />
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/my-orders" element={<MyOrders />} />
+            <Route path="/orders/:id/success" element={<OrderSuccess />} />
 
             <Route path="/unauthorized" element={<h2>Không có quyền truy cập</h2>} />
           </Routes>

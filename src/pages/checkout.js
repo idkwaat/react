@@ -2,12 +2,14 @@ import React, { useState, useContext } from "react";
 import { useCart } from "../context/CartContext";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../context/AuthContext";
+import PaymentPopup from "../components/PaymentPopup"; // ⬅️ thêm dòng này
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function CheckOut() {
   const { cartItems, getCartTotal, clearCart } = useCart();
-  const { token } = useContext(AuthContext); // ✅ lấy token từ context
+  const { token } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -18,6 +20,9 @@ export default function CheckOut() {
     address: "",
     notes: "",
   });
+
+  const [showPopup, setShowPopup] = useState(false);
+  const [createdOrder, setCreatedOrder] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,11 +38,8 @@ export default function CheckOut() {
     }
 
     try {
-      // Giải mã token để kiểm tra user
       const decoded = jwtDecode(token);
-      console.log("Decoded token trong Checkout:", decoded);
 
-      // ✅ Chuẩn bị dữ liệu đơn hàng
       const order = {
         customerName: formData.fullName,
         phone: formData.phone,
@@ -55,7 +57,6 @@ export default function CheckOut() {
         })),
       };
 
-      // ✅ Gửi request tới API
       const res = await fetch(`${API_BASE_URL}/api/orders`, {
         method: "POST",
         headers: {
@@ -65,10 +66,11 @@ export default function CheckOut() {
         body: JSON.stringify(order),
       });
 
-      // ✅ Kiểm tra phản hồi từ server
       if (res.ok) {
-        alert("✅ Đặt hàng thành công! Vui lòng chuyển khoản theo hướng dẫn bên dưới.");
+        const result = await res.json();
+        setCreatedOrder(result);
         clearCart();
+        setShowPopup(true); // ✅ bật popup
       } else if (res.status === 401) {
         alert("⚠️ Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.");
         localStorage.removeItem("token");
@@ -215,6 +217,17 @@ export default function CheckOut() {
             </div>
           </div>
         </form>
+
+                           {/* 🧾 Popup QR thanh toán */}
+        {createdOrder && (
+          <PaymentPopup
+            show={showPopup}
+            onClose={() => setShowPopup(false)}
+            orderId={createdOrder.id}
+            amount={createdOrder.totalAmount}
+          />
+        )}
+
       </div>
     </div>
   );
