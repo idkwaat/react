@@ -109,7 +109,7 @@ const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact2.jpg
             >
               <p>
                 Quét mã QR để thanh toán{" "}
-                <strong>{amount.toLocaleString()}₫</strong>
+                <strong>{amount ? amount.toLocaleString() : "0"}₫</strong>
               </p>
 
               <img

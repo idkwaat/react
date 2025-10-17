@@ -329,6 +329,27 @@ h1, h2, h3, h4, h5, h6 {
   height: auto;
 }
 
+.product-img {
+  width: 100%;
+  height: 280px; /* hoặc 300px tùy layout bạn muốn */
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border-radius: 12px;
+}
+
+.product-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* hoặc 'contain' nếu muốn giữ nguyên tỉ lệ ảnh */
+  transition: transform 0.3s ease;
+}
+
+.product-img:hover img {
+  transform: scale(1.05);
+}
 
 
 
