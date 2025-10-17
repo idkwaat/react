@@ -10,52 +10,44 @@ const PaymentPopup = ({ show, onClose, orderId, amount }) => {
   const navigate = useNavigate();
 
   // 🏦 Thông tin tài khoản nhận tiền
-const BANK_ID = "970422"; // MBBank
-const ACCOUNT_NO = "0961834230";
-const ACCOUNT_NAME = "PHUNG CHI KIEN";
+  const BANK_ID = "970422"; // MBBank
+  const ACCOUNT_NO = "0961834230";
+  const ACCOUNT_NAME = "PHUNG CHI KIEN";
 
-// 🕒 Tạo nội dung chuyển khoản có thêm ngày giờ
-const qrUrl = useMemo(() => {
-  const now = new Date();
-  const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(
-    now.getDate()
-  ).padStart(2, "0")}_${String(now.getHours()).padStart(2, "0")}${String(
-    now.getMinutes()
-  ).padStart(2, "0")}${String(now.getSeconds()).padStart(2, "0")}`;
+  // 🧾 Tạo QR đơn giản: chỉ chứa mã đơn hàng DH_<id>
+  const qrUrl = useMemo(() => {
+    const transferInfo = `DH_${orderId}`;
+    return `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-qr_only.png?amount=${amount}&addInfo=${encodeURIComponent(
+      transferInfo
+    )}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
+  }, [orderId, amount]);
 
-  const transferInfo = `DH_${orderId}_${timestamp}`;
-  return `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-qr_only.png?amount=${amount}&addInfo=${encodeURIComponent(
-    transferInfo
-  )}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
-}, [orderId, amount]);
-
-
-
-  // 🧠 Kết nối SignalR (nhận realtime từ backend Casso webhook)
+  // 🔄 Kết nối SignalR (nhận realtime thanh toán từ backend)
   useEffect(() => {
     if (!orderId || !show) return;
 
-    const conn = new signalR.HubConnectionBuilder()
+    const connection = new signalR.HubConnectionBuilder()
       .withUrl(
         `https://truchoavien2.onrender.com/hubs/payments?orderId=${orderId}`
       )
       .withAutomaticReconnect()
       .build();
 
-    conn
-      .start()
+    connection.start()
       .then(() => console.log("✅ Connected to SignalR for order", orderId))
-      .catch((err) => console.error("SignalR error:", err));
+      .catch((err) => console.error("❌ SignalR connection error:", err));
 
-    conn.on("PaymentSuccess", (data) => {
+    connection.on("PaymentSuccess", (data) => {
       console.log("📩 Payment success:", data);
       setStatus("success");
     });
 
-    return () => conn.stop();
+    return () => {
+      connection.stop();
+    };
   }, [orderId, show]);
 
-  // ⏱ Đếm ngược thời gian thanh toán
+  // ⏱ Đếm ngược thời gian
   useEffect(() => {
     if (!show || status !== "pending") return;
 
@@ -73,7 +65,7 @@ const qrUrl = useMemo(() => {
     return () => clearInterval(timer);
   }, [show, status]);
 
-  // 🎯 Thanh toán xong → tự redirect sau 3 giây
+  // ✅ Khi thanh toán thành công → tự đóng sau 3s
   useEffect(() => {
     if (status === "success") {
       const timer = setTimeout(() => {
@@ -108,11 +100,10 @@ const qrUrl = useMemo(() => {
               exit={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
             >
-             <p>
-  Quét mã QR để thanh toán{" "}
-  <strong>{Number(amount || 0).toLocaleString("vi-VN")}₫</strong>
-</p>
-
+              <p>
+                Quét mã QR để thanh toán{" "}
+                <strong>{Number(amount || 0).toLocaleString("vi-VN")}₫</strong>
+              </p>
 
               <img
                 src={qrUrl}
@@ -160,7 +151,7 @@ const qrUrl = useMemo(() => {
               transition={{ duration: 0.3 }}
               className="text-success"
             >
-              <h4> Thanh toán thành công!</h4>
+              <h4>🎉 Thanh toán thành công!</h4>
               <p>Đơn hàng #{orderId} đã được xác nhận.</p>
               <p className="text-muted small">Chuyển hướng sau 3 giây...</p>
             </motion.div>
