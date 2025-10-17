@@ -198,11 +198,10 @@ export default function CheckOut() {
                 </table>
 
                 <div className="mt-3">
-                  <p>Vui lòng chuyển khoản đến:</p>
+                  <p>Vui lòng thanh toán bằng cách quét mã QR sau khi ấn nút xác nhận:</p>
                   <ul>
-                    <li><strong>Ngân hàng:</strong> Vietcombank</li>
-                    <li><strong>Chủ tài khoản:</strong> Nguyễn Văn A</li>
-                    <li><strong>Số tài khoản:</strong> 0123456789</li>
+                    <li><strong>Ngân hàng:</strong> MBBank</li>
+                    <li><strong>Chủ tài khoản:</strong> PHUNG CHI KIEN</li>
                     <li>
                       <strong>Nội dung:</strong>{" "}
                       {`Thanh toan don hang #${Date.now()}`}
