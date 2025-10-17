@@ -72,7 +72,6 @@ export default function CheckOut() {
     ...result,
     totalAmount: getCartTotal(), // ✅ gán tổng tiền từ giỏ hàng vào đây
   });
-  clearCart();
   setShowPopup(true);
 }
  else if (res.status === 401) {
