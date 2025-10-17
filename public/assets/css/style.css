@@ -294,7 +294,7 @@ p:empty {
 
 p {
   margin: 0 0 18px 0;
-  color: var(--body-color);
+  color: #5a201d;
   line-height: 1.63;
   /* Small devices */
 }

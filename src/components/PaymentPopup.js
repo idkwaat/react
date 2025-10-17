@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Modal, Button, Spinner, ProgressBar } from "react-bootstrap";
 import * as signalR from "@microsoft/signalr";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,19 +15,20 @@ const ACCOUNT_NO = "0961834230";
 const ACCOUNT_NAME = "PHUNG CHI KIEN";
 
 // 🕒 Tạo nội dung chuyển khoản có thêm ngày giờ
-const now = new Date();
-const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(
-  now.getDate()
-).padStart(2, "0")}_${String(now.getHours()).padStart(2, "0")}${String(
-  now.getMinutes()
-).padStart(2, "0")}${String(now.getSeconds()).padStart(2, "0")}`;
+const qrUrl = useMemo(() => {
+  const now = new Date();
+  const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, "0")}${String(
+    now.getDate()
+  ).padStart(2, "0")}_${String(now.getHours()).padStart(2, "0")}${String(
+    now.getMinutes()
+  ).padStart(2, "0")}${String(now.getSeconds()).padStart(2, "0")}`;
 
-const transferInfo = `DH_${orderId}_${timestamp}`;
+  const transferInfo = `DH_${orderId}_${timestamp}`;
+  return `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-qr_only.png?amount=${amount}&addInfo=${encodeURIComponent(
+    transferInfo
+  )}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
+}, [orderId, amount]);
 
-// 🔗 Tạo link QR tự động theo chuẩn VietQR
-const qrUrl = `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-compact2.jpg?amount=${amount}&addInfo=${encodeURIComponent(
-  transferInfo
-)}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
 
 
   // 🧠 Kết nối SignalR (nhận realtime từ backend Casso webhook)
