@@ -11,6 +11,7 @@ export default function OrderSuccess() {
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
+      style={{marginBottom:"100px"}}
     >
       <motion.div
         initial={{ scale: 0 }}
