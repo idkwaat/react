@@ -69,7 +69,6 @@ export default function CheckOut() {
       if (res.ok) {
         const result = await res.json();
         setCreatedOrder(result);
-        clearCart();
         setShowPopup(true); // ✅ bật popup
       } else if (res.status === 401) {
         alert("⚠️ Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.");
@@ -224,6 +223,7 @@ export default function CheckOut() {
             onClose={() => setShowPopup(false)}
             orderId={createdOrder.id}
             amount={createdOrder.totalAmount}
+             onPaid={() => clearCart()}
           />
         )}
 
