@@ -124,12 +124,13 @@ export default function CheckOut() {
   value={formData[f.name]}
   onChange={handleChange}
   required={f.label.includes("*")}
-  style={{ color: formData[f.name] ? "white" : "#333", transition: "0.2s" }}
-  onFocus={(e) => (e.target.style.color = "white")}
+  style={{ color: formData[f.name] ? "white" : "#777", transition: "0.2s" }}
+  onFocus={(e) => e.target.style.setProperty("color", "white", "important")}
   onBlur={(e) => {
-    if (!e.target.value) e.target.style.color = "#333"; // Nếu trống, chuyển lại xám
+    if (!e.target.value) e.target.style.setProperty("color", "#777", "important");
   }}
 />
+
 
                 </div>
               ))}
@@ -139,12 +140,13 @@ export default function CheckOut() {
   name="notes"
   value={formData.notes}
   onChange={handleChange}
-  style={{ color: formData.notes ? "white" : "#333", transition: "0.2s" }}
-  onFocus={(e) => (e.target.style.color = "white")}
+  style={{ color: formData.notes ? "white" : "#777", transition: "0.2s" }}
+  onFocus={(e) => e.target.style.setProperty("color", "white", "important")}
   onBlur={(e) => {
-    if (!e.target.value) e.target.style.color = "#333";
+    if (!e.target.value) e.target.style.setProperty("color", "#777", "important");
   }}
 ></textarea>
+
 
               </div>
             </div>
