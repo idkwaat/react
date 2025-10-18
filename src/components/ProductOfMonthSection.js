@@ -72,30 +72,32 @@ useEffect(() => {
                                     data-wow-delay={`${0.3 + i * 0.1}s`}
                                 >
 <div
-  className="product-img relative overflow-hidden"
+  className="product-img relative overflow-hidden group"
   style={{ height: "260px", borderRadius: "8px" }}
 >
-  {/* Nền blur tự động */}
+  {/* ✅ Nền blur auto theo ảnh */}
   <div
-    className="absolute inset-0 blur-xl scale-110"
+    className="absolute inset-0 blur-xl"
     style={{
       backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
+      transform: "scale(1.15)",
       filter: "blur(18px)",
-      transform: "scale(1.1)",
     }}
   ></div>
 
-  {/* Ảnh chính giữ nguyên tỉ lệ không méo */}
-  <img
-    src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
-    alt={v.name}
-    className="relative z-10 max-h-full max-w-full mx-auto object-contain transition duration-300 hover:scale-105"
-  />
+  {/* ✅ Flex để ảnh luôn căn giữa */}
+  <div className="relative z-10 w-full h-full flex items-center justify-center">
+    <img
+      src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
+      alt={v.name}
+      className="max-h-[90%] max-w-[90%] object-contain transition duration-300 group-hover:scale-105"
+    />
+  </div>
 
-  {/* Nút cart giữ nguyên và nổi lên trên */}
-  <div className="product-btns relative z-20">
+  {/* ✅ Nút Cart nổi top-right */}
+  <div className="product-btns absolute top-3 right-3 z-20">
     <button
       className="icon-btn cart"
       onClick={(e) => {
@@ -107,6 +109,7 @@ useEffect(() => {
     </button>
   </div>
 </div>
+
 
 
                                     <div className="product-content">

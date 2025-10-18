@@ -218,35 +218,34 @@ export default function Shop() {
                       className="product-style1 wow animate__fadeInUp"
                       data-wow-delay={`${0.3 + index * 0.05}s`}
                     >
-                     <div
-  className="product-img relative overflow-hidden group"
-  role="button"
-  onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
-  style={{ height: "560px", borderRadius: "8px" }}
+                   <div
+  className="product-img relative overflow-hidden group flex items-center justify-center rounded-[8px]"
+  style={{ aspectRatio: "1 / 1.2" }} // ✅ Tỉ lệ khung ổn định, auto scale theo grid
 >
-
+  {/* ✅ Blur nền */}
   <div
     className="absolute inset-0"
     style={{
       backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      filter: "blur(22px) brightness(0.8)",
-      transform: "scale(1.2)",
+      filter: "blur(25px) brightness(0.7)",
+      transform: "scale(1.3)"
     }}
   ></div>
 
-  {/* ✅ Overlay nhẹ giúp ảnh nổi hơn */}
+  {/* ✅ Overlay nhẹ để ảnh chính nổi bật */}
   <div className="absolute inset-0 bg-black/10"></div>
 
-  {/* ✅ Ảnh chính giữ nguyên tỉ lệ, scale nhẹ khi hover */}
+  {/* ✅ Ảnh chính — giới hạn chiều cao, không bao giờ bị che */}
   <img
     src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
     alt={v.name}
-    className="relative z-10 max-h-full max-w-full mx-auto object-contain transition-transform duration-500 group-hover:scale-105"
+    className="relative z-10 object-contain max-h-[75%] max-w-[85%] transition-transform duration-500 group-hover:scale-105"
   />
 
-  {/* ✅ Nút giỏ hàng nổi phía trên */}
+
+  {/* ✅ Nút giỏ hàng giữ nguyên */}
   <div className="product-btns relative z-20">
     <a
       href="#"
@@ -267,6 +266,7 @@ export default function Shop() {
     {v.discount && <li>-{v.discount}%</li>}
   </ul>
 </div>
+
 
 
 
@@ -465,38 +465,38 @@ export default function Shop() {
                         {topProducts.length > 0 ? (
                           topProducts.map((p) => (
                             <div key={p.id} className="recent-post d-flex mb-3">
-                              <div className="media-img">
-                                <a onClick={() => navigate(`/shop/${p.id}`)} role="button">
-                                 <div
+<div
   className="media-img position-relative overflow-hidden"
   style={{ width: "70px", height: "70px", borderRadius: "6px" }}
 >
-  {/* Nền blur */}
+  {/* ✅ Nền blur tự động từ ảnh */}
   <div
-    className="absolute inset-0 blur-xl scale-110"
+    className="absolute inset-0 blur-xl"
     style={{
-      backgroundImage: `url(${(p.imageUrl && p.imageUrl.startsWith("https")) ? p.imageUrl : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`})`,
+      backgroundImage: `url(${(p.imageUrl && p.imageUrl.startsWith("https"))
+        ? p.imageUrl
+        : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
+      transform: "scale(1.15)",
       filter: "blur(14px)",
-      transform: "scale(1.1)",
     }}
   ></div>
 
-  {/* Ảnh chính giữ đúng tỉ lệ */}
-  <img
-    src={
-      (p.imageUrl && p.imageUrl.startsWith("https"))
-        ? p.imageUrl
-        : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`
-    }
-    alt={p.name}
-    className="relative z-10 w-full h-full object-contain p-1"
-  />
+  {/* ✅ Flex để ảnh luôn căn giữa, không méo */}
+  <div className="relative z-10 w-full h-full flex items-center justify-center">
+    <img
+      src={
+        (p.imageUrl && p.imageUrl.startsWith("https"))
+          ? p.imageUrl
+          : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`
+      }
+      alt={p.name}
+      className="max-h-[90%] max-w-[90%] object-contain"
+    />
+  </div>
 </div>
 
-                                </a>
-                              </div>
                               <div className="media-body ms-3">
                                 <h4 className="post-title mb-1">
                                   <a

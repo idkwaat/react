@@ -110,32 +110,36 @@ export default function TrendingProducts() {
         data-wow-delay={`${0.3 + i * 0.1}s`}
       >
 <div
-  className="product-img relative overflow-hidden rounded-md"
+  className="product-img relative overflow-hidden rounded-md group flex items-center justify-center"
   role="button"
   onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
-  style={{ height: "260px" }}
+  style={{ height: "400px" }}
 >
-  {/* Background blur auto theo ảnh */}
+  {/* ✅ Background blur auto theo ảnh */}
   <div
-    className="absolute inset-0 blur-xl scale-110"
+    className="absolute inset-0"
     style={{
       backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      filter: "blur(16px)",
-      transform: "scale(1.1)",
+      filter: "blur(20px) brightness(0.75)",
+      transform: "scale(1.25)",
     }}
   ></div>
 
-  {/* Ảnh gốc giữ nguyên tỉ lệ */}
-  <img
-    src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
-    alt={v.name}
-    className="relative z-10 max-h-full max-w-full mx-auto object-contain transition duration-300 group-hover:scale-105"
-  />
+  {/* ✅ Overlay tối nhẹ để ảnh chính nổi hơn */}
+  <div className="absolute inset-0 bg-black/10"></div>
 
-  {/* Nút cart + badge Hot / Discount giữ nguyên */}
-  <div className="product-btns relative z-20">
+  {/* ✅ Ảnh gốc căn giữa, không méo, có hover scale */}
+  <img
+  src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
+  alt={v.name}
+  className="relative z-10 max-h-[90%] max-w-[90%] mx-auto object-contain transition duration-300 group-hover:scale-105"
+/>
+
+
+  {/* ✅ Nút cart + badge Hot / Discount giữ nguyên */}
+  <div className="product-btns absolute top-3 right-3 z-20">
     <a
       href="#"
       className="icon-btn cart"
@@ -149,11 +153,12 @@ export default function TrendingProducts() {
     </a>
   </div>
 
-  <ul className="post-box relative z-20">
+  <ul className="post-box absolute top-3 left-3 z-20">
     {v.isHot && <li>Hot</li>}
     {v.discount > 0 && <li>-{v.discount}%</li>}
   </ul>
 </div>
+
 
 
         <div className="product-content">
