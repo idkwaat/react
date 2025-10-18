@@ -77,23 +77,38 @@ useEffect(() => {
 >
   {/* ✅ Nền blur auto theo ảnh */}
   <div
-    className="absolute inset-0 blur-xl"
+    className="absolute inset-0"
     style={{
       backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      transform: "scale(1.15)",
-      filter: "blur(18px)",
+      transform: "scale(1.2)",
+      filter: "blur(20px) brightness(0.75)",
     }}
   ></div>
 
   {/* ✅ Flex để ảnh luôn căn giữa */}
   <div className="relative z-10 w-full h-full flex items-center justify-center">
-    <img
-      src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
-      alt={v.name}
-      className="max-h-[90%] max-w-[90%] object-contain transition duration-300 group-hover:scale-105"
-    />
+   <img
+  src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
+  alt={v.name}
+  className="transition duration-300 group-hover:scale-105"
+  style={{
+    maxHeight: "95%",
+    maxWidth: "95%",
+    objectFit: "contain",
+  }}
+  onLoad={(e) => {
+    const img = e.currentTarget;
+    // Nếu ảnh cao hoặc tỉ lệ chuẩn -> hiển thị cover full
+    if (img.naturalHeight > img.naturalWidth * 0.9) {
+      img.style.objectFit = "cover";
+      img.style.width = "100%";
+      img.style.height = "100%";
+    }
+  }}
+/>
+
   </div>
 
   {/* ✅ Nút Cart nổi top-right */}
@@ -109,6 +124,7 @@ useEffect(() => {
     </button>
   </div>
 </div>
+
 
 
 
