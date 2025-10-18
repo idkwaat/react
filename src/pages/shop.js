@@ -260,7 +260,7 @@ export default function Shop() {
       position: "relative",
       zIndex: 10,
       maxHeight: "100%",
-      maxWidth: "100%",
+      maxWidth: "110%",
       objectFit: "contain",
       transition: "transform 0.4s ease",
     }}
@@ -491,36 +491,54 @@ export default function Shop() {
                           topProducts.map((p) => (
                             <div key={p.id} className="recent-post d-flex mb-3">
 <div
-  className="media-img position-relative overflow-hidden"
-  style={{ width: "70px", height: "70px", borderRadius: "6px" }}
+  className="media-img"
+  style={{
+    position: "relative",
+    overflow: "hidden",
+    width: "70px",
+    height: "70px",
+    borderRadius: "6px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  }}
 >
-  {/* ✅ Nền blur tự động từ ảnh */}
+  {/* ✅ Blur nền sâu + tối nhẹ */}
   <div
-    className="absolute inset-0 blur-xl"
     style={{
-      backgroundImage: `url(${(p.imageUrl && p.imageUrl.startsWith("https"))
-        ? p.imageUrl
-        : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`})`,
+      position: "absolute",
+      inset: 0,
+      backgroundImage: `url(${
+        p.imageUrl && p.imageUrl.startsWith("https")
+          ? p.imageUrl
+          : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`
+      })`,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      transform: "scale(1.15)",
-      filter: "blur(14px)",
+      filter: "blur(18px) brightness(0.7)",
+      transform: "scale(1.4)",
     }}
   ></div>
 
-  {/* ✅ Flex để ảnh luôn căn giữa, không méo */}
-  <div className="relative z-10 w-full h-full flex items-center justify-center">
-    <img
-      src={
-        (p.imageUrl && p.imageUrl.startsWith("https"))
-          ? p.imageUrl
-          : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`
-      }
-      alt={p.name}
-      className="max-h-[90%] max-w-[90%] object-contain"
-    />
-  </div>
+  {/* ✅ Ảnh chính luôn căn giữa, không méo */}
+  <img
+    src={
+      p.imageUrl && p.imageUrl.startsWith("https")
+        ? p.imageUrl
+        : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`
+    }
+    alt={p.name}
+    style={{
+      position: "relative",
+      zIndex: 10,
+      maxHeight: "85%",
+      maxWidth: "85%",
+      objectFit: "contain",
+      transition: "transform 0.3s ease",
+    }}
+  />
 </div>
+
 
                               <div className="media-body ms-3">
                                 <h4 className="post-title mb-1">

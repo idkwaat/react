@@ -72,31 +72,59 @@ useEffect(() => {
                                     data-wow-delay={`${0.3 + i * 0.1}s`}
                                 >
 <div
-  className="product-img relative overflow-hidden group"
-  style={{ height: "400px", borderRadius: "8px" }}
+  className="product-img"
+  style={{
+    position: "relative",
+    overflow: "hidden",
+    borderRadius: "8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    aspectRatio: "1 / 1.2", // ✅ Giữ layout đẹp, không cần height fix cứng
+    cursor: "pointer",
+  }}
+  onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
 >
-  {/* ✅ Nền blur auto theo ảnh */}
+  {/* ✅ Blur nền sâu hơn + brightness để highlight ảnh chính */}
   <div
-    className="absolute inset-0 blur-xl"
     style={{
+      position: "absolute",
+      inset: 0,
       backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      transform: "scale(1.15)",
-      filter: "blur(18px)",
+      filter: "blur(26px) brightness(0.55)",
+      transform: "scale(1.4)",
+      transition: "transform 0.4s ease",
+    }}
+    className="group-hover:scale-[1.5]"
+  ></div>
+
+  {/* ✅ Overlay che nhẹ để ảnh chính nổi */}
+  <div
+    style={{
+      position: "absolute",
+      inset: 0,
+      backgroundColor: "rgba(0,0,0,0.08)",
     }}
   ></div>
 
-  {/* ✅ Flex để ảnh luôn căn giữa */}
-  <div className="relative z-10 w-full h-full flex items-center justify-center">
-    <img
-      src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
-      alt={v.name}
-      className="max-h-[90%] max-w-[90%] object-contain transition duration-300 group-hover:scale-105"
-    />
-  </div>
+  {/* ✅ Ảnh chính full tỉ lệ, hover scale mượt */}
+  <img
+    src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
+    alt={v.name}
+    style={{
+      position: "relative",
+      zIndex: 10,
+      maxHeight: "92%",
+      maxWidth: "95%",
+      objectFit: "contain",
+      transition: "transform 0.35s ease",
+    }}
+    className="group-hover:scale-105"
+  />
 
-  {/* ✅ Nút Cart nổi top-right */}
+  {/* ✅ Nút Cart top-right */}
   <div className="product-btns absolute top-3 right-3 z-20">
     <button
       className="icon-btn cart"
@@ -109,6 +137,7 @@ useEffect(() => {
     </button>
   </div>
 </div>
+
 
 
 

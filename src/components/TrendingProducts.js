@@ -110,35 +110,60 @@ export default function TrendingProducts() {
         data-wow-delay={`${0.3 + i * 0.1}s`}
       >
 <div
-  className="product-img relative overflow-hidden rounded-md group flex items-center justify-center"
+  className="product-img"
   role="button"
   onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
-  style={{ height: "260px" }}
+  style={{
+    position: "relative",
+    overflow: "hidden",
+    borderRadius: "8px",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    aspectRatio: "1 / 1.2",
+    cursor: "pointer",
+  }}
 >
-  {/* ✅ Background blur auto theo ảnh */}
+  {/* ✅ Blur nền */}
   <div
-    className="absolute inset-0"
     style={{
+      position: "absolute",
+      inset: 0,
       backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      filter: "blur(20px) brightness(0.75)",
-      transform: "scale(1.25)",
+      filter: "blur(26px) brightness(0.55)",
+      transform: "scale(1.4)",
+      transition: "transform 0.4s ease",
+    }}
+    className="group-hover:scale-[1.5]"
+  ></div>
+
+  {/* ✅ Overlay làm dịu nền */}
+  <div
+    style={{
+      position: "absolute",
+      inset: 0,
+      backgroundColor: "rgba(0,0,0,0.08)",
     }}
   ></div>
 
-  {/* ✅ Overlay tối nhẹ để ảnh chính nổi hơn */}
-  <div className="absolute inset-0 bg-black/10"></div>
-
-  {/* ✅ Ảnh gốc căn giữa, không méo, có hover scale */}
+  {/* ✅ Ảnh chính scale mượt */}
   <img
-  src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
-  alt={v.name}
-  className="relative z-10 max-h-[90%] max-w-[90%] mx-auto object-contain transition duration-300 group-hover:scale-105"
-/>
+    src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
+    alt={v.name}
+    style={{
+      position: "relative",
+      zIndex: 10,
+      maxHeight: "100%",
+      maxWidth: "110%",
+      objectFit: "contain",
+      transition: "transform 0.35s ease",
+    }}
+    className="group-hover:scale-105"
+  />
 
-
-  {/* ✅ Nút cart + badge Hot / Discount giữ nguyên */}
+  {/* ✅ Button cart giữ đúng hiệu ứng hover */}
   <div className="product-btns absolute top-3 right-3 z-20">
     <a
       href="#"
@@ -153,6 +178,7 @@ export default function TrendingProducts() {
     </a>
   </div>
 
+  {/* ✅ Badge Hot / Discount */}
   <ul className="post-box absolute top-3 left-3 z-20">
     {v.isHot && <li>Hot</li>}
     {v.discount > 0 && <li>-{v.discount}%</li>}
