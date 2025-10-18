@@ -118,34 +118,44 @@ export default function CheckOut() {
               ].map((f) => (
                 <div className="form-group" key={f.name}>
                   <label>{f.label}</label>
-                 <input
+<input
   type={f.type || "text"}
   name={f.name}
   value={formData[f.name]}
   onChange={handleChange}
   required={f.label.includes("*")}
-  style={{ color: formData[f.name] ? "white" : "#777", transition: "0.2s" }}
-  onFocus={(e) => e.target.style.setProperty("color", "white", "important")}
+  style={{ color: formData[f.name] ? "white" : "#333", transition: "0.2s" }}
+  onFocus={(e) => {
+    e.target.style.setProperty("color", "white", "important");
+  }}
   onBlur={(e) => {
-    if (!e.target.value) e.target.style.setProperty("color", "#777", "important");
+    if (!e.target.value) {
+      e.target.style.setProperty("color", "#333", "important");
+    }
   }}
 />
+
 
 
                 </div>
               ))}
               <div className="form-group">
                 <label>Ghi chú</label>
-                <textarea
+<textarea
   name="notes"
   value={formData.notes}
   onChange={handleChange}
-  style={{ color: formData.notes ? "white" : "#777", transition: "0.2s" }}
-  onFocus={(e) => e.target.style.setProperty("color", "white", "important")}
+  style={{ color: formData.notes ? "white" : "#333", transition: "0.2s" }}
+  onFocus={(e) => {
+    e.target.style.setProperty("color", "white", "important");
+  }}
   onBlur={(e) => {
-    if (!e.target.value) e.target.style.setProperty("color", "#777", "important");
+    if (!e.target.value) {
+      e.target.style.setProperty("color", "#333", "important");
+    }
   }}
 ></textarea>
+
 
 
               </div>

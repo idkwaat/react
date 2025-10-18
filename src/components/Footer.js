@@ -36,13 +36,21 @@ export default function Footer() {
                         type="email"
                         placeholder="Nhập email của bạn"
                       />
-                      <button
-                        type="submit"
-                        className="vs-btn"
-                        style={{ backgroundColor: "#9e3a2f", color: "#FAF5F0" }}
-                      >
-                        <i className="fa-solid fa-paper-plane"></i> Đăng ký
-                      </button>
+                    <button
+  type="submit"
+  className="vs-btn"
+  style={{
+    backgroundColor: "#9e3a2f",
+    color: "#FAF5F0",
+    width: "100%",        // ✅ full chiều ngang
+    display: "block",      // ✅ tránh khoảng trắng inline
+    padding: "14px 26px",  // ✅ co lại cho cân
+    border: "none",        // ✅ tránh border mặc định
+  }}
+>
+  <i className="fa-solid fa-paper-plane"></i> Đăng ký
+</button>
+
                     </div>
                   </div>
                 </div>
