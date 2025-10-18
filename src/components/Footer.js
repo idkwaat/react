@@ -104,7 +104,7 @@ export default function Footer() {
                     </a>
                   </li>
                   <li>
-                    <a href="/products" style={{ color: "#3C1E17" }}>
+                    <a href="/shop" style={{ color: "#3C1E17" }}>
                       <i
                         className="fa-solid fa-leaf me-2"
                         style={{ color: "#A54034" }}
