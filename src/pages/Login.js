@@ -77,7 +77,7 @@ const LoginClient = () => {
             <input
               type="text"
               className="form-control form-control-lg rounded-3"
-              placeholder="Nhập email hoặc số điện thoại..."
+              placeholder="Nhập username..."
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               required
