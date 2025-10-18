@@ -142,36 +142,59 @@ const Header = () => {
 </ul>
 
 
-  {user && (
-    <div className="border-top mt-4 pt-4">
-      <p className="text-light small mb-3 opacity-75">
-        Xin chào, <strong>{user.username}</strong>
-      </p>
-      <Link
-        to="/profile"
-        onClick={() => setMobileMenuOpen(false)}
-        className="mobile-menu-link"
-      >
-        <i className="fa-solid fa-user me-2"></i> Hồ sơ cá nhân
-      </Link>
-      <Link
-        to="/my-orders"
-        onClick={() => setMobileMenuOpen(false)}
-        className="mobile-menu-link"
-      >
-        <i className="fa-solid fa-box me-2"></i> Đơn hàng của tôi
-      </Link>
-      <button
-        onClick={() => {
-          handleLogout();
-          setMobileMenuOpen(false);
-        }}
-        className="btn btn-outline-light w-100 mt-3 fw-semibold"
-      >
-        <i className="fa-solid fa-right-from-bracket me-2"></i> Đăng xuất
-      </button>
-    </div>
-  )}
+ {user ? (
+  // 🔒 Khi đã đăng nhập
+  <div className="border-top mt-4 pt-4">
+    <p className="text-light small mb-3 opacity-75">
+      Xin chào, <strong>{user.username}</strong>
+    </p>
+    <Link
+      to="/profile"
+      onClick={() => setMobileMenuOpen(false)}
+      className="mobile-menu-link"
+    >
+      <i className="fa-solid fa-user me-2"></i> Hồ sơ cá nhân
+    </Link>
+    <Link
+      to="/my-orders"
+      onClick={() => setMobileMenuOpen(false)}
+      className="mobile-menu-link"
+    >
+      <i className="fa-solid fa-box me-2"></i> Đơn hàng của tôi
+    </Link>
+    <button
+      onClick={() => {
+        handleLogout();
+        setMobileMenuOpen(false);
+      }}
+      className="btn btn-outline-light w-100 mt-3 fw-semibold"
+    >
+      <i className="fa-solid fa-right-from-bracket me-2"></i> Đăng xuất
+    </button>
+  </div>
+) : (
+  // 🔓 Khi chưa đăng nhập
+  <div className="border-top mt-4 pt-4 text-center">
+    <p className="text-light small mb-3 opacity-75">
+      Bạn chưa đăng nhập
+    </p>
+    <Link
+      to="/login"
+      onClick={() => setMobileMenuOpen(false)}
+      className="btn btn-light w-100 fw-semibold"
+    >
+      <i className="fa-solid fa-right-to-bracket me-2"></i> Đăng nhập
+    </Link>
+    <Link
+      to="/register"
+      onClick={() => setMobileMenuOpen(false)}
+      className="btn btn-outline-light w-100 mt-2 fw-semibold"
+    >
+      <i className="fa-solid fa-user-plus me-2"></i> Đăng ký
+    </Link>
+  </div>
+)}
+
 </div>
 
     </div>
