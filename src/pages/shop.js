@@ -218,29 +218,32 @@ export default function Shop() {
                       className="product-style1 wow animate__fadeInUp"
                       data-wow-delay={`${0.3 + index * 0.05}s`}
                     >
-                      <div
-  className="product-img relative overflow-hidden"
+                     <div
+  className="product-img relative overflow-hidden group"
   role="button"
   onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
   style={{ height: "260px", borderRadius: "8px" }}
 >
-  {/* ✅ Nền blur auto lấy theo ảnh */}
+
   <div
-    className="absolute inset-0 blur-xl scale-110"
+    className="absolute inset-0"
     style={{
       backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      filter: "blur(18px)",
-      transform: "scale(1.1)",
+      filter: "blur(22px) brightness(0.8)",
+      transform: "scale(1.2)",
     }}
   ></div>
 
-  {/* ✅ Ảnh chính giữ nguyên tỉ lệ, không méo */}
+  {/* ✅ Overlay nhẹ giúp ảnh nổi hơn */}
+  <div className="absolute inset-0 bg-black/10"></div>
+
+  {/* ✅ Ảnh chính giữ nguyên tỉ lệ, scale nhẹ khi hover */}
   <img
     src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
     alt={v.name}
-    className="relative z-10 max-h-full max-w-full mx-auto object-contain transition duration-300 hover:scale-105"
+    className="relative z-10 max-h-full max-w-full mx-auto object-contain transition-transform duration-500 group-hover:scale-105"
   />
 
   {/* ✅ Nút giỏ hàng nổi phía trên */}
@@ -264,6 +267,7 @@ export default function Shop() {
     {v.discount && <li>-{v.discount}%</li>}
   </ul>
 </div>
+
 
 
                       <div className="product-content">
