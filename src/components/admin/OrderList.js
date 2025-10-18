@@ -149,11 +149,20 @@ const OrderList = () => {
                   <tr key={item.productId}>
                     <td className="border p-2">
                       {item.imageUrl ? (
-                        <img src={
+                        <img
+  src={
     item.imageUrl && item.imageUrl.startsWith("http")
       ? item.imageUrl
-      : `${API_BASE_URL}${item.imageUrl || item.variants?.[0]?.imageUrl || ""}`
-  } className="w-12 h-12 object-cover rounded" />
+      : item.imageUrl
+      ? `${API_BASE_URL}${item.imageUrl}`
+      : item.variants?.[0]?.imageUrl
+      ? `${API_BASE_URL}${item.variants[0].imageUrl}`
+      : "/images/no-image.png" // ✅ ảnh mặc định nếu không có
+  }
+  alt={item.productName}
+  className="w-12 h-12 object-cover rounded"
+/>
+
                       ) : (
                         <span className="text-gray-400 italic">Không có ảnh</span>
                       )}
