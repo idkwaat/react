@@ -73,7 +73,7 @@ const LoginClient = () => {
 
         <form onSubmit={handleLogin}>
           <div className="mb-3">
-            <label className="form-label fw-semibold">Email / Số điện thoại</label>
+            <label className="form-label fw-semibold">Username</label>
             <input
               type="text"
               className="form-control form-control-lg rounded-3"
