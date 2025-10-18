@@ -222,7 +222,7 @@ export default function Shop() {
   className="product-img relative overflow-hidden group"
   role="button"
   onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
-  style={{ height: "260px", borderRadius: "8px" }}
+  style={{ height: "560px", borderRadius: "8px" }}
 >
 
   <div
