@@ -114,11 +114,11 @@ export default function CheckOut() {
       <style>{`
         /* class focus riêng để không đụng hàng */
         .ch-focus {
-          color: #ffffff !important;
-          caret-color: #ffffff !important;
-          /* Chrome autofill text */
-          -webkit-text-fill-color: #ffffff !important;
-        }
+  color: #ffffff !important;
+  caret-color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
         /* placeholder khi đang focus (nếu muốn mờ hơn) */
         .ch-focus::placeholder {
           color: rgba(255,255,255,0.7) !important;
@@ -158,7 +158,8 @@ export default function CheckOut() {
                     onBlur={handleBlur}
                     placeholder={f.placeholder || ""}
                     // bạn có thể để style tạm cho màu trước khi focus
-                    style={{ color: formData[f.name] ? "#fff" : "#333", transition: "color 0.15s" }}
+                    style={{ color: "#333", transition: "color 0.15s" }}
+
                   />
 
 
@@ -174,7 +175,8 @@ export default function CheckOut() {
                   onFocus={handleFocus}
                   onBlur={handleBlur}
                   placeholder="Ghi chú thêm..."
-                  style={{ color: formData.notes ? "#fff" : "#333", transition: "color 0.15s" }}
+                  style={{ color: "#333", transition: "color 0.15s" }}
+
                 ></textarea>
 
 

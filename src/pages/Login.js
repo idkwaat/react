@@ -44,7 +44,7 @@ const LoginClient = () => {
       }
     } catch (err) {
       console.error(err);
-      alert("Lỗi kết nối đến server");
+      alert("Sai tài khoản hoặc mật khẩu");
     }
   };
 
