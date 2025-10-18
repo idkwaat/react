@@ -4,7 +4,8 @@ import * as signalR from "@microsoft/signalr";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-const PaymentPopup = ({ show, onClose, orderId, amount, qrUrl, accountName, accountNo }) => {
+const PaymentPopup = ({ show, onClose, orderId, amount, qrUrl, customerName, accountName, accountNo }) => {
+
   const [status, setStatus] = useState("pending");
   const [timeLeft, setTimeLeft] = useState(600);
   const navigate = useNavigate();
@@ -111,9 +112,13 @@ const PaymentPopup = ({ show, onClose, orderId, amount, qrUrl, accountName, acco
                 <strong>{accountName}</strong> - TPBank
               </p>
               <p className="text-muted small mb-2">STK: {accountNo}</p>
-              <p className="text-muted">
-                Nội dung chuyển khoản: <strong>DH{orderId}_{accountName.toUpperCase().replace(/\s+/g, '')}</strong>
-              </p>
+<p className="text-muted">
+  Nội dung chuyển khoản:{" "}
+  <strong>
+    DH{orderId}_{customerName?.toUpperCase().replace(/\s+/g, "")}
+  </strong>
+</p>
+
 
 
               <div className="mt-3">

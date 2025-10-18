@@ -209,10 +209,6 @@ setShowPopup(true);
                   <ul>
                     <li><strong>Ngân hàng:</strong> MBBank</li>
                     <li><strong>Chủ tài khoản:</strong> PHUNG CHI KIEN</li>
-                    <li>
-                      <strong>Nội dung:</strong>{" "}
-                      {`Thanh toan don hang #${Date.now()}`}
-                    </li>
                   </ul>
                 </div>
 
@@ -232,6 +228,7 @@ setShowPopup(true);
             orderId={createdOrder.id}
             amount={createdOrder.totalAmount}
             qrUrl={createdOrder.qrUrl} // ✅ lấy từ backend
+            customerName={formData.fullName}   // ✅ truyền tên khách hàng
             accountName="PHUNG TO UYEN"
             accountNo="26266363999"
             onPaid={() => clearCart()}
