@@ -207,8 +207,9 @@ setShowPopup(true);
                 <div className="mt-3">
                   <p>Vui lòng thanh toán bằng cách quét mã QR sau khi ấn nút xác nhận:</p>
                   <ul>
-                    <li><strong>Ngân hàng:</strong> MBBank</li>
-                    <li><strong>Chủ tài khoản:</strong> PHUNG CHI KIEN</li>
+                    <li><strong>Ngân hàng:</strong> TPBank</li>
+                    <li><strong>Chủ tài khoản:</strong> PHUNG TO UYEN</li>
+            
                   </ul>
                 </div>
 
