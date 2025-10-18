@@ -30,55 +30,46 @@ export default function CheckOut() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handlePlaceOrder = async (e) => {
-    e.preventDefault();
+const handlePlaceOrder = async (e) => {
+  e.preventDefault();
 
-    if (!token) {
-      alert("❌ Bạn cần đăng nhập để đặt hàng!");
-      return;
-    }
+  if (!token) {
+    alert("❌ Bạn cần đăng nhập để đặt hàng!");
+    return;
+  }
 
-    try {
-      const decoded = jwtDecode(token);
+  try {
+    const decoded = jwtDecode(token);
 
-      const order = {
-        customerName: formData.fullName,
-        phone: formData.phone,
-        email: formData.email,
-        address: `${formData.address}, ${formData.ward}, ${formData.district}, ${formData.province}`,
-        notes: formData.notes,
-        paymentMethod: "Chuyển khoản ngân hàng",
-        totalAmount: getCartTotal(),
-        items: cartItems.map((item) => ({
-          productId: item.productId,
-          variantId: item.variantId || null,
-          variantName: item.variantName || null,
-          quantity: item.quantity,
-          price: item.price,
-        })),
-      };
+    // 🔹 1️⃣ Tạo đơn hàng trong database
+    const order = {
+      customerName: formData.fullName,
+      phone: formData.phone,
+      email: formData.email,
+      address: `${formData.address}, ${formData.ward}, ${formData.district}, ${formData.province}`,
+      notes: formData.notes,
+      paymentMethod: "Chuyển khoản ngân hàng",
+      totalAmount: getCartTotal(),
+      items: cartItems.map((item) => ({
+        productId: item.productId,
+        variantId: item.variantId || null,
+        variantName: item.variantName || null,
+        quantity: item.quantity,
+        price: item.price,
+      })),
+    };
 
-      const res = await fetch(`${API_BASE_URL}/api/orders`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(order),
-      });
+    const res = await fetch(`${API_BASE_URL}/api/orders`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(order),
+    });
 
-      if (res.ok) {
-        const result = await res.json();
-setCreatedOrder({
-  id: result.id,
-  totalAmount: result.totalAmount || getCartTotal(),
-  qrUrl: result.qrUrl, // ✅ backend trả về QR VietQR
-   transferContent: `DH${result.id}_${formData.fullName.toUpperCase().replace(/\s+/g, '')}`,
-});
-
-setShowPopup(true);
-      }
-      else if (res.status === 401) {
+    if (!res.ok) {
+      if (res.status === 401) {
         alert("⚠️ Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.");
         localStorage.removeItem("token");
       } else {
@@ -86,11 +77,44 @@ setShowPopup(true);
         console.error("Server error:", errorText);
         alert("❌ Lỗi khi tạo đơn hàng!");
       }
-    } catch (err) {
-      console.error("Lỗi khi gửi đơn hàng:", err);
-      alert("❌ Không thể kết nối tới server hoặc token lỗi!");
+      return;
     }
-  };
+
+    const result = await res.json();
+
+    // 🔹 2️⃣ Sau khi tạo đơn hàng xong, gọi API tạo QR SePay
+    const payRes = await fetch(`${API_BASE_URL}/api/payments/create`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        amount: result.totalAmount || getCartTotal(),
+        description: `DH${result.id}`,
+        customerName: formData.fullName, // ✅ Gửi tên khách hàng sang backend
+      }),
+    });
+
+    if (!payRes.ok) {
+      console.error("Lỗi khi tạo QR:", await payRes.text());
+      alert("❌ Không thể tạo mã QR thanh toán!");
+      return;
+    }
+
+    const payData = await payRes.json();
+
+    // 🔹 3️⃣ Hiển thị popup thanh toán
+    setCreatedOrder({
+      id: result.id,
+      totalAmount: result.totalAmount || getCartTotal(),
+      qrUrl: payData.qrCode, // ✅ link QR nhận từ backend
+    });
+
+    setShowPopup(true);
+  } catch (err) {
+    console.error("Lỗi khi gửi đơn hàng:", err);
+    alert("❌ Không thể kết nối tới server hoặc token lỗi!");
+  }
+};
+
   return (
     <div className="vs-checkout-wrapper space-top space-extra-bottom">
       <div className="container">
