@@ -220,28 +220,29 @@ export default function Shop() {
                     >
                    <div
   className="product-img relative overflow-hidden group flex items-center justify-center rounded-[8px]"
-  style={{ aspectRatio: "1 / 1.2" }} // ✅ Tỉ lệ khung ổn định, auto scale theo grid
+  style={{ aspectRatio: "1 / 1.2" }}
 >
-  {/* ✅ Blur nền */}
+  {/* ✅ Nền blur rõ ràng, lệch nhẹ để tạo chiều sâu */}
   <div
     className="absolute inset-0"
     style={{
       backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
-      filter: "blur(25px) brightness(0.7)",
-      transform: "scale(1.3)"
+      filter: "blur(28px) brightness(0.55)", // ✅ Blur mạnh + tối nhẹ để ảnh chính nổi bật
+      transform: "scale(1.4)", // ✅ Scale mạnh hơn để không lộ viền
     }}
   ></div>
 
-  {/* ✅ Overlay nhẹ để ảnh chính nổi bật */}
-  <div className="absolute inset-0 bg-black/10"></div>
+  {/* ✅ Overlay siêu mờ để ảnh chính không bị dính blur nền */}
+  <div className="absolute inset-0 bg-black/5"></div>
 
-  {/* ✅ Ảnh chính — giới hạn chiều cao, không bao giờ bị che */}
+  {/* ✅ Ảnh chính căn giữa tuyệt đối theo chiều dọc + ngang */}
   <img
     src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
     alt={v.name}
-    className="relative z-10 object-contain max-h-[75%] max-w-[85%] transition-transform duration-500 group-hover:scale-105"
+    className="relative z-10 object-contain max-h-[78%] max-w-[85%] m-auto block transition-transform duration-500 group-hover:scale-105"
+    style={{ display: "block" }} // ✅ Đảm bảo ảnh không bị tính inline-block khiến lệch
   />
 
 
