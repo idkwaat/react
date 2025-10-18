@@ -73,7 +73,7 @@ useEffect(() => {
                                 >
 <div
   className="product-img relative overflow-hidden group"
-  style={{ height: "260px", borderRadius: "8px" }}
+  style={{ height: "400px", borderRadius: "8px" }}
 >
   {/* ✅ Nền blur auto theo ảnh */}
   <div

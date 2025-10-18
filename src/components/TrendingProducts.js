@@ -113,7 +113,7 @@ export default function TrendingProducts() {
   className="product-img relative overflow-hidden rounded-md group flex items-center justify-center"
   role="button"
   onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
-  style={{ height: "400px" }}
+  style={{ height: "260px" }}
 >
   {/* ✅ Background blur auto theo ảnh */}
   <div
