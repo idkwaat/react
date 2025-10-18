@@ -3,12 +3,15 @@ import { useCart } from "../context/CartContext";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../context/AuthContext";
 import PaymentPopup from "../components/PaymentPopup"; // popup hiển thị QR
+import { useNavigate } from "react-router-dom";
+
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function CheckOut() {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { token } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -34,6 +37,7 @@ export default function CheckOut() {
 
     if (!token) {
       alert("❌ Bạn cần đăng nhập để đặt hàng!");
+      navigate("/login");
       return;
     }
 
@@ -114,22 +118,34 @@ export default function CheckOut() {
               ].map((f) => (
                 <div className="form-group" key={f.name}>
                   <label>{f.label}</label>
-                  <input
-                    type={f.type || "text"}
-                    name={f.name}
-                    value={formData[f.name]}
-                    onChange={handleChange}
-                    required={f.label.includes("*")}
-                  />
+                 <input
+  type={f.type || "text"}
+  name={f.name}
+  value={formData[f.name]}
+  onChange={handleChange}
+  required={f.label.includes("*")}
+  style={{ color: formData[f.name] ? "white" : "#333", transition: "0.2s" }}
+  onFocus={(e) => (e.target.style.color = "white")}
+  onBlur={(e) => {
+    if (!e.target.value) e.target.style.color = "#333"; // Nếu trống, chuyển lại xám
+  }}
+/>
+
                 </div>
               ))}
               <div className="form-group">
                 <label>Ghi chú</label>
                 <textarea
-                  name="notes"
-                  value={formData.notes}
-                  onChange={handleChange}
-                ></textarea>
+  name="notes"
+  value={formData.notes}
+  onChange={handleChange}
+  style={{ color: formData.notes ? "white" : "#333", transition: "0.2s" }}
+  onFocus={(e) => (e.target.style.color = "white")}
+  onBlur={(e) => {
+    if (!e.target.value) e.target.style.color = "#333";
+  }}
+></textarea>
+
               </div>
             </div>
 
