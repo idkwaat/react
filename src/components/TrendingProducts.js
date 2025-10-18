@@ -115,40 +115,30 @@ export default function TrendingProducts() {
   onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
   style={{ height: "260px" }}
 >
-  {/* ✅ Background Blur — phóng to nhẹ, cover đúng tỉ lệ */}
+  {/* ✅ Background blur auto theo ảnh */}
   <div
-    className="absolute inset-0 scale-125 blur-xl opacity-70"
+    className="absolute inset-0"
     style={{
       backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
+      filter: "blur(20px) brightness(0.75)",
+      transform: "scale(1.25)",
     }}
   ></div>
 
-  {/* ✅ Ảnh chính: nếu ảnh nhỏ thì dùng contain, ảnh lớn thì cover full */}
+  {/* ✅ Overlay tối nhẹ để ảnh chính nổi hơn */}
+  <div className="absolute inset-0 bg-black/10"></div>
+
+  {/* ✅ Ảnh gốc căn giữa, không méo, có hover scale */}
   <img
   src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
   alt={v.name}
-  className="relative z-10 transition duration-300 group-hover:scale-105"
-  style={{
-    maxHeight: "100%",
-    maxWidth: "100%",
-    objectFit: "cover",
-  }}
-  onLoad={(e) => {
-    // e.currentTarget là HTMLImageElement an toàn hơn e.target
-    const img = e.currentTarget;
-    // Nếu ảnh "nằm ngang" (rộng hơn so với cao) - chuyển về contain
-    if (img.naturalHeight < img.naturalWidth * 0.8) {
-      img.style.objectFit = "contain";
-      img.style.maxHeight = "85%";
-      img.style.maxWidth = "85%";
-    }
-  }}
+  className="relative z-10 max-h-[90%] max-w-[90%] mx-auto object-contain transition duration-300 group-hover:scale-105"
 />
 
 
-  {/* ✅ Nút cart */}
+  {/* ✅ Nút cart + badge Hot / Discount giữ nguyên */}
   <div className="product-btns absolute top-3 right-3 z-20">
     <a
       href="#"
@@ -163,13 +153,11 @@ export default function TrendingProducts() {
     </a>
   </div>
 
-  {/* ✅ Badge Hot / Discount */}
   <ul className="post-box absolute top-3 left-3 z-20">
     {v.isHot && <li>Hot</li>}
     {v.discount > 0 && <li>-{v.discount}%</li>}
   </ul>
 </div>
-
 
 
 

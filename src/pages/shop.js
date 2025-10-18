@@ -218,43 +218,59 @@ export default function Shop() {
                       className="product-style1 wow animate__fadeInUp"
                       data-wow-delay={`${0.3 + index * 0.05}s`}
                     >
-                  <div
-  className="product-img relative overflow-hidden flex items-center justify-center aspect-[4/5] rounded-lg cursor-pointer group"
-  role="button"
-  onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
+                   <div
+  className="product-img"
+  style={{
+    position: "relative",
+    overflow: "hidden",
+    borderRadius: "8px",
+    display: "flex",
+    alignItems: "center", // ✅ Căn giữa dọc
+    justifyContent: "center", // ✅ Căn giữa ngang
+    aspectRatio: "1 / 1.2", // ✅ Giữ khung đẹp, không méo
+  }}
 >
-  {/* Nền blur mờ tự động */}
+  {/* ✅ Blur nền */}
   <div
-    className="absolute inset-0 scale-125 blur-xl opacity-70 bg-center bg-cover"
     style={{
-      backgroundImage: `url(${
-        v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`
-      })`,
+      position: "absolute",
+      inset: 0,
+      backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      filter: "blur(28px) brightness(0.55)",
+      transform: "scale(1.4)",
     }}
   ></div>
 
-  {/* Ảnh chính auto detect size => contain hoặc cover */}
+  {/* ✅ Overlay mờ nhẹ */}
+  <div
+    style={{
+      position: "absolute",
+      inset: 0,
+      backgroundColor: "rgba(0,0,0,0.05)",
+    }}
+  ></div>
+
+  {/* ✅ Ảnh chính */}
   <img
     src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
     alt={v.name}
-    className="relative z-10 transition-all duration-500"
     style={{
+      position: "relative",
+      zIndex: 10,
       maxHeight: "100%",
       maxWidth: "100%",
-      objectFit: "cover",
+      objectFit: "contain",
+      transition: "transform 0.4s ease",
     }}
-    onLoad={(e) => {
-      const img = e.target;
-      if (img.naturalHeight < img.naturalWidth * 0.8) {
-        // Nếu ảnh thấp -> dùng contain để không bị cắt
-        img.style.objectFit = "contain";
-        img.style.maxHeight = "85%";
-        img.style.maxWidth = "85%";
-      }
-    }}
+    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
   />
 
-  {/* Giữ nguyên nút giỏ hàng + badge */}
+
+
+  {/* ✅ Nút giỏ hàng giữ nguyên */}
   <div className="product-btns relative z-20">
     <a
       href="#"
@@ -268,12 +284,13 @@ export default function Shop() {
       <i className="fa-solid fa-basket-shopping"></i>
     </a>
   </div>
+
+  {/* ✅ Badge Hot / Discount */}
   <ul className="post-box relative z-20">
     {v.isHot && <li>Hot</li>}
     {v.discount && <li>-{v.discount}%</li>}
   </ul>
 </div>
-
 
 
 
@@ -474,18 +491,16 @@ export default function Shop() {
                           topProducts.map((p) => (
                             <div key={p.id} className="recent-post d-flex mb-3">
 <div
-  className="media-img relative overflow-hidden"
+  className="media-img position-relative overflow-hidden"
   style={{ width: "70px", height: "70px", borderRadius: "6px" }}
 >
   {/* ✅ Nền blur tự động từ ảnh */}
   <div
     className="absolute inset-0 blur-xl"
     style={{
-      backgroundImage: `url(${
-        (p.imageUrl && p.imageUrl.startsWith("https"))
-          ? p.imageUrl
-          : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`
-      })`,
+      backgroundImage: `url(${(p.imageUrl && p.imageUrl.startsWith("https"))
+        ? p.imageUrl
+        : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`})`,
       backgroundSize: "cover",
       backgroundPosition: "center",
       transform: "scale(1.15)",
@@ -502,17 +517,10 @@ export default function Shop() {
           : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`
       }
       alt={p.name}
-      className="max-h-[90%] max-w-[90%] object-contain transition duration-300"
-      onError={(e) => {
-        // ✅ Nếu ảnh lỗi, fallback dùng variant
-        e.currentTarget.src = p.variants?.[0]?.imageUrl?.startsWith("https")
-          ? p.variants[0].imageUrl
-          : `${API_BASE_URL}${p.variants?.[0]?.imageUrl || ""}`;
-      }}
+      className="max-h-[90%] max-w-[90%] object-contain"
     />
   </div>
 </div>
-
 
                               <div className="media-body ms-3">
                                 <h4 className="post-title mb-1">
