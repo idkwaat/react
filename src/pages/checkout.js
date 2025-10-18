@@ -73,7 +73,7 @@ setCreatedOrder({
   id: result.id,
   totalAmount: result.totalAmount || getCartTotal(),
   qrUrl: result.qrUrl, // ✅ backend trả về QR VietQR
-  transferContent: result.transferContent, // ✅ nội dung chuyển khoản (VD: DH_52)
+   transferContent: `DH${result.id}_${formData.fullName.toUpperCase().replace(/\s+/g, '')}`,
 });
 
 setShowPopup(true);

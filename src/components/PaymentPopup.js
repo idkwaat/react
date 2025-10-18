@@ -27,9 +27,9 @@ const PaymentPopup = ({ show, onClose, orderId, amount, qrUrl, accountName, acco
       .catch((err) => console.error("❌ SignalR connection error:", err));
 
     connection.on("PaymentStatus", (data) => {
-  console.log("📩 Payment status:", data);
-  if (data.status === "success") setStatus("success");
-});
+      console.log("📩 Payment status:", data);
+      if (data.status === "success") setStatus("success");
+    });
 
 
     return () => {
@@ -112,8 +112,9 @@ const PaymentPopup = ({ show, onClose, orderId, amount, qrUrl, accountName, acco
               </p>
               <p className="text-muted small mb-2">STK: {accountNo}</p>
               <p className="text-muted">
-                Nội dung chuyển khoản: <strong>DH_{orderId}</strong>
+                Nội dung chuyển khoản: <strong>DH{orderId}_{accountName.toUpperCase().replace(/\s+/g, '')}</strong>
               </p>
+
 
               <div className="mt-3">
                 <ProgressBar
