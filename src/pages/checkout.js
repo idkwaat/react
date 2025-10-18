@@ -13,6 +13,16 @@ export default function CheckOut() {
   const { token } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  // helper toggle class (dùng khi map inputs)
+  const handleFocus = (e) => {
+    e.currentTarget.classList.add("ch-focus");
+  };
+  const handleBlur = (e) => {
+    if (!e.currentTarget.value) {
+      e.currentTarget.classList.remove("ch-focus");
+    }
+  };
+
   const [formData, setFormData] = useState({
     fullName: "",
     phone: "",
@@ -101,6 +111,24 @@ export default function CheckOut() {
 
   return (
     <div className="vs-checkout-wrapper space-top space-extra-bottom">
+      <style>{`
+        /* class focus riêng để không đụng hàng */
+        .ch-focus {
+          color: #ffffff !important;
+          caret-color: #ffffff !important;
+          /* Chrome autofill text */
+          -webkit-text-fill-color: #ffffff !important;
+        }
+        /* placeholder khi đang focus (nếu muốn mờ hơn) */
+        .ch-focus::placeholder {
+          color: rgba(255,255,255,0.7) !important;
+        }
+        /* Đảm bảo textarea cũng theo */
+        textarea.ch-focus {
+          color: #ffffff !important;
+          -webkit-text-fill-color: #ffffff !important;
+        }
+      `}</style>
       <div className="container">
         <form className="checkout-form mt-40" onSubmit={handlePlaceOrder}>
           <div className="row">
@@ -119,21 +147,19 @@ export default function CheckOut() {
                 <div className="form-group" key={f.name}>
                   <label>{f.label}</label>
 <input
-  type={f.type || "text"}
-  name={f.name}
-  value={formData[f.name]}
-  onChange={handleChange}
-  required={f.label.includes("*")}
-  style={{ color: formData[f.name] ? "white" : "#333", transition: "0.2s" }}
-  onFocus={(e) => {
-    e.target.style.setProperty("color", "white", "important");
-  }}
-  onBlur={(e) => {
-    if (!e.target.value) {
-      e.target.style.setProperty("color", "#333", "important");
-    }
-  }}
-/>
+                    type={f.type || "text"}
+                    name={f.name}
+                    value={formData[f.name]}
+                    onChange={handleChange}
+                    required={f.label.includes("*")}
+                    // class mặc định (ko thay đổi toàn cục)
+                    // thêm onFocus/onBlur để bật class ch-focus
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
+                    placeholder={f.placeholder || ""}
+                    // bạn có thể để style tạm cho màu trước khi focus
+                    style={{ color: formData[f.name] ? "#fff" : "#333", transition: "color 0.15s" }}
+                  />
 
 
 
@@ -142,19 +168,14 @@ export default function CheckOut() {
               <div className="form-group">
                 <label>Ghi chú</label>
 <textarea
-  name="notes"
-  value={formData.notes}
-  onChange={handleChange}
-  style={{ color: formData.notes ? "white" : "#333", transition: "0.2s" }}
-  onFocus={(e) => {
-    e.target.style.setProperty("color", "white", "important");
-  }}
-  onBlur={(e) => {
-    if (!e.target.value) {
-      e.target.style.setProperty("color", "#333", "important");
-    }
-  }}
-></textarea>
+                  name="notes"
+                  value={formData.notes}
+                  onChange={handleChange}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                  placeholder="Ghi chú thêm..."
+                  style={{ color: formData.notes ? "#fff" : "#333", transition: "color 0.15s" }}
+                ></textarea>
 
 
 
