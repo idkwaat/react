@@ -9,6 +9,7 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 export default function CheckOut() {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { token } = useContext(AuthContext);
+  
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -67,14 +68,17 @@ export default function CheckOut() {
       });
 
       if (res.ok) {
-  const result = await res.json();
-  setCreatedOrder({
-    ...result,
-    totalAmount: getCartTotal(), // ✅ gán tổng tiền từ giỏ hàng vào đây
-  });
-  setShowPopup(true);
-}
- else if (res.status === 401) {
+        const result = await res.json();
+setCreatedOrder({
+  id: result.id,
+  totalAmount: result.totalAmount || getCartTotal(),
+  qrUrl: result.qrUrl, // ✅ backend trả về QR VietQR
+  transferContent: result.transferContent, // ✅ nội dung chuyển khoản (VD: DH_52)
+});
+
+setShowPopup(true);
+      }
+      else if (res.status === 401) {
         alert("⚠️ Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.");
         localStorage.removeItem("token");
       } else {
@@ -220,15 +224,19 @@ export default function CheckOut() {
           </div>
         </form>
 
-                           {/* 🧾 Popup QR thanh toán */}
+        {/* 🧾 Popup QR thanh toán */}
         {createdOrder && (
           <PaymentPopup
             show={showPopup}
             onClose={() => setShowPopup(false)}
             orderId={createdOrder.id}
             amount={createdOrder.totalAmount}
-             onPaid={() => clearCart()}
+            qrUrl={createdOrder.qrUrl} // ✅ lấy từ backend
+            accountName="PHUNG TO UYEN"
+            accountNo="26266363999"
+            onPaid={() => clearCart()}
           />
+
         )}
 
       </div>

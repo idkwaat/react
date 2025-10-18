@@ -4,23 +4,12 @@ import * as signalR from "@microsoft/signalr";
 import { motion, AnimatePresence } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 
-const PaymentPopup = ({ show, onClose, orderId, amount }) => {
+const PaymentPopup = ({ show, onClose, orderId, amount, qrUrl, accountName, accountNo }) => {
   const [status, setStatus] = useState("pending");
-  const [timeLeft, setTimeLeft] = useState(600); // 10 phút
+  const [timeLeft, setTimeLeft] = useState(600);
   const navigate = useNavigate();
 
-  // 🏦 Thông tin tài khoản nhận tiền
-  const BANK_ID = "970422"; // MBBank
-  const ACCOUNT_NO = "0961834230";
-  const ACCOUNT_NAME = "PHUNG CHI KIEN";
 
-  // 🧾 Tạo QR đơn giản: chỉ chứa mã đơn hàng DH_<id>
-  const qrUrl = useMemo(() => {
-    const transferInfo = `DH_${orderId}`;
-    return `https://img.vietqr.io/image/${BANK_ID}-${ACCOUNT_NO}-qr_only.png?amount=${amount}&addInfo=${encodeURIComponent(
-      transferInfo
-    )}&accountName=${encodeURIComponent(ACCOUNT_NAME)}`;
-  }, [orderId, amount]);
 
   // 🔄 Kết nối SignalR (nhận realtime thanh toán từ backend)
   useEffect(() => {
@@ -37,10 +26,11 @@ const PaymentPopup = ({ show, onClose, orderId, amount }) => {
       .then(() => console.log("✅ Connected to SignalR for order", orderId))
       .catch((err) => console.error("❌ SignalR connection error:", err));
 
-    connection.on("PaymentSuccess", (data) => {
-      console.log("📩 Payment success:", data);
-      setStatus("success");
-    });
+    connection.on("PaymentStatus", (data) => {
+  console.log("📩 Payment status:", data);
+  if (data.status === "success") setStatus("success");
+});
+
 
     return () => {
       connection.stop();
@@ -118,9 +108,9 @@ const PaymentPopup = ({ show, onClose, orderId, amount }) => {
               />
 
               <p className="mt-2 mb-0">
-                <strong>{ACCOUNT_NAME}</strong> – MBBank
+                <strong>{accountName}</strong> - TPBank
               </p>
-              <p className="text-muted small mb-2">STK: {ACCOUNT_NO}</p>
+              <p className="text-muted small mb-2">STK: {accountNo}</p>
               <p className="text-muted">
                 Nội dung chuyển khoản: <strong>DH_{orderId}</strong>
               </p>
