@@ -16,37 +16,45 @@ const LoginClient = () => {
   }, [user, navigate]);
 
   const handleLogin = async (e) => {
-    e.preventDefault();
-    try {
-      const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-  username: identifier,
-  password,
-}),
+  e.preventDefault();
+  try {
+    const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        username: identifier,
+        password,
+      }),
+    });
 
-      });
+    const data = await res.json();
+    console.log("API Login Response:", data); // ✅ Debug để thấy token
 
-      const data = await res.json();
+    if (res.ok) {
+      const token = data.token || data.accessToken || data.jwt;
 
-      if (res.ok) {
-        const token = data.token || data.accessToken || data.jwt;
-        if (!token) {
-          alert("❌ Không nhận được token từ server!");
-          return;
-        }
-        login(token);
-        alert("✅ Đăng nhập thành công!");
-        navigate("/");
-      } else {
-        alert(data.message || "Đăng nhập thất bại!");
+      if (!token) {
+        alert("❌ Không nhận được token từ server!");
+        return;
       }
-    } catch (err) {
-      console.error(err);
-      alert("Sai tài khoản hoặc mật khẩu");
+
+      // ✅ Lưu token vào localStorage để checkout / auth pages đọc được
+      localStorage.setItem("token", token);
+
+      // ✅ Đồng bộ với AuthContext (nếu context chỉ quản lý state tạm)
+      login(token);
+
+      alert("✅ Đăng nhập thành công!");
+      navigate("/");
+    } else {
+      alert(data.message || "❌ Đăng nhập thất bại!");
     }
-  };
+  } catch (err) {
+    console.error("Login Error:", err);
+    alert("❌ Sai tài khoản hoặc mật khẩu");
+  }
+};
+
 
   return (
     <div
