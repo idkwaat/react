@@ -109,34 +109,52 @@ export default function TrendingProducts() {
         className="product-style1 wow animate__fadeInUp"
         data-wow-delay={`${0.3 + i * 0.1}s`}
       >
-        <div
-          className="product-img"
-          role="button"
-          onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
-        >
-          <img
-            src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
-            alt={v.name}
-          />
-          <div className="product-btns">
-            <a
-              href="#"
-              className="icon-btn cart"
-              onClick={(e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                handleAddToCart(v);
-              }}
-            >
-              <i className="fa-solid fa-basket-shopping"></i>
-            </a>
-          </div>
+<div
+  className="product-img relative overflow-hidden rounded-md"
+  role="button"
+  onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
+  style={{ height: "260px" }}
+>
+  {/* Background blur auto theo ảnh */}
+  <div
+    className="absolute inset-0 blur-xl scale-110"
+    style={{
+      backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      filter: "blur(16px)",
+      transform: "scale(1.1)",
+    }}
+  ></div>
 
-          <ul className="post-box">
-            {v.isHot && <li>Hot</li>}
-            {v.discount > 0 && <li>-{v.discount}%</li>}
-          </ul>
-        </div>
+  {/* Ảnh gốc giữ nguyên tỉ lệ */}
+  <img
+    src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
+    alt={v.name}
+    className="relative z-10 max-h-full max-w-full mx-auto object-contain transition duration-300 group-hover:scale-105"
+  />
+
+  {/* Nút cart + badge Hot / Discount giữ nguyên */}
+  <div className="product-btns relative z-20">
+    <a
+      href="#"
+      className="icon-btn cart"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleAddToCart(v);
+      }}
+    >
+      <i className="fa-solid fa-basket-shopping"></i>
+    </a>
+  </div>
+
+  <ul className="post-box relative z-20">
+    {v.isHot && <li>Hot</li>}
+    {v.discount > 0 && <li>-{v.discount}%</li>}
+  </ul>
+</div>
+
 
         <div className="product-content">
 <div

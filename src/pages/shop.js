@@ -128,29 +128,29 @@ export default function Shop() {
     setPage(1);
   };
   // 🛒 Hàm thêm giỏ có hiệu ứng animation
-const handleAddToCart = (v) => {
-  const cartItem = {
-    productId: v.productId,
-    variantId: v.id,
-    productName: v.name,
-    price: v.price ?? 0,
-    quantity: 1,
-    imageUrl: v.imageUrl,
-  };
+  const handleAddToCart = (v) => {
+    const cartItem = {
+      productId: v.productId,
+      variantId: v.id,
+      productName: v.name,
+      price: v.price ?? 0,
+      quantity: 1,
+      imageUrl: v.imageUrl,
+    };
 
-  addToCart(cartItem);
+    addToCart(cartItem);
 
     // 🌟 Hiệu ứng +1 bay lên và rung icon giỏ
-   // 🌟 Hiệu ứng +1 bay lên và rung icon giỏ
-// 🌟 Hiệu ứng +1 bay lên và rung icon giỏ
-const targetIcon =
-  document.querySelector(".header-cart i.fa-basket-shopping") ||
-  document.querySelector(".fa-solid.fa-basket-shopping"); // fallback cho Shop
+    // 🌟 Hiệu ứng +1 bay lên và rung icon giỏ
+    // 🌟 Hiệu ứng +1 bay lên và rung icon giỏ
+    const targetIcon =
+      document.querySelector(".header-cart i.fa-basket-shopping") ||
+      document.querySelector(".fa-solid.fa-basket-shopping"); // fallback cho Shop
 
-if (!targetIcon) {
-  console.warn("Không tìm thấy icon giỏ hàng trên trang này");
-  return;
-}
+    if (!targetIcon) {
+      console.warn("Không tìm thấy icon giỏ hàng trên trang này");
+      return;
+    }
 
 
     const rect = targetIcon.getBoundingClientRect();
@@ -171,7 +171,7 @@ if (!targetIcon) {
   };
   return (
 
-    <section className="books-layout1 space-top space-extra-bottom relative" style={{ minHeight: "210vh" }}>
+    <section className="books-layout1 space-top space-extra-bottom relative" style={{ minHeight: "260vh" }}>
       <div className="container relative z-10">
         <div className="row g-4 position-relative">
           {/* ======== DANH SÁCH SẢN PHẨM ======== */}
@@ -219,35 +219,52 @@ if (!targetIcon) {
                       data-wow-delay={`${0.3 + index * 0.05}s`}
                     >
                       <div
-                        className="product-img"
-                        role="button"
-                        onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
-                      >
-                        <img
-                          src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
-                          alt={v.name}
-                        />
-<div className="product-btns">
-  <a
-    href="#"
-    className="icon-btn cart"
-    onClick={(e) => {
-  e.preventDefault();
-  e.stopPropagation();
-  handleAddToCart(v);
-}}
-  >
-    <i className="fa-solid fa-basket-shopping"></i>
-  </a>
+  className="product-img relative overflow-hidden"
+  role="button"
+  onClick={() => navigate(`/shop/${v.productId}/${v.id}`)}
+  style={{ height: "260px", borderRadius: "8px" }}
+>
+  {/* ✅ Nền blur auto lấy theo ảnh */}
+  <div
+    className="absolute inset-0 blur-xl scale-110"
+    style={{
+      backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      filter: "blur(18px)",
+      transform: "scale(1.1)",
+    }}
+  ></div>
+
+  {/* ✅ Ảnh chính giữ nguyên tỉ lệ, không méo */}
+  <img
+    src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
+    alt={v.name}
+    className="relative z-10 max-h-full max-w-full mx-auto object-contain transition duration-300 hover:scale-105"
+  />
+
+  {/* ✅ Nút giỏ hàng nổi phía trên */}
+  <div className="product-btns relative z-20">
+    <a
+      href="#"
+      className="icon-btn cart"
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        handleAddToCart(v);
+      }}
+    >
+      <i className="fa-solid fa-basket-shopping"></i>
+    </a>
+  </div>
+
+  {/* ✅ Badge Hot / Discount */}
+  <ul className="post-box relative z-20">
+    {v.isHot && <li>Hot</li>}
+    {v.discount && <li>-{v.discount}%</li>}
+  </ul>
 </div>
 
-
-
-                        <ul className="post-box">
-                          {v.isHot && <li>Hot</li>}
-                          {v.discount && <li>-{v.discount}%</li>}
-                        </ul>
-                      </div>
 
                       <div className="product-content">
                         <div className="product-rating d-flex align-items-center gap-2">
@@ -400,7 +417,7 @@ if (!targetIcon) {
                                 }}
                                 style={{
                                   fontWeight: !selectedCategory ? "600" : "normal",
-                                  color: !selectedCategory ? "#ffffffff" : "#333", color:"#5a201d"
+                                  color: !selectedCategory ? "#ffffffff" : "#333", color: "#5a201d"
                                 }}
                               >
                                 Tất cả sản phẩm
@@ -439,23 +456,41 @@ if (!targetIcon) {
 
                     {/* 🌟 TOP SÁCH */}
                     <div className="widget product-sidebar mt-4">
-                      <h3 className="widget_title title-shep">Top sách tháng</h3>
+                      <h3 className="widget_title title-shep">Top Sản phẩm</h3>
                       <div className="recent-post-wrap">
                         {topProducts.length > 0 ? (
                           topProducts.map((p) => (
                             <div key={p.id} className="recent-post d-flex mb-3">
                               <div className="media-img">
                                 <a onClick={() => navigate(`/shop/${p.id}`)} role="button">
-                                  <img
-                                     src={
-    (p.imageUrl && p.imageUrl.startsWith("https"))
-      ? p.imageUrl
-      : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`
-  }
-                                    alt={p.name}
-                                    width="70"
-                                    className="rounded"
-                                  />
+                                 <div
+  className="media-img position-relative overflow-hidden"
+  style={{ width: "70px", height: "70px", borderRadius: "6px" }}
+>
+  {/* Nền blur */}
+  <div
+    className="absolute inset-0 blur-xl scale-110"
+    style={{
+      backgroundImage: `url(${(p.imageUrl && p.imageUrl.startsWith("https")) ? p.imageUrl : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`})`,
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      filter: "blur(14px)",
+      transform: "scale(1.1)",
+    }}
+  ></div>
+
+  {/* Ảnh chính giữ đúng tỉ lệ */}
+  <img
+    src={
+      (p.imageUrl && p.imageUrl.startsWith("https"))
+        ? p.imageUrl
+        : `${API_BASE_URL}${p.imageUrl || p.variants?.[0]?.imageUrl}`
+    }
+    alt={p.name}
+    className="relative z-10 w-full h-full object-contain p-1"
+  />
+</div>
+
                                 </a>
                               </div>
                               <div className="media-body ms-3">
@@ -498,7 +533,7 @@ if (!targetIcon) {
           </AnimatePresence>
         </div>
       </div>
-       {/* CSS hiệu ứng */}
+      {/* CSS hiệu ứng */}
       <style>{`
         @keyframes cartShake {
           0% { transform: rotate(0deg); }
