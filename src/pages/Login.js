@@ -15,35 +15,31 @@ const LoginClient = () => {
     if (user) navigate("/");
   }, [user, navigate]);
 
-  const handleLogin = async (e) => {
+ const handleLogin = async (e) => {
   e.preventDefault();
   try {
     const res = await fetch(`${API_BASE_URL}/api/auth/login`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        username: identifier,
+        username: identifier, // ✅ backend nhận được
         password,
       }),
+      credentials: "include",
     });
 
     const data = await res.json();
-    console.log("API Login Response:", data); // ✅ Debug để thấy token
+    console.log("API Login Response:", data);
 
     if (res.ok) {
       const token = data.token || data.accessToken || data.jwt;
-
       if (!token) {
         alert("❌ Không nhận được token từ server!");
         return;
       }
 
-      // ✅ Lưu token vào localStorage để checkout / auth pages đọc được
       localStorage.setItem("token", token);
-
-      // ✅ Đồng bộ với AuthContext (nếu context chỉ quản lý state tạm)
       login(token);
-
       alert("✅ Đăng nhập thành công!");
       navigate("/");
     } else {
@@ -54,6 +50,7 @@ const LoginClient = () => {
     alert("❌ Sai tài khoản hoặc mật khẩu");
   }
 };
+
 
 
   return (

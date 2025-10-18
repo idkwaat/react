@@ -3,25 +3,12 @@ import { useCart } from "../context/CartContext";
 import { jwtDecode } from "jwt-decode";
 import { AuthContext } from "../context/AuthContext";
 import PaymentPopup from "../components/PaymentPopup"; // popup hiển thị QR
-import { useNavigate } from "react-router-dom";
-
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function CheckOut() {
   const { cartItems, getCartTotal, clearCart } = useCart();
   const { token } = useContext(AuthContext);
-  const navigate = useNavigate();
-
-  // helper toggle class (dùng khi map inputs)
-  const handleFocus = (e) => {
-    e.currentTarget.classList.add("ch-focus");
-  };
-  const handleBlur = (e) => {
-    if (!e.currentTarget.value) {
-      e.currentTarget.classList.remove("ch-focus");
-    }
-  };
 
   const [formData, setFormData] = useState({
     fullName: "",
@@ -47,7 +34,6 @@ export default function CheckOut() {
 
     if (!token) {
       alert("❌ Bạn cần đăng nhập để đặt hàng!");
-      navigate("/login");
       return;
     }
 
@@ -111,25 +97,6 @@ export default function CheckOut() {
 
   return (
     <div className="vs-checkout-wrapper space-top space-extra-bottom">
-      <style>{`
-  input, textarea {
-    color: #333 !important; /* Màu mặc định khi không focus */
-    transition: color 0.2s;
-  }
-
-  /* Khi focus thì đổi chữ sang trắng */
-  .ch-focus {
-    color: #ffffff !important;
-    caret-color: #ffffff !important;
-    -webkit-text-fill-color: #ffffff !important; /* Autofill & WebKit fix */
-  }
-
-  /* Placeholder khi focus */
-  .ch-focus::placeholder {
-    color: rgba(255,255,255,0.7) !important;
-  }
-`}</style>
-
       <div className="container">
         <form className="checkout-form mt-40" onSubmit={handlePlaceOrder}>
           <div className="row">
@@ -147,35 +114,40 @@ export default function CheckOut() {
               ].map((f) => (
                 <div className="form-group" key={f.name}>
                   <label>{f.label}</label>
-<input
+                 <input
   type={f.type || "text"}
   name={f.name}
   value={formData[f.name]}
   onChange={handleChange}
   required={f.label.includes("*")}
-  onFocus={(e) => e.target.classList.add("ch-focus")}
-  onBlur={(e) => e.target.classList.remove("ch-focus")}
-  placeholder={f.placeholder || ""}
+  onFocus={(e) => {
+    e.target.style.backgroundColor = "#f8f8f8"; // Giữ nguyên nền
+    e.target.style.boxShadow = "none";          // Bỏ viền sáng Bootstrap
+    e.target.style.outline = "none";            // Bỏ outline mặc định
+    e.target.style.borderColor = "#ddd";        // Giữ border cũ
+  }}
+  onBlur={(e) => {
+    e.target.style.backgroundColor = "#f8f8f8"; // Giữ y nguyên khi blur
+  }}
 />
-
-
-
-
                 </div>
               ))}
               <div className="form-group">
                 <label>Ghi chú</label>
-<textarea
+                <textarea
   name="notes"
   value={formData.notes}
   onChange={handleChange}
-  onFocus={(e) => e.target.classList.add("ch-focus")}
-  onBlur={(e) => e.target.classList.remove("ch-focus")}
-  placeholder="Ghi chú thêm..."
+  onFocus={(e) => {
+    e.target.style.backgroundColor = "#f8f8f8";
+    e.target.style.boxShadow = "none";
+    e.target.style.outline = "none";
+    e.target.style.borderColor = "#ddd";
+  }}
+  onBlur={(e) => {
+    e.target.style.backgroundColor = "#f8f8f8";
+  }}
 ></textarea>
-
-
-
 
               </div>
             </div>
