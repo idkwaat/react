@@ -61,9 +61,10 @@ function AppContent() {
   // ✅ Kiểm tra xem route hiện tại có phải admin hay không
   const isAdminRoute = location.pathname.startsWith("/admin");
 
-  useEffect(() => {
-    axios.post(`${API_BASE_URL}/api/analytics/visit`).catch(() => {});
-  }, []);
+useEffect(() => {
+  axios.post(`${API_BASE_URL}/api/dashboard/visit`).catch(() => {});
+}, []);
+
 
 useEffect(() => {
   const token = localStorage.getItem("token");
