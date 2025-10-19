@@ -164,19 +164,38 @@ export default function TrendingProducts() {
   />
 
   {/* ✅ Button cart giữ đúng hiệu ứng hover */}
-  <div className="product-btns absolute top-3 right-3 z-20">
-    <a
-      href="#"
-      className="icon-btn cart"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleAddToCart(v);
-      }}
-    >
-      <i className="fa-solid fa-basket-shopping"></i>
-    </a>
-  </div>
+<div
+  className="product-btns"
+  style={{
+    position: "absolute",
+    bottom: "10px",
+    right: "10px",
+    zIndex: 50,
+    pointerEvents: "auto",
+  }}
+>
+  <a
+    href="#"
+    className="icon-btn cart"
+    style={{
+      backgroundColor: "rgba(0,0,0,0.7)",
+      color: "white",
+      borderRadius: "50%",
+      padding: "10px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+    }}
+    onClick={(e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      handleAddToCart(v);
+    }}
+  >
+    <i className="fa-solid fa-basket-shopping"></i>
+  </a>
+</div>
+
 
   {/* ✅ Badge Hot / Discount */}
   <ul className="post-box absolute top-3 left-3 z-20">

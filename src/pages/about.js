@@ -46,7 +46,6 @@ export default function About() {
     <>
       {/* --- VIDEO GIỚI THIỆU --- */}
       <section className="position-relative text-center text-white">
-        <Breadcrumb/>
         <video
           autoPlay
           muted

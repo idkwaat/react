@@ -33,7 +33,6 @@ export default function Contact() {
     paddingBottom: "150px",
   }}
 >
-  <Breadcrumb/>
   <div className="container">
     <h2
       className="sec-title text-center mb-5"

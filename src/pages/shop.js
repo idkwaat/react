@@ -7,6 +7,13 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useContext } from "react";
 import { useCart } from "../context/CartContext";
 import { Breadcrumb } from "react-bootstrap";
+import Slider from "react-slick";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import { useLocation } from "react-router-dom";
+import { useMemo } from "react";
+
+
 
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
@@ -25,9 +32,23 @@ export default function Shop() {
   const navigate = useNavigate();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { addToCart } = useCart();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+const selectedCategoryId = searchParams.get("categoryId");
+  
 
 
+useEffect(() => {
+  const params = new URLSearchParams(location.search);
+  const categoryId = params.get("categoryId");
 
+  if (categoryId) {
+    setSelectedCategory(Number(categoryId)); // hoặc parseInt(categoryId)
+    setPage(1);
+  } else {
+    setSelectedCategory(null);
+  }
+}, [location.search]);
 
   // 🔹 Gọi API sản phẩm (có tìm kiếm, phân trang, lọc)
   useEffect(() => {
@@ -50,6 +71,7 @@ export default function Shop() {
             averageRating: p.averageRating,
             reviewCount: p.reviewCount,
             categoryName: p.categoryName,
+            categoryId: p.categoryId,
             productDescription: p.description,
           }))
         );
@@ -104,6 +126,11 @@ export default function Shop() {
     return b.id - a.id;
   });
 
+  const filteredVariants = useMemo(() => {
+  if (!selectedCategoryId) return sortedVariants;
+  return sortedVariants.filter(v => String(v.categoryId) === String(selectedCategoryId));
+}, [selectedCategoryId, sortedVariants]);
+
   // 🔹 Style cho Select filter
   const customSelectStyles = {
     control: (base, state) => ({
@@ -141,6 +168,9 @@ export default function Shop() {
 
     addToCart(cartItem);
 
+
+
+
     // 🌟 Hiệu ứng +1 bay lên và rung icon giỏ
     // 🌟 Hiệu ứng +1 bay lên và rung icon giỏ
     // 🌟 Hiệu ứng +1 bay lên và rung icon giỏ
@@ -170,10 +200,69 @@ export default function Shop() {
       setTimeout(() => targetIcon.classList.remove("cart-gold"), 600);
     }, 600);
   };
+const PrevArrow = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    style={{
+      position: "absolute",
+      left: "-45px", // đẩy ra ngoài slider
+      top: "35%",
+      transform: "translateY(-50%)",
+      zIndex: 10,
+      background: "rgba(0,0,0,0.6)",
+      border: "none",
+      borderRadius: "50%",
+      width: "40px",
+      height: "40px",
+      color: "white",
+      cursor: "pointer",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+      transition: "all 0.3s ease",
+    }}
+    onMouseEnter={(e) =>
+      (e.currentTarget.style.background = "rgba(0,0,0,0.9)")
+    }
+    onMouseLeave={(e) =>
+      (e.currentTarget.style.background = "rgba(0,0,0,0.6)")
+    }
+  >
+    <i className="fa-solid fa-chevron-left"></i>
+  </button>
+);
+
+const NextArrow = ({ onClick }) => (
+  <button
+    onClick={onClick}
+    style={{
+      position: "absolute",
+      right: "-45px", // đẩy ra ngoài slider
+      top: "35%",
+      transform: "translateY(-50%)",
+      zIndex: 10,
+      background: "rgba(0,0,0,0.6)",
+      border: "none",
+      borderRadius: "50%",
+      width: "40px",
+      height: "40px",
+      color: "white",
+      cursor: "pointer",
+      boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
+      transition: "all 0.3s ease",
+    }}
+    onMouseEnter={(e) =>
+      (e.currentTarget.style.background = "rgba(0,0,0,0.9)")
+    }
+    onMouseLeave={(e) =>
+      (e.currentTarget.style.background = "rgba(0,0,0,0.6)")
+    }
+  >
+    <i className="fa-solid fa-chevron-right"></i>
+  </button>
+
+);
   return (
 
     <section className="books-layout1 space-top space-extra-bottom relative" style={{ minHeight: "260vh" }}>
-      <Breadcrumb/>
       <div className="container relative z-10">
         <div className="row g-4 position-relative">
           {/* ======== DANH SÁCH SẢN PHẨM ======== */}
@@ -222,141 +311,305 @@ export default function Shop() {
     }, {})
   ).map(([categoryName, items]) => {
     const categoryId = items[0]?.categoryId;
+    const isViewAll = searchParams.get("categoryId") == categoryId;
+
+    // 👉 Nếu đang ở trang "Xem tất cả", bỏ slider — hiển thị grid
+    if (isViewAll) {
+      return (
+        <div key={categoryName} className="mb-5">
+          {/* ======== TIÊU ĐỀ NHÓM ======== */}
+          <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1">
+            <h3 className="fw-bold mb-0" style={{ fontSize: "1.5rem", color: "#3a2f2b" }}>
+              {categoryName}
+            </h3>
+            <button className="btn btn-outline-dark btn-sm" onClick={() => navigate("/shop")}>
+              ← Quay lại
+            </button>
+          </div>
+
+          {/* ======== GRID ======== */}
+          <div className="row">
+            {items.map((v, index) => (
+              <div key={`${v.productId}-${v.id}-${index}`} className="col-6 col-md-4 col-lg-3 mb-4">
+                <div className="product-style1 wow animate__fadeInUp" data-wow-delay={`${0.2 + index * 0.05}s`}>
+                  <div
+                    className="product-img"
+                    style={{
+                      position: "relative",
+                      overflow: "hidden",
+                      borderRadius: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      aspectRatio: "1 / 1",
+                    }}
+                  >
+                    {/* 🔹 Nền blur */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        backgroundImage: `url(${
+                          v.imageUrl?.startsWith("https")
+                            ? v.imageUrl
+                            : `${API_BASE_URL}${v.imageUrl}`
+                        })`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        filter: "blur(25px) brightness(0.55)",
+                        transform: "scale(1.4)",
+                      }}
+                    ></div>
+
+                    {/* Overlay */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        backgroundColor: "rgba(0,0,0,0.05)",
+                      }}
+                    ></div>
+
+                    {/* Ảnh chính */}
+                    <img
+                      src={
+                        v.imageUrl?.startsWith("https")
+                          ? v.imageUrl
+                          : `${API_BASE_URL}${v.imageUrl}`
+                      }
+                      alt={v.name}
+                      style={{
+                        position: "relative",
+                        zIndex: 10,
+                        maxHeight: "100%",
+                        maxWidth: "110%",
+                        objectFit: "contain",
+                        transition: "transform 0.4s ease",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                    />
+
+                    {/* Nút giỏ hàng */}
+                    <div
+                      className="product-btns"
+                      style={{
+                        position: "absolute",
+                        bottom: "10px",
+                        right: "10px",
+                        zIndex: 50,
+                        pointerEvents: "auto",
+                      }}
+                    >
+                      <a
+                        href="#"
+                        className="icon-btn cart"
+                        style={{
+                          backgroundColor: "rgba(0,0,0,0.7)",
+                          color: "white",
+                          borderRadius: "50%",
+                          padding: "10px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleAddToCart(v);
+                        }}
+                      >
+                        <i className="fa-solid fa-basket-shopping"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="product-content text-center mt-2">
+                    <h2 className="product-title" style={{ fontSize: "1rem" }}>
+                      <a
+                        href={`/shop/${v.productId}/${v.id}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          navigate(`/shop/${v.productId}/${v.id}`);
+                        }}
+                      >
+                        {v.name}
+                      </a>
+                    </h2>
+                    <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
+                      {v.price?.toLocaleString()}₫
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    }
+
+    // 👉 Nếu KHÔNG phải "Xem tất cả", vẫn hiển thị slider
+    const displayItems =
+      items.length < 10
+        ? [...items, ...Array(10 - items.length).fill(null).map((_, i) => items[i % items.length])]
+        : items;
+
+    const settings = {
+      dots: false,
+      infinite: true,
+      speed: 500,
+      slidesToShow: 5,
+      slidesToScroll: 5,
+      arrows: true,
+      responsive: [
+        { breakpoint: 1200, settings: { slidesToShow: 4 } },
+        { breakpoint: 992, settings: { slidesToShow: 3 } },
+        { breakpoint: 768, settings: { slidesToShow: 2 } },
+        { breakpoint: 576, settings: { slidesToShow: 1 } },
+      ],
+    };
 
     return (
       <div key={categoryName} className="mb-5">
         {/* ======== TIÊU ĐỀ NHÓM ======== */}
         <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1">
-          <h3
-            className="fw-bold mb-0"
-            style={{ fontSize: "1.5rem", color: "#3a2f2b" }}
-          >
+          <h3 className="fw-bold mb-0" style={{ fontSize: "1.5rem", color: "#3a2f2b" }}>
             {categoryName}
           </h3>
-
-          {/* ======== NÚT XEM TẤT CẢ ======== */}
-          <button
-            className="btn btn-outline-dark btn-sm"
-            onClick={() => navigate(`/shop?categoryId=${categoryId}`)}
-          >
-            Xem tất cả →
-          </button>
+          {categoryId ? (
+            <button
+              className="btn btn-outline-dark btn-sm"
+              onClick={() => navigate(`/shop?categoryId=${categoryId}`)}
+            >
+              Xem tất cả →
+            </button>
+          ) : null}
         </div>
 
-        {/* ======== GRID SẢN PHẨM TRONG NHÓM ======== */}
-        <div className="row g-4">
-          {items.slice(0, 5).map((v, index) => (
-            <div
-              key={`${v.productId}-${v.id}`}
-              className="col-xl-2 col-lg-3 col-md-4 col-sm-6"
-            >
-              <div
-                className="product-style1 wow animate__fadeInUp"
-                data-wow-delay={`${0.2 + index * 0.05}s`}
-              >
+        {/* ======== SLIDER ======== */}
+        <div style={{ position: "relative", overflow: "visible", padding: "0 40px" }}>
+          <Slider {...settings} nextArrow={<NextArrow />} prevArrow={<PrevArrow />}>
+            {displayItems.map((v, index) => (
+              <div key={`${v.productId}-${v.id}-${index}`} className="p-2">
                 <div
-                  className="product-img"
-                  style={{
-                    position: "relative",
-                    overflow: "hidden",
-                    borderRadius: "8px",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    aspectRatio: "1 / 1",
-                  }}
+                  className="product-style1 wow animate__fadeInUp"
+                  data-wow-delay={`${0.2 + index * 0.05}s`}
                 >
-                  {/* ẢNH NỀN BLUR */}
                   <div
+                    className="product-img"
                     style={{
-                      position: "absolute",
-                      inset: 0,
-                      backgroundImage: `url(${
+                      position: "relative",
+                      overflow: "hidden",
+                      borderRadius: "8px",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      aspectRatio: "1 / 1",
+                    }}
+                  >
+                    {/* Nền blur */}
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        backgroundImage: `url(${
+                          v.imageUrl?.startsWith("https")
+                            ? v.imageUrl
+                            : `${API_BASE_URL}${v.imageUrl}`
+                        })`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        filter: "blur(25px) brightness(0.55)",
+                        transform: "scale(1.4)",
+                      }}
+                    ></div>
+
+                    <div
+                      style={{
+                        position: "absolute",
+                        inset: 0,
+                        backgroundColor: "rgba(0,0,0,0.05)",
+                      }}
+                    ></div>
+
+                    <img
+                      src={
                         v.imageUrl?.startsWith("https")
                           ? v.imageUrl
                           : `${API_BASE_URL}${v.imageUrl}`
-                      })`,
-                      backgroundSize: "cover",
-                      backgroundPosition: "center",
-                      filter: "blur(25px) brightness(0.55)",
-                      transform: "scale(1.4)",
-                    }}
-                  ></div>
+                      }
+                      alt={v.name}
+                      style={{
+                        position: "relative",
+                        zIndex: 10,
+                        maxHeight: "100%",
+                        maxWidth: "110%",
+                        objectFit: "contain",
+                        transition: "transform 0.4s ease",
+                      }}
+                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
+                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                    />
 
-                  {/* LỚP LÀM MỜ */}
-                  <div
-                    style={{
-                      position: "absolute",
-                      inset: 0,
-                      backgroundColor: "rgba(0,0,0,0.05)",
-                    }}
-                  ></div>
-
-                  {/* ẢNH CHÍNH */}
-                  <img
-                    src={
-                      v.imageUrl?.startsWith("https")
-                        ? v.imageUrl
-                        : `${API_BASE_URL}${v.imageUrl}`
-                    }
-                    alt={v.name}
-                    style={{
-                      position: "relative",
-                      zIndex: 10,
-                      maxHeight: "100%",
-                      maxWidth: "110%",
-                      objectFit: "contain",
-                      transition: "transform 0.4s ease",
-                    }}
-                    onMouseEnter={(e) =>
-                      (e.currentTarget.style.transform = "scale(1.05)")
-                    }
-                    onMouseLeave={(e) =>
-                      (e.currentTarget.style.transform = "scale(1)")
-                    }
-                  />
-
-                  {/* NÚT GIỎ HÀNG */}
-                  <div className="product-btns relative z-20">
-                    <a
-                      href="#"
-                      className="icon-btn cart"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        handleAddToCart(v);
+                    <div
+                      className="product-btns"
+                      style={{
+                        position: "absolute",
+                        bottom: "10px",
+                        right: "10px",
+                        zIndex: 50,
+                        pointerEvents: "auto",
                       }}
                     >
-                      <i className="fa-solid fa-basket-shopping"></i>
-                    </a>
+                      <a
+                        href="#"
+                        className="icon-btn cart"
+                        style={{
+                          backgroundColor: "rgba(0,0,0,0.7)",
+                          color: "white",
+                          borderRadius: "50%",
+                          padding: "10px",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                        }}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          handleAddToCart(v);
+                        }}
+                      >
+                        <i className="fa-solid fa-basket-shopping"></i>
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="product-content text-center mt-2">
+                    <h2 className="product-title" style={{ fontSize: "1rem" }}>
+                      <a
+                        href={`/shop/${v.productId}/${v.id}`}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          navigate(`/shop/${v.productId}/${v.id}`);
+                        }}
+                      >
+                        {v.name}
+                      </a>
+                    </h2>
+                    <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
+                      {v.price?.toLocaleString()}₫
+                    </p>
                   </div>
                 </div>
-
-                {/* TÊN & GIÁ */}
-                <div className="product-content text-center mt-2">
-                  <h2 className="product-title" style={{ fontSize: "1rem" }}>
-                    <a
-                      href={`/shop/${v.productId}/${v.id}`}
-                      onClick={(e) => {
-                        e.preventDefault();
-                        navigate(`/shop/${v.productId}/${v.id}`);
-                      }}
-                    >
-                      {v.name}
-                    </a>
-                  </h2>
-                  <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-                    {v.price?.toLocaleString()}₫
-                  </p>
-                </div>
               </div>
-            </div>
-          ))}
+            ))}
+          </Slider>
         </div>
       </div>
     );
   })}
 </div>
+
 
 
             {/* ======== PHÂN TRANG ======== */}

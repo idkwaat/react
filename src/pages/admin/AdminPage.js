@@ -13,7 +13,8 @@ import {
 
 ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip, Legend);
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5186";
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
+
 
 export default function AdminPage() {
   const [stats, setStats] = useState(null);

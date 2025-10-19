@@ -116,8 +116,8 @@ useEffect(() => {
     style={{
       position: "relative",
       zIndex: 10,
-      maxHeight: "92%",
-      maxWidth: "95%",
+      maxHeight: "100%",
+      maxWidth: "110%",
       objectFit: "contain",
       transition: "transform 0.35s ease",
     }}
@@ -125,17 +125,43 @@ useEffect(() => {
   />
 
   {/* ✅ Nút Cart top-right */}
-  <div className="product-btns absolute top-3 right-3 z-20">
-    <button
-      className="icon-btn cart"
-      onClick={(e) => {
-        e.stopPropagation();
-        addToCart(v);
-      }}
-    >
-      <FaBasketShopping />
-    </button>
-  </div>
+<div
+  className="product-btns"
+  style={{
+    position: "absolute",
+    top: "10px",        // dịch xuống một chút cho đẹp
+    right: "10px",      // cách mép phải 10px
+    zIndex: 50,         // cao hơn ảnh và các layer khác
+    pointerEvents: "auto", // cho phép click (phòng trường hợp slick tắt pointer)
+  }}
+>
+  <button
+    className="icon-btn cart"
+    onClick={(e) => {
+      e.stopPropagation();
+      addToCart(v);
+    }}
+    style={{
+      backgroundColor: "rgba(0,0,0,0.6)", // nền mờ
+      color: "white",
+      border: "none",
+      borderRadius: "50%",
+      width: "40px",
+      height: "40px",
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      cursor: "pointer",
+      transition: "all 0.3s ease",
+      boxShadow: "0 2px 6px rgba(0,0,0,0.25)",
+    }}
+    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.9)")}
+    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "rgba(0,0,0,0.6)")}
+  >
+    <FaBasketShopping size={18} />
+  </button>
+</div>
+
 </div>
 
 

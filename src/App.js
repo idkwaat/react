@@ -46,8 +46,12 @@ import OrderList from "./components/admin/OrderList.js";
 import MyOrders from "./pages/myorders.js";
 import OrderSuccess from "./pages/OrderSuccess.js";
 import axios from "axios";
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5186";
+
+const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
+
 
 function AppContent() {
   const location = useLocation();
