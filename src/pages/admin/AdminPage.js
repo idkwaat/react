@@ -21,13 +21,13 @@ export default function AdminPage() {
   const [visitorChart, setVisitorChart] = useState(null);
 
   useEffect(() => {
-    // 🔹 Lấy dữ liệu tổng quan
+    // 🔹 Tổng quan
     axios
       .get(`${API_BASE_URL}/api/dashboard/overview`)
       .then((res) => setStats(res.data))
       .catch((err) => console.error("Overview error:", err));
 
-    // 💰 Lấy dữ liệu biểu đồ doanh thu
+    // 💰 Biểu đồ doanh thu
     axios
       .get(`${API_BASE_URL}/api/dashboard/revenue-chart`)
       .then((res) => {
@@ -46,7 +46,7 @@ export default function AdminPage() {
       })
       .catch((err) => console.error("Revenue chart error:", err));
 
-    // 👁️ Lấy dữ liệu biểu đồ lượt truy cập
+    // 👁️ Biểu đồ lượt truy cập
     axios
       .get(`${API_BASE_URL}/api/dashboard/visit-chart`)
       .then((res) => {
@@ -67,6 +67,7 @@ export default function AdminPage() {
   }, []);
 
   if (!stats) return <div className="text-center mt-5">Đang tải Dashboard...</div>;
+
   return (
     <>
       {/* Header */}
@@ -79,6 +80,7 @@ export default function AdminPage() {
 
       {/* Thống kê tổng quan */}
       <div className="row">
+        {/* Đơn hàng */}
         <div className="col-sm-6 col-md-6 col-lg-3 mt-3">
           <div className="card">
             <div className="content">
@@ -99,6 +101,7 @@ export default function AdminPage() {
           </div>
         </div>
 
+        {/* Doanh thu */}
         <div className="col-sm-6 col-md-6 col-lg-3 mt-3">
           <div className="card">
             <div className="content">
@@ -122,6 +125,7 @@ export default function AdminPage() {
           </div>
         </div>
 
+        {/* Lượt truy cập */}
         <div className="col-sm-6 col-md-6 col-lg-3 mt-3">
           <div className="card">
             <div className="content">
@@ -142,6 +146,7 @@ export default function AdminPage() {
           </div>
         </div>
 
+        {/* Người dùng */}
         <div className="col-sm-6 col-md-6 col-lg-3 mt-3">
           <div className="card">
             <div className="content">
@@ -165,10 +170,22 @@ export default function AdminPage() {
 
       {/* Biểu đồ */}
       <div className="row mt-4">
+        {/* Biểu đồ doanh thu */}
         <div className="col-md-6">
           <div className="card">
             <div className="content">
               <h5>📈 Doanh thu 7 ngày gần nhất</h5>
+              {revenueChart && (
+                <p className="text-muted mb-2">
+                  Tổng cộng:{" "}
+                  <strong>
+                    {revenueChart.datasets[0].data
+                      .reduce((a, b) => a + b, 0)
+                      .toLocaleString()}
+                    ₫
+                  </strong>
+                </p>
+              )}
               <div className="canvas-wrapper">
                 {revenueChart ? (
                   <Line data={revenueChart} height={180} />
@@ -180,10 +197,22 @@ export default function AdminPage() {
           </div>
         </div>
 
+        {/* Biểu đồ lượt truy cập */}
         <div className="col-md-6">
           <div className="card">
             <div className="content">
               <h5>👁️‍🗨️ Lượt truy cập 7 ngày gần nhất</h5>
+              {visitorChart && (
+                <p className="text-muted mb-2">
+                  Tổng cộng:{" "}
+                  <strong>
+                    {visitorChart.datasets[0].data
+                      .reduce((a, b) => a + b, 0)
+                      .toLocaleString()}
+                  </strong>{" "}
+                  lượt
+                </p>
+              )}
               <div className="canvas-wrapper">
                 {visitorChart ? (
                   <Line data={visitorChart} height={180} />
