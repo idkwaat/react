@@ -45,6 +45,9 @@ import ProfilePage from "./pages/profile/ProfilePage.js";
 import OrderList from "./components/admin/OrderList.js";
 import MyOrders from "./pages/myorders.js";
 import OrderSuccess from "./pages/OrderSuccess.js";
+import axios from "axios";
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || "http://localhost:5186";
 
 function AppContent() {
   const location = useLocation();
@@ -53,6 +56,10 @@ function AppContent() {
 
   // ✅ Kiểm tra xem route hiện tại có phải admin hay không
   const isAdminRoute = location.pathname.startsWith("/admin");
+
+  useEffect(() => {
+    axios.post(`${API_BASE_URL}/api/analytics/visit`).catch(() => {});
+  }, []);
 
 useEffect(() => {
   const token = localStorage.getItem("token");

@@ -6,6 +6,7 @@ import PriceFilter from "../components/PriceFilter";
 import { motion, AnimatePresence } from "framer-motion";
 import { useContext } from "react";
 import { useCart } from "../context/CartContext";
+import { Breadcrumb } from "react-bootstrap";
 
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
@@ -172,6 +173,7 @@ export default function Shop() {
   return (
 
     <section className="books-layout1 space-top space-extra-bottom relative" style={{ minHeight: "260vh" }}>
+      <Breadcrumb/>
       <div className="container relative z-10">
         <div className="row g-4 position-relative">
           {/* ======== DANH SÁCH SẢN PHẨM ======== */}
@@ -210,128 +212,152 @@ export default function Shop() {
             </div>
 
             {/* ======== GRID SẢN PHẨM ======== */}
-            <div className="row g-4">
-              {sortedVariants.length > 0 ? (
-                sortedVariants.map((v, index) => (
-                  <div key={`${v.productId}-${v.id}`} className="col-xl-4 col-md-6 col-sm-6">
-                    <div
-                      className="product-style1 wow animate__fadeInUp"
-                      data-wow-delay={`${0.3 + index * 0.05}s`}
+{/* ======== DANH SÁCH SẢN PHẨM THEO DANH MỤC ======== */}
+<div className="space-y-5">
+  {Object.entries(
+    sortedVariants.reduce((acc, v) => {
+      if (!acc[v.categoryName]) acc[v.categoryName] = [];
+      acc[v.categoryName].push(v);
+      return acc;
+    }, {})
+  ).map(([categoryName, items]) => {
+    const categoryId = items[0]?.categoryId;
+
+    return (
+      <div key={categoryName} className="mb-5">
+        {/* ======== TIÊU ĐỀ NHÓM ======== */}
+        <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1">
+          <h3
+            className="fw-bold mb-0"
+            style={{ fontSize: "1.5rem", color: "#3a2f2b" }}
+          >
+            {categoryName}
+          </h3>
+
+          {/* ======== NÚT XEM TẤT CẢ ======== */}
+          <button
+            className="btn btn-outline-dark btn-sm"
+            onClick={() => navigate(`/shop?categoryId=${categoryId}`)}
+          >
+            Xem tất cả →
+          </button>
+        </div>
+
+        {/* ======== GRID SẢN PHẨM TRONG NHÓM ======== */}
+        <div className="row g-4">
+          {items.slice(0, 5).map((v, index) => (
+            <div
+              key={`${v.productId}-${v.id}`}
+              className="col-xl-2 col-lg-3 col-md-4 col-sm-6"
+            >
+              <div
+                className="product-style1 wow animate__fadeInUp"
+                data-wow-delay={`${0.2 + index * 0.05}s`}
+              >
+                <div
+                  className="product-img"
+                  style={{
+                    position: "relative",
+                    overflow: "hidden",
+                    borderRadius: "8px",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    aspectRatio: "1 / 1",
+                  }}
+                >
+                  {/* ẢNH NỀN BLUR */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      backgroundImage: `url(${
+                        v.imageUrl?.startsWith("https")
+                          ? v.imageUrl
+                          : `${API_BASE_URL}${v.imageUrl}`
+                      })`,
+                      backgroundSize: "cover",
+                      backgroundPosition: "center",
+                      filter: "blur(25px) brightness(0.55)",
+                      transform: "scale(1.4)",
+                    }}
+                  ></div>
+
+                  {/* LỚP LÀM MỜ */}
+                  <div
+                    style={{
+                      position: "absolute",
+                      inset: 0,
+                      backgroundColor: "rgba(0,0,0,0.05)",
+                    }}
+                  ></div>
+
+                  {/* ẢNH CHÍNH */}
+                  <img
+                    src={
+                      v.imageUrl?.startsWith("https")
+                        ? v.imageUrl
+                        : `${API_BASE_URL}${v.imageUrl}`
+                    }
+                    alt={v.name}
+                    style={{
+                      position: "relative",
+                      zIndex: 10,
+                      maxHeight: "100%",
+                      maxWidth: "110%",
+                      objectFit: "contain",
+                      transition: "transform 0.4s ease",
+                    }}
+                    onMouseEnter={(e) =>
+                      (e.currentTarget.style.transform = "scale(1.05)")
+                    }
+                    onMouseLeave={(e) =>
+                      (e.currentTarget.style.transform = "scale(1)")
+                    }
+                  />
+
+                  {/* NÚT GIỎ HÀNG */}
+                  <div className="product-btns relative z-20">
+                    <a
+                      href="#"
+                      className="icon-btn cart"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        handleAddToCart(v);
+                      }}
                     >
-                   <div
-  className="product-img"
-  style={{
-    position: "relative",
-    overflow: "hidden",
-    borderRadius: "8px",
-    display: "flex",
-    alignItems: "center", // ✅ Căn giữa dọc
-    justifyContent: "center", // ✅ Căn giữa ngang
-    aspectRatio: "1 / 1.2", // ✅ Giữ khung đẹp, không méo
-  }}
->
-  {/* ✅ Blur nền */}
-  <div
-    style={{
-      position: "absolute",
-      inset: 0,
-      backgroundImage: `url(${v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`})`,
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-      filter: "blur(28px) brightness(0.55)",
-      transform: "scale(1.4)",
-    }}
-  ></div>
+                      <i className="fa-solid fa-basket-shopping"></i>
+                    </a>
+                  </div>
+                </div>
 
-  {/* ✅ Overlay mờ nhẹ */}
-  <div
-    style={{
-      position: "absolute",
-      inset: 0,
-      backgroundColor: "rgba(0,0,0,0.05)",
-    }}
-  ></div>
-
-  {/* ✅ Ảnh chính */}
-  <img
-    src={v.imageUrl?.startsWith("https") ? v.imageUrl : `${API_BASE_URL}${v.imageUrl}`}
-    alt={v.name}
-    style={{
-      position: "relative",
-      zIndex: 10,
-      maxHeight: "100%",
-      maxWidth: "110%",
-      objectFit: "contain",
-      transition: "transform 0.4s ease",
-    }}
-    onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-    onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-  />
-
-
-
-  {/* ✅ Nút giỏ hàng giữ nguyên */}
-  <div className="product-btns relative z-20">
-    <a
-      href="#"
-      className="icon-btn cart"
-      onClick={(e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        handleAddToCart(v);
-      }}
-    >
-      <i className="fa-solid fa-basket-shopping"></i>
-    </a>
-  </div>
-
-  {/* ✅ Badge Hot / Discount */}
-  <ul className="post-box relative z-20">
-    {v.isHot && <li>Hot</li>}
-    {v.discount && <li>-{v.discount}%</li>}
-  </ul>
+                {/* TÊN & GIÁ */}
+                <div className="product-content text-center mt-2">
+                  <h2 className="product-title" style={{ fontSize: "1rem" }}>
+                    <a
+                      href={`/shop/${v.productId}/${v.id}`}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        navigate(`/shop/${v.productId}/${v.id}`);
+                      }}
+                    >
+                      {v.name}
+                    </a>
+                  </h2>
+                  <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
+                    {v.price?.toLocaleString()}₫
+                  </p>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  })}
 </div>
 
-
-
-
-                      <div className="product-content">
-                        <div className="product-rating d-flex align-items-center gap-2">
-                          {[1, 2, 3, 4, 5].map((s) => (
-                            <FaStar key={s} size={16} color={v.averageRating >= s ? "#0b4b32" : "#ddd"} />
-                          ))}
-                          <span style={{ fontSize: "0.85rem", color: "#666" }}>
-                            ({v.averageRating?.toFixed(1) || "0.0"})
-                          </span>
-                          <ul className="price-list ms-auto">
-                            {v.oldPrice && (
-                              <li>
-                                <del>{v.oldPrice.toLocaleString()}₫</del>
-                              </li>
-                            )}
-                            <li>{v.price?.toLocaleString()}₫</li>
-                          </ul>
-                        </div>
-
-                        <h2 className="product-title mt-1">
-                          <a
-                            href={`/shop/${v.productId}/${v.id}`}
-                            onClick={(e) => {
-                              e.preventDefault();
-                              navigate(`/shop/${v.productId}/${v.id}`);
-                            }}
-                          >
-                            {v.name}
-                          </a>
-                        </h2>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-5 col-12">😴 Không có sản phẩm phù hợp</div>
-              )}
-            </div>
 
             {/* ======== PHÂN TRANG ======== */}
             {totalPages > 1 && (

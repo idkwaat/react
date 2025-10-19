@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Target, Leaf, HeartHandshake, Users } from "lucide-react";
+import { Breadcrumb } from "react-bootstrap";
 import {
   FaFlag,
   FaRecycle,
@@ -45,6 +46,7 @@ export default function About() {
     <>
       {/* --- VIDEO GIỚI THIỆU --- */}
       <section className="position-relative text-center text-white">
+        <Breadcrumb/>
         <video
           autoPlay
           muted
@@ -78,8 +80,10 @@ export default function About() {
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.4 }}
           >
+            <span style={{color:"#fff"}}>
             Nơi nghệ thuật giấy Trúc Chỉ được tái sinh trong không gian sống đương đại,
             kết nối tinh hoa văn hóa Việt với hơi thở của thời đại.
+            </span>
           </motion.p>
         </div>
       </section>
