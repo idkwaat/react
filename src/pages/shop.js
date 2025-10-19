@@ -35,6 +35,8 @@ export default function Shop() {
   const location = useLocation();
   const searchParams = new URLSearchParams(location.search);
 const selectedCategoryId = searchParams.get("categoryId");
+const CategoryAllGrid = React.lazy(() => import("./CategoryAllGrid"));
+
   
 
 
@@ -300,7 +302,6 @@ const NextArrow = ({ onClick }) => (
               </div>
             </div>
 
-            {/* ======== GRID SẢN PHẨM ======== */}
 {/* ======== DANH SÁCH SẢN PHẨM THEO DANH MỤC ======== */}
 <div className="space-y-5">
   {Object.entries(
@@ -313,16 +314,19 @@ const NextArrow = ({ onClick }) => (
     const categoryId = items[0]?.categoryId;
     const isViewAll = searchParams.get("categoryId") == categoryId;
 
-    // 👉 Nếu đang ở trang "Xem tất cả", bỏ slider — hiển thị grid
+    // 🔹 Nếu đang ở trang "Xem tất cả"
     if (isViewAll) {
       return (
-        <div key={categoryName} className="mb-5">
+        <div key={categoryName} className="mb-5 fade-in">
           {/* ======== TIÊU ĐỀ NHÓM ======== */}
           <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1">
             <h3 className="fw-bold mb-0" style={{ fontSize: "1.5rem", color: "#3a2f2b" }}>
               {categoryName}
             </h3>
-            <button className="btn btn-outline-dark btn-sm" onClick={() => navigate("/shop")}>
+            <button
+              className="btn btn-outline-dark btn-sm"
+              onClick={() => navigate("/shop")}
+            >
               ← Quay lại
             </button>
           </div>
@@ -330,8 +334,12 @@ const NextArrow = ({ onClick }) => (
           {/* ======== GRID ======== */}
           <div className="row">
             {items.map((v, index) => (
-              <div key={`${v.productId}-${v.id}-${index}`} className="col-6 col-md-4 col-lg-3 mb-4">
-                <div className="product-style1 wow animate__fadeInUp" data-wow-delay={`${0.2 + index * 0.05}s`}>
+              <div
+                key={`${v.productId}-${v.id}-${index}`}
+                className="col-6 col-md-4 col-lg-3 mb-4 animate__animated animate__fadeInUp"
+                style={{ animationDelay: `${0.05 * index}s` }}
+              >
+                <div className="product-style1">
                   <div
                     className="product-img"
                     style={{
@@ -344,7 +352,7 @@ const NextArrow = ({ onClick }) => (
                       aspectRatio: "1 / 1",
                     }}
                   >
-                    {/* 🔹 Nền blur */}
+                    {/* ⚡ Không blur nền trong grid */}
                     <div
                       style={{
                         position: "absolute",
@@ -356,8 +364,8 @@ const NextArrow = ({ onClick }) => (
                         })`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
-                        filter: "blur(25px) brightness(0.55)",
-                        transform: "scale(1.4)",
+                        transform: "scale(1.2)",
+                        opacity: 0.85,
                       }}
                     ></div>
 
@@ -366,12 +374,13 @@ const NextArrow = ({ onClick }) => (
                       style={{
                         position: "absolute",
                         inset: 0,
-                        backgroundColor: "rgba(0,0,0,0.05)",
+                        backgroundColor: "rgba(0,0,0,0.1)",
                       }}
                     ></div>
 
                     {/* Ảnh chính */}
                     <img
+                      loading="lazy"
                       src={
                         v.imageUrl?.startsWith("https")
                           ? v.imageUrl
@@ -384,7 +393,7 @@ const NextArrow = ({ onClick }) => (
                         maxHeight: "100%",
                         maxWidth: "110%",
                         objectFit: "contain",
-                        transition: "transform 0.4s ease",
+                        transition: "transform 0.3s ease",
                       }}
                       onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
                       onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
@@ -398,7 +407,6 @@ const NextArrow = ({ onClick }) => (
                         bottom: "10px",
                         right: "10px",
                         zIndex: 50,
-                        pointerEvents: "auto",
                       }}
                     >
                       <a
@@ -448,7 +456,7 @@ const NextArrow = ({ onClick }) => (
       );
     }
 
-    // 👉 Nếu KHÔNG phải "Xem tất cả", vẫn hiển thị slider
+    // 🔹 Slider view
     const displayItems =
       items.length < 10
         ? [...items, ...Array(10 - items.length).fill(null).map((_, i) => items[i % items.length])]
@@ -470,8 +478,7 @@ const NextArrow = ({ onClick }) => (
     };
 
     return (
-      <div key={categoryName} className="mb-5">
-        {/* ======== TIÊU ĐỀ NHÓM ======== */}
+      <div key={categoryName} className="mb-5 fade-in">
         <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1">
           <h3 className="fw-bold mb-0" style={{ fontSize: "1.5rem", color: "#3a2f2b" }}>
             {categoryName}
@@ -486,15 +493,11 @@ const NextArrow = ({ onClick }) => (
           ) : null}
         </div>
 
-        {/* ======== SLIDER ======== */}
         <div style={{ position: "relative", overflow: "visible", padding: "0 40px" }}>
           <Slider {...settings} nextArrow={<NextArrow />} prevArrow={<PrevArrow />}>
             {displayItems.map((v, index) => (
               <div key={`${v.productId}-${v.id}-${index}`} className="p-2">
-                <div
-                  className="product-style1 wow animate__fadeInUp"
-                  data-wow-delay={`${0.2 + index * 0.05}s`}
-                >
+                <div className="product-style1 animate__animated animate__fadeInUp">
                   <div
                     className="product-img"
                     style={{
@@ -507,7 +510,7 @@ const NextArrow = ({ onClick }) => (
                       aspectRatio: "1 / 1",
                     }}
                   >
-                    {/* Nền blur */}
+                    {/* ⚡ Giữ blur trong slider để đẹp hơn */}
                     <div
                       style={{
                         position: "absolute",
@@ -533,6 +536,7 @@ const NextArrow = ({ onClick }) => (
                     ></div>
 
                     <img
+                      loading="lazy"
                       src={
                         v.imageUrl?.startsWith("https")
                           ? v.imageUrl
@@ -549,7 +553,7 @@ const NextArrow = ({ onClick }) => (
                       }}
                       onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
                       onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                    />
+/>
 
                     <div
                       className="product-btns"
@@ -558,7 +562,6 @@ const NextArrow = ({ onClick }) => (
                         bottom: "10px",
                         right: "10px",
                         zIndex: 50,
-                        pointerEvents: "auto",
                       }}
                     >
                       <a
@@ -609,6 +612,7 @@ const NextArrow = ({ onClick }) => (
     );
   })}
 </div>
+
 
 
 
