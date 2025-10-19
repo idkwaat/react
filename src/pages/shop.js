@@ -16,6 +16,7 @@ import { useMemo } from "react";
 
 
 
+
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function Shop() {
@@ -302,316 +303,375 @@ const NextArrow = ({ onClick }) => (
               </div>
             </div>
 
-{/* ======== DANH SÁCH SẢN PHẨM THEO DANH MỤC ======== */}
+{/* ======= DANH MỤC SẢN PHẨM ======= */}
 <div className="space-y-5">
-  {Object.entries(
-    sortedVariants.reduce((acc, v) => {
-      if (!acc[v.categoryName]) acc[v.categoryName] = [];
-      acc[v.categoryName].push(v);
-      return acc;
-    }, {})
-  ).map(([categoryName, items]) => {
-    const categoryId = items[0]?.categoryId;
-    const isViewAll = searchParams.get("categoryId") == categoryId;
+  <AnimatePresence mode="wait">
+    {Object.entries(
+      sortedVariants.reduce((acc, v) => {
+        if (!acc[v.categoryName]) acc[v.categoryName] = [];
+        acc[v.categoryName].push(v);
+        return acc;
+      }, {})
+    ).map(([categoryName, items]) => {
+      const categoryId = items[0]?.categoryId;
+      const isViewAll = searchParams.get("categoryId") == categoryId;
 
-    // 🔹 Nếu đang ở trang "Xem tất cả"
-    if (isViewAll) {
+      // 🔹 Slider view
+      const displayItems =
+        items.length < 10
+          ? [...items, ...Array(10 - items.length).fill(null).map((_, i) => items[i % items.length])]
+          : items;
+
+      const settings = {
+        dots: false,
+        infinite: true,
+        speed: 700,
+        slidesToShow: 4,
+        slidesToScroll: 4,
+        arrows: true,
+        swipeToSlide: true,
+        cssEase: "cubic-bezier(0.25, 0.46, 0.45, 0.94)",
+        responsive: [
+          { breakpoint: 1200, settings: { slidesToShow: 4 } },
+          { breakpoint: 992, settings: { slidesToShow: 3 } },
+          { breakpoint: 768, settings: { slidesToShow: 2 } },
+          { breakpoint: 576, settings: { slidesToShow: 1 } },
+        ],
+      };
+
       return (
-        <div key={categoryName} className="mb-5 fade-in">
-          {/* ======== TIÊU ĐỀ NHÓM ======== */}
-          <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1">
-            <h3 className="fw-bold mb-0" style={{ fontSize: "1.5rem", color: "#3a2f2b" }}>
-              {categoryName}
-            </h3>
-            <button
-              className="btn btn-outline-dark btn-sm"
-              onClick={() => navigate("/shop")}
+        <motion.div
+          key={isViewAll ? `viewall-${categoryId}` : `slider-${categoryId}`}
+          initial={{ opacity: 0, y: 25 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -25 }}
+          transition={{ duration: 0.45, ease: "easeInOut" }}
+        >
+          <div key={categoryName} className="mb-5 fade-in" style={{ animation: "fadeIn 0.6s ease-out" }}>
+            <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1"
+              style={{
+    borderBottom: "3px solid rgba(58, 47, 43, 0.9)",
+    boxShadow: "0 1px 0 rgba(58, 47, 43, 0.2)",
+  }}
             >
-              ← Quay lại
-            </button>
-          </div>
-
-          {/* ======== GRID ======== */}
-          <div className="row">
-            {items.map((v, index) => (
-              <div
-                key={`${v.productId}-${v.id}-${index}`}
-                className="col-6 col-md-4 col-lg-3 mb-4 animate__animated animate__fadeInUp"
-                style={{ animationDelay: `${0.05 * index}s` }}
+              <h3
+                className="fw-bold mb-0"
+                style={{ fontSize: "1.5rem", color: "#3a2f2b" }}
               >
-                <div className="product-style1">
-                  <div
-                    className="product-img"
-                    style={{
-                      position: "relative",
-                      overflow: "hidden",
-                      borderRadius: "8px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      aspectRatio: "1 / 1",
-                    }}
+                {categoryName}
+              </h3>
+              {categoryId ? (
+                isViewAll ? (
+                  <button
+                    className="btn btn-outline-dark btn-sm"
+                    onClick={() => navigate("/shop")}
                   >
-                    {/* ⚡ Không blur nền trong grid */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        backgroundImage: `url(${
-                          v.imageUrl?.startsWith("https")
-                            ? v.imageUrl
-                            : `${API_BASE_URL}${v.imageUrl}`
-                        })`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        transform: "scale(1.2)",
-                        opacity: 0.85,
-                      }}
-                    ></div>
+                    ← Quay lại
+                  </button>
+                ) : (
+                  <button
+                    className="btn btn-outline-dark btn-sm"
+                    onClick={() => navigate(`/shop?categoryId=${categoryId}`)}
+                  >
+                    Xem tất cả →
+                  </button>
+                )
+              ) : null}
+            </div>
 
-                    {/* Overlay */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        backgroundColor: "rgba(0,0,0,0.1)",
-                      }}
-                    ></div>
-
-                    {/* Ảnh chính */}
-                    <img
-                      loading="lazy"
-                      src={
-                        v.imageUrl?.startsWith("https")
-                          ? v.imageUrl
-                          : `${API_BASE_URL}${v.imageUrl}`
-                      }
-                      alt={v.name}
-                      style={{
-                        position: "relative",
-                        zIndex: 10,
-                        maxHeight: "100%",
-                        maxWidth: "110%",
-                        objectFit: "contain",
-                        transition: "transform 0.3s ease",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-                    />
-
-                    {/* Nút giỏ hàng */}
-                    <div
-                      className="product-btns"
-                      style={{
-                        position: "absolute",
-                        bottom: "10px",
-                        right: "10px",
-                        zIndex: 50,
-                      }}
-                    >
-                      <a
-                        href="#"
-                        className="icon-btn cart"
+            {isViewAll ? (
+              // === VIEW ALL MODE (GRID) ===
+              <div className="row">
+                {items.map((v, index) => (
+                  <motion.div
+                    key={`${v?.productId}-${v?.id}-${index}`}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.04 }}
+                    className="col-6 col-md-4 col-lg-3 mb-4"
+                  >
+                    {v && (
+                      <div
+                        className="product-style1"
                         style={{
-                          backgroundColor: "rgba(0,0,0,0.7)",
-                          color: "white",
-                          borderRadius: "50%",
-                          padding: "10px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleAddToCart(v);
+                          willChange: "transform, opacity",
+                          animationDelay: `${0.03 * index}s`,
                         }}
                       >
-                        <i className="fa-solid fa-basket-shopping"></i>
-                      </a>
-                    </div>
-                  </div>
+                        <div
+                          className="product-img"
+                          style={{
+                            position: "relative",
+                            overflow: "hidden",
+                            borderRadius: "8px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            aspectRatio: "1 / 1",
+                          }}
+                        >
+                          <div
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              backgroundImage: `url(${
+                                v.imageUrl?.startsWith("https")
+                                  ? v.imageUrl
+                                  : `${API_BASE_URL}${v.imageUrl}`
+                              })`,
+                              backgroundSize: "cover",
+                              backgroundPosition: "center",
+                              filter: "blur(25px) brightness(0.55)",
+                              transform: "scale(1.4)",
+                              transition: "opacity 0.4s ease",
+                            }}
+                          ></div>
 
-                  <div className="product-content text-center mt-2">
-                    <h2 className="product-title" style={{ fontSize: "1rem" }}>
-                      <a
-                        href={`/shop/${v.productId}/${v.id}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          navigate(`/shop/${v.productId}/${v.id}`);
-                        }}
-                      >
-                        {v.name}
-                      </a>
-                    </h2>
-                    <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-                      {v.price?.toLocaleString()}₫
-                    </p>
-                  </div>
-                </div>
+                          <div
+                            style={{
+                              position: "absolute",
+                              inset: 0,
+                              backgroundColor: "rgba(0,0,0,0.05)",
+                            }}
+                          ></div>
+
+                          <img
+                            loading="lazy"
+                            src={
+                              v.imageUrl?.startsWith("https")
+                                ? v.imageUrl
+                                : `${API_BASE_URL}${v.imageUrl}`
+                            }
+                            alt={v.name}
+                            style={{
+                              position: "relative",
+                              zIndex: 10,
+                              maxHeight: "100%",
+                              maxWidth: "110%",
+                              objectFit: "contain",
+                              transition: "transform 0.4s ease-out",
+                              willChange: "transform",
+                            }}
+                            onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.07)")}
+                            onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                          />
+
+                          <div
+                            className="product-btns"
+                            style={{
+                              position: "absolute",
+                              bottom: "10px",
+                              right: "10px",
+                              zIndex: 50,
+                              opacity: 0,
+                              transform: "translateY(10px)",
+                              transition: "opacity 0.3s ease, transform 0.3s ease",
+                            }}
+                            onMouseEnter={(e) => {
+                              e.currentTarget.style.opacity = 1;
+                              e.currentTarget.style.transform = "translateY(0)";
+                            }}
+                            onMouseLeave={(e) => {
+                              e.currentTarget.style.opacity = 0;
+                              e.currentTarget.style.transform = "translateY(10px)";
+                            }}
+                          >
+                            <a
+                              href="#"
+                              className="icon-btn cart"
+                              style={{
+                                backgroundColor: "rgba(0,0,0,0.7)",
+                                color: "white",
+                                borderRadius: "50%",
+                                padding: "10px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                              }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                handleAddToCart(v);
+                              }}
+                            >
+                              <i className="fa-solid fa-basket-shopping"></i>
+                            </a>
+                          </div>
+                        </div>
+
+                        <div className="product-content text-center mt-2">
+                          <h2 className="product-title" style={{ fontSize: "1rem" }}>
+                            <a
+                              href={`/shop/${v.productId}/${v.id}`}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                navigate(`/shop/${v.productId}/${v.id}`);
+                              }}
+                            >
+                              {v.name}
+                            </a>
+                          </h2>
+                          <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
+                            {v.price?.toLocaleString()}₫
+                          </p>
+                        </div>
+                      </div>
+                    )}
+                  </motion.div>
+                ))}
               </div>
-            ))}
+            ) : (
+              // === SLIDER MODE ===
+              <div style={{ position: "relative", overflow: "visible", padding: "0 40px" }}>
+                <Slider {...settings} nextArrow={<NextArrow />} prevArrow={<PrevArrow />}>
+                  {displayItems.map((v, index) => (
+                    <motion.div
+                      key={`${v?.productId}-${v?.id}-${index}`}
+                      initial={{ opacity: 0, y: 15 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      transition={{ delay: index * 0.05 }}
+                      className="p-2"
+                    >
+                      {v && (
+                        <div
+                          className="product-style1"
+                          style={{
+                            willChange: "transform, opacity",
+                            animationDelay: `${0.03 * index}s`,
+                          }}
+                        >
+                          <div
+                            className="product-img"
+                            style={{
+                              position: "relative",
+                              overflow: "hidden",
+                              borderRadius: "8px",
+                              display: "flex",
+                              alignItems: "center",
+                              justifyContent: "center",
+                              aspectRatio: "1 / 1",
+                            }}
+                          >
+                            <div
+                              style={{
+                                position: "absolute",
+                                inset: 0,
+                                backgroundImage: `url(${
+                                  v.imageUrl?.startsWith("https")
+                                    ? v.imageUrl
+                                    : `${API_BASE_URL}${v.imageUrl}`
+                                })`,
+                                backgroundSize: "cover",
+                                backgroundPosition: "center",
+                                filter: "blur(25px) brightness(0.55)",
+                                transform: "scale(1.4)",
+                                transition: "opacity 0.4s ease",
+                              }}
+                            ></div>
+
+                            <div
+                              style={{
+                                position: "absolute",
+                                inset: 0,
+                                backgroundColor: "rgba(0,0,0,0.05)",
+                              }}
+                            ></div>
+
+                            <img
+                              loading="lazy"
+                              src={
+                                v.imageUrl?.startsWith("https")
+                                  ? v.imageUrl
+                                  : `${API_BASE_URL}${v.imageUrl}`
+                              }
+                              alt={v.name}
+                              style={{
+                                position: "relative",
+                                zIndex: 10,
+                                maxHeight: "100%",
+                                maxWidth: "110%",
+                                objectFit: "contain",
+                                transition: "transform 0.4s ease-out",
+                                willChange: "transform",
+                              }}
+                              onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.07)")}
+                              onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
+                            />
+
+                            <div
+                              className="product-btns"
+                              style={{
+                                position: "absolute",
+                                bottom: "10px",
+                                right: "10px",
+                                zIndex: 50,
+                                opacity: 0,
+                                transform: "translateY(10px)",
+                                transition: "opacity 0.3s ease, transform 0.3s ease",
+                              }}
+                              onMouseEnter={(e) => {
+                                e.currentTarget.style.opacity = 1;
+                                e.currentTarget.style.transform = "translateY(0)";
+                              }}
+                              onMouseLeave={(e) => {
+                                e.currentTarget.style.opacity = 0;
+                                e.currentTarget.style.transform = "translateY(10px)";
+                              }}
+                            >
+                              <a
+                                href="#"
+                                className="icon-btn cart"
+                                style={{
+                                  backgroundColor: "rgba(0,0,0,0.7)",
+                                  color: "white",
+                                  borderRadius: "50%",
+                                  padding: "10px",
+                                  display: "flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                }}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  handleAddToCart(v);
+                                }}
+                              >
+                                <i className="fa-solid fa-basket-shopping"></i>
+                              </a>
+                            </div>
+                          </div>
+
+                          <div className="product-content text-center mt-2">
+                            <h2 className="product-title" style={{ fontSize: "1rem" }}>
+                              <a
+                                href={`/shop/${v.productId}/${v.id}`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  navigate(`/shop/${v.productId}/${v.id}`);
+                                }}
+                              >
+                                {v.name}
+                              </a>
+                            </h2>
+                            <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
+                              {v.price?.toLocaleString()}₫
+                            </p>
+                          </div>
+                        </div>
+                      )}
+                    </motion.div>
+                  ))}
+                </Slider>
+              </div>
+            )}
           </div>
-        </div>
+        </motion.div>
       );
-    }
-
-    // 🔹 Slider view
-    const displayItems =
-      items.length < 10
-        ? [...items, ...Array(10 - items.length).fill(null).map((_, i) => items[i % items.length])]
-        : items;
-
-    const settings = {
-      dots: false,
-      infinite: true,
-      speed: 500,
-      slidesToShow: 5,
-      slidesToScroll: 5,
-      arrows: true,
-      responsive: [
-        { breakpoint: 1200, settings: { slidesToShow: 4 } },
-        { breakpoint: 992, settings: { slidesToShow: 3 } },
-        { breakpoint: 768, settings: { slidesToShow: 2 } },
-        { breakpoint: 576, settings: { slidesToShow: 1 } },
-      ],
-    };
-
-    return (
-      <div key={categoryName} className="mb-5 fade-in">
-        <div className="d-flex justify-content-between align-items-center mb-3 border-bottom pb-1">
-          <h3 className="fw-bold mb-0" style={{ fontSize: "1.5rem", color: "#3a2f2b" }}>
-            {categoryName}
-          </h3>
-          {categoryId ? (
-            <button
-              className="btn btn-outline-dark btn-sm"
-              onClick={() => navigate(`/shop?categoryId=${categoryId}`)}
-            >
-              Xem tất cả →
-            </button>
-          ) : null}
-        </div>
-
-        <div style={{ position: "relative", overflow: "visible", padding: "0 40px" }}>
-          <Slider {...settings} nextArrow={<NextArrow />} prevArrow={<PrevArrow />}>
-            {displayItems.map((v, index) => (
-              <div key={`${v.productId}-${v.id}-${index}`} className="p-2">
-                <div className="product-style1 animate__animated animate__fadeInUp">
-                  <div
-                    className="product-img"
-                    style={{
-                      position: "relative",
-                      overflow: "hidden",
-                      borderRadius: "8px",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      aspectRatio: "1 / 1",
-                    }}
-                  >
-                    {/* ⚡ Giữ blur trong slider để đẹp hơn */}
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        backgroundImage: `url(${
-                          v.imageUrl?.startsWith("https")
-                            ? v.imageUrl
-                            : `${API_BASE_URL}${v.imageUrl}`
-                        })`,
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        filter: "blur(25px) brightness(0.55)",
-                        transform: "scale(1.4)",
-                      }}
-                    ></div>
-
-                    <div
-                      style={{
-                        position: "absolute",
-                        inset: 0,
-                        backgroundColor: "rgba(0,0,0,0.05)",
-                      }}
-                    ></div>
-
-                    <img
-                      loading="lazy"
-                      src={
-                        v.imageUrl?.startsWith("https")
-                          ? v.imageUrl
-                          : `${API_BASE_URL}${v.imageUrl}`
-                      }
-                      alt={v.name}
-                      style={{
-                        position: "relative",
-                        zIndex: 10,
-                        maxHeight: "100%",
-                        maxWidth: "110%",
-                        objectFit: "contain",
-                        transition: "transform 0.4s ease",
-                      }}
-                      onMouseEnter={(e) => (e.currentTarget.style.transform = "scale(1.05)")}
-                      onMouseLeave={(e) => (e.currentTarget.style.transform = "scale(1)")}
-/>
-
-                    <div
-                      className="product-btns"
-                      style={{
-                        position: "absolute",
-                        bottom: "10px",
-                        right: "10px",
-                        zIndex: 50,
-                      }}
-                    >
-                      <a
-                        href="#"
-                        className="icon-btn cart"
-                        style={{
-                          backgroundColor: "rgba(0,0,0,0.7)",
-                          color: "white",
-                          borderRadius: "50%",
-                          padding: "10px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                        }}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleAddToCart(v);
-                        }}
-                      >
-                        <i className="fa-solid fa-basket-shopping"></i>
-                      </a>
-                    </div>
-                  </div>
-
-                  <div className="product-content text-center mt-2">
-                    <h2 className="product-title" style={{ fontSize: "1rem" }}>
-                      <a
-                        href={`/shop/${v.productId}/${v.id}`}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          navigate(`/shop/${v.productId}/${v.id}`);
-                        }}
-                      >
-                        {v.name}
-                      </a>
-                    </h2>
-                    <p className="text-muted mb-0" style={{ fontSize: "0.9rem" }}>
-                      {v.price?.toLocaleString()}₫
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </Slider>
-        </div>
-      </div>
-    );
-  })}
+    })}
+  </AnimatePresence>
 </div>
+
+
 
 
 

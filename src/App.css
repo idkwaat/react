@@ -351,6 +351,62 @@ h1, h2, h3, h4, h5, h6 {
   transform: scale(1.05);
 }
 
+/* Mượt tổng thể khi hover hoặc thay đổi layout */
+* {
+  scroll-behavior: smooth;
+  transition: all 0.25s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Animation fade-in mượt */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.fade-in {
+  animation: fadeIn 0.5s ease-out;
+  will-change: transform, opacity;
+}
+
+/* Làm slider mượt hơn */
+.slick-slide {
+  transition: transform 0.4s ease-out;
+  will-change: transform;
+}
+
+/* Khi hover sản phẩm */
+.product-style1:hover .product-img img {
+  transform: scale(1.07);
+  transition: transform 0.35s ease-out;
+}
+
+/* Nút thêm giỏ rung mượt hơn */
+.cart-shake {
+  animation: shakeCart 0.6s cubic-bezier(0.36, 0.07, 0.19, 0.97);
+}
+@keyframes shakeCart {
+  10%, 90% { transform: translateX(-1px); }
+  20%, 80% { transform: translateX(2px); }
+  30%, 50%, 70% { transform: translateX(-3px); }
+  40%, 60% { transform: translateX(3px); }
+}
+
+/* +1 bay lên mượt */
+.plus-one-fly {
+  position: fixed;
+  color: #00c853;
+  font-weight: bold;
+  font-size: 1.2rem;
+  animation: flyUp 1s ease-out forwards;
+  pointer-events: none;
+  z-index: 9999;
+}
+@keyframes flyUp {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-40px); }
+}
 
 
 
