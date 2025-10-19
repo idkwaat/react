@@ -15,56 +15,58 @@ ChartJS.register(LineElement, CategoryScale, LinearScale, PointElement, Tooltip,
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
-
 export default function AdminPage() {
   const [stats, setStats] = useState(null);
   const [revenueChart, setRevenueChart] = useState(null);
   const [visitorChart, setVisitorChart] = useState(null);
 
   useEffect(() => {
-    // Lấy dữ liệu thống kê chính
-    axios.get(`${API_BASE_URL}/api/dashboard/overview`).then((res) => setStats(res.data));
+    // 🔹 Lấy dữ liệu tổng quan
+    axios
+      .get(`${API_BASE_URL}/api/dashboard/overview`)
+      .then((res) => setStats(res.data))
+      .catch((err) => console.error("Overview error:", err));
 
-    // Lấy dữ liệu biểu đồ doanh thu
-    axios.get(`${API_BASE_URL}/api/dashboard/revenue-chart`).then((res) => {
-      setRevenueChart({
-        labels: res.data.map((x) => x.date),
-        datasets: [
-          {
-            label: "Doanh thu (VND)",
-            data: res.data.map((x) => x.revenue),
-            borderColor: "#28a745",
-            fill: false,
-            tension: 0.3,
-          },
-        ],
-      });
-    });
+    // 💰 Lấy dữ liệu biểu đồ doanh thu
+    axios
+      .get(`${API_BASE_URL}/api/dashboard/revenue-chart`)
+      .then((res) => {
+        setRevenueChart({
+          labels: res.data.map((x) => x.date),
+          datasets: [
+            {
+              label: "Doanh thu (VND)",
+              data: res.data.map((x) => x.revenue),
+              borderColor: "#28a745",
+              fill: false,
+              tension: 0.3,
+            },
+          ],
+        });
+      })
+      .catch((err) => console.error("Revenue chart error:", err));
 
-    // Lấy dữ liệu biểu đồ lượt truy cập
-    axios.get(`${API_BASE_URL}/api/analytics/chart`).then((res) => {
-      setVisitorChart({
-        labels: res.data.map((x) => x.date),
-        datasets: [
-          {
-            label: "Lượt truy cập",
-            data: res.data.map((x) => x.count),
-            borderColor: "#007bff",
-            fill: false,
-            tension: 0.3,
-          },
-        ],
-      });
-    });
-
-    // Lấy thống kê lượt truy cập tổng/hôm nay
-    axios.get(`${API_BASE_URL}/api/analytics/stats`).then((res) => {
-      setStats((prev) => ({ ...prev, ...res.data }));
-    });
+    // 👁️ Lấy dữ liệu biểu đồ lượt truy cập
+    axios
+      .get(`${API_BASE_URL}/api/dashboard/visit-chart`)
+      .then((res) => {
+        setVisitorChart({
+          labels: res.data.map((x) => x.date),
+          datasets: [
+            {
+              label: "Lượt truy cập",
+              data: res.data.map((x) => x.count),
+              borderColor: "#007bff",
+              fill: false,
+              tension: 0.3,
+            },
+          ],
+        });
+      })
+      .catch((err) => console.error("Visit chart error:", err));
   }, []);
 
   if (!stats) return <div className="text-center mt-5">Đang tải Dashboard...</div>;
-
   return (
     <>
       {/* Header */}
