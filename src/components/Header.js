@@ -208,10 +208,10 @@ const Header = () => {
 <nav className="main-menu menu-style1 d-none d-lg-block">
   <ul className="d-flex align-items-center gap-4 list-unstyled mb-0">
     {[
-      { path: "/", label: "Home" },
-      { path: "/shop", label: "Shop" },
-      { path: "/about", label: "About Us" },
-      { path: "/policy", label: "Policy" },
+      { path: "/", label: "Trang Chủ" },
+      { path: "/shop", label: "Sản Phẩm" },
+      { path: "/about", label: "Về Chúng Tôi" },
+      { path: "/policy", label: "Chính Sách" },
     ].map((item) => (
       <li key={item.path}>
         <Link

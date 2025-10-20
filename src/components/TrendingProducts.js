@@ -268,7 +268,7 @@ export default function TrendingProducts() {
     </div>
   ))
 ) : (
-  <div className="text-center py-5">💤 Chưa có sản phẩm trending</div>
+  <div className="text-center py-5">💤 Đang tải sản phẩm...</div>
 )}
 
         </div>

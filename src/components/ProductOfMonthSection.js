@@ -57,7 +57,7 @@ useEffect(() => {
             <div className="container">
                 <div className="title-area text-center animation-style1 title-anime mb-5">
                     <h2 className="sec-title title-anime__title" style={{ textTransform: "initial" }}>
-                        Product Of The Month
+                        Top Sản Phẩm Tháng
                     </h2>
                 </div>
 
