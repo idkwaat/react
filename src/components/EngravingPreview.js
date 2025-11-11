@@ -143,7 +143,7 @@ export default function EngravingPreview({ variantId, onClose }) {
               style={{
                 left: `${engravingX}%`,
                 top: `${engravingY}%`,
-                fontFamily: `${engravingFont}, sans-serif !important`,
+                fontFamily: `${engravingFont}, sans-serif`,
                 color: engravingColor,
                 fontSize: `${engravingSize || 22}px`,
                 textShadow:
