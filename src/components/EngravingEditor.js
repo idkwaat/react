@@ -15,19 +15,20 @@ export default function EngravingEditor({ variant, onClose, onSaved }) {
   const [extraPrice, setExtraPrice] = useState(variant.extraPrice);
 
   // ✅ Thêm đoạn này — để tự cập nhật lại nếu variant thay đổi
-  useEffect(() => {
-    if (variant) {
-      setText(variant.engravingText || "Vị trí khắc");
-      setPosition({
-        x: variant.engravingX || 50,
-        y: variant.engravingY || 80,
-      });
-      setFont(variant.engravingFont || "Courier New");
-      setColor(variant.engravingColor || "#333");
-      setFontSize(variant.engravingSize || 22);
-      setExtraPrice(variant.extraPrice || 0);
-    }
-  }, [variant]);
+ useEffect(() => {
+  if (variant) {
+    setText(variant.engravingText || "Vị trí khắc");
+    setPosition({
+      x: variant.engravingX ?? 50,
+      y: variant.engravingY ?? 80,
+    });
+    setFont(variant.engravingFont || "Courier New");
+    setColor(variant.engravingColor || "#333");
+    setFontSize(variant.engravingSize || 22);
+    setExtraPrice(variant.extraPrice || 0);
+  }
+}, [variant]);
+
   // ✅ Điều này cực kỳ quan trọng, vì khi bạn fetch chi tiết variant từ server
   // thì component sẽ tự cập nhật lại nội dung khắc cũ thay vì giữ state cũ
 

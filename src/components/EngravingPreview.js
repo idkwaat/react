@@ -145,7 +145,7 @@ export default function EngravingPreview({ variantId, onClose }) {
                 top: `${engravingY}%`,
                 fontFamily: `${engravingFont}, sans-serif !important`,
                 color: engravingColor,
-                fontSize: `${engravingSize || 22}px !important`,
+                fontSize: `${engravingSize || 22}px`,
                 textShadow:
                   engravingColor === "#fff"
                     ? "1px 1px 2px rgba(0,0,0,0.6)"
