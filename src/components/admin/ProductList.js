@@ -34,10 +34,9 @@ const [selectedVariant, setSelectedVariant] = useState(null);
 const handleEditEngraving = async (variantId) => {
   try {
     const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
-    const res = await axios.get(`${API_BASE_URL}/api/products/${variantId}`);
+    const res = await axios.get(`${API_BASE_URL}/api/products/${variantId}/engraving`);
 
-    // ✅ Nếu API trả về biến thể riêng, giữ nguyên
-    // Nếu trả về sản phẩm chứa nhiều biến thể, tìm variant đúng id
+    // Nếu API trả về sản phẩm chứa nhiều variants (ít gặp)
     let variantData = res.data;
     if (res.data.variants) {
       variantData = res.data.variants.find(v => v.id === variantId);
@@ -54,6 +53,7 @@ const handleEditEngraving = async (variantId) => {
     alert("❌ Không thể tải dữ liệu biến thể từ server!");
   }
 };
+
 
 
 
