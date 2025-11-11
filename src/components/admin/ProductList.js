@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import ModelViewer from "../../components/ModelViewer";
 import EngravingEditor from "../../components/EngravingEditor";
+import axios from "axios";
+
 
 const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
@@ -29,6 +31,32 @@ const [selectedVariant, setSelectedVariant] = useState(null);
     fetchProducts();
   }, []);
 
+const handleEditEngraving = async (variantId) => {
+  try {
+    const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
+    const res = await axios.get(`${API_BASE_URL}/api/products/${variantId}`);
+
+    // ✅ Nếu API trả về biến thể riêng, giữ nguyên
+    // Nếu trả về sản phẩm chứa nhiều biến thể, tìm variant đúng id
+    let variantData = res.data;
+    if (res.data.variants) {
+      variantData = res.data.variants.find(v => v.id === variantId);
+    }
+
+    if (!variantData) {
+      alert("⚠️ Không tìm thấy thông tin biến thể khắc!");
+      return;
+    }
+
+    setSelectedVariant(variantData);
+  } catch (error) {
+    console.error("Lỗi khi tải thông tin khắc:", error);
+    alert("❌ Không thể tải dữ liệu biến thể từ server!");
+  }
+};
+
+
+
   const handleDelete = async (id) => {
     if (!window.confirm("Bạn có chắc muốn xóa sản phẩm này không?")) return;
     const token = localStorage.getItem("token");
@@ -49,6 +77,7 @@ const [selectedVariant, setSelectedVariant] = useState(null);
       alert("⚠️ Không thể kết nối đến server.");
     }
   };
+
 
   return (
     <div className="container mt-4">
@@ -161,10 +190,11 @@ const [selectedVariant, setSelectedVariant] = useState(null);
 <button
   className="btn btn-outline-secondary btn-sm"
   style={{ marginBottom: "10px" }}
-  onClick={() => setSelectedVariant(v)}
+  onClick={() => handleEditEngraving(v.id)} // 🟢 gọi API lấy dữ liệu mới nhất
 >
   🪶 Chọn vị trí khắc
 </button>
+
 
 
     {v.modelUrl ? (

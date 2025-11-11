@@ -1,5 +1,4 @@
-// src/components/admin/EngravingEditor.jsx
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import axios from "axios";
 
@@ -15,6 +14,22 @@ export default function EngravingEditor({ variant, onClose, onSaved }) {
   const [dragging, setDragging] = useState(false);
   const [extraPrice, setExtraPrice] = useState(variant.extraPrice);
 
+  // ✅ Thêm đoạn này — để tự cập nhật lại nếu variant thay đổi
+  useEffect(() => {
+    if (variant) {
+      setText(variant.engravingText || "Vị trí khắc");
+      setPosition({
+        x: variant.engravingX || 50,
+        y: variant.engravingY || 80,
+      });
+      setFont(variant.engravingFont || "Courier New");
+      setColor(variant.engravingColor || "#333");
+      setFontSize(variant.engravingSize || 22);
+      setExtraPrice(variant.extraPrice || 0);
+    }
+  }, [variant]);
+  // ✅ Điều này cực kỳ quan trọng, vì khi bạn fetch chi tiết variant từ server
+  // thì component sẽ tự cập nhật lại nội dung khắc cũ thay vì giữ state cũ
 
   const engravingColors = [
     { label: "Bạc", value: "#aaa" },
@@ -24,19 +39,18 @@ export default function EngravingEditor({ variant, onClose, onSaved }) {
     { label: "Đỏ", value: "#c0392b" },
   ];
 
-const engravingFonts = [
-  "Courier New",
-  "Arial",
-  "Verdana",
-  "Tahoma",
-  "Trebuchet MS",
-  "Times New Roman",
-  "Georgia",
-  "Comic Sans MS",
-  "Impact",
-  "System-ui",
-];
-
+  const engravingFonts = [
+    "Courier New",
+    "Arial",
+    "Verdana",
+    "Tahoma",
+    "Trebuchet MS",
+    "Times New Roman",
+    "Georgia",
+    "Comic Sans MS",
+    "Impact",
+    "System-ui",
+  ];
 
   const handleSave = async () => {
     try {
@@ -51,21 +65,25 @@ const engravingFonts = [
         extraPrice: extraPrice,
       };
 
-      const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
-await axios.put(`${API_BASE_URL}/api/products/${variant.id}/engraving`, payload);
+      const API_BASE_URL =
+        process.env.REACT_APP_API_URL || "http://localhost:5186";
+
+      await axios.put(
+        `${API_BASE_URL}/api/products/${variant.id}/engraving`,
+        payload
+      );
 
       onSaved && onSaved(payload);
- onClose();
+      onClose();
 
-    // ⏳ Sau 300ms (đợi animation đóng modal xong) mới hiện alert
-    setTimeout(() => {
-      alert("✅ Đã lưu vị trí và nội dung khắc thành công!");
-    }, 300);
-  } catch (err) {
-    console.error(err);
-    alert("❌ Lỗi khi lưu dữ liệu khắc.");
-  }
-};
+      setTimeout(() => {
+        alert("✅ Đã lưu vị trí và nội dung khắc thành công!");
+      }, 300);
+    } catch (err) {
+      console.error(err);
+      alert("❌ Lỗi khi lưu dữ liệu khắc.");
+    }
+  };
 
   const handleDrag = (e) => {
     const rect = e.target.parentElement.getBoundingClientRect();
@@ -78,9 +96,11 @@ await axios.put(`${API_BASE_URL}/api/products/${variant.id}/engraving`, payload)
   const imageSrc =
     variant.cleanImageUrl?.startsWith("http")
       ? variant.cleanImageUrl
-      : `${process.env.REACT_APP_API_URL || "http://localhost:5186"}${
-          variant.cleanImageUrl
-        }`;
+      : `${
+          process.env.REACT_APP_API_URL || "http://localhost:5186"
+        }${variant.cleanImageUrl}`;
+
+  // ... phần JSX hiển thị (không cần đổi)
 
   return (
     <div className="engraving-overlay">

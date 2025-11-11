@@ -25,13 +25,13 @@ export default function EngravingPreview({ variantId, onClose }) {
         const allProducts = productRes.data.data || productRes.data.Data || [];
 
         const foundProduct = allProducts.find(p =>
-  p.variants?.some(v => v.id === variantId)
-);
-if (foundProduct) {
-  const foundVariant = foundProduct.variants.find(v => v.id === variantId);
-  setVariant(foundVariant);
-  setProduct(foundProduct); // 🆕 lưu sản phẩm gốc lại
-}
+          p.variants?.some(v => v.id === variantId)
+        );
+        if (foundProduct) {
+          const foundVariant = foundProduct.variants.find(v => v.id === variantId);
+          setVariant(foundVariant);
+          setProduct(foundProduct); // 🆕 lưu sản phẩm gốc lại
+        }
 
       } catch (err) {
         console.error(err);
@@ -43,47 +43,47 @@ if (foundProduct) {
     fetchData();
   }, [variantId]);
 
-const handleAddToCart = () => {
-  if (!text.trim()) {
+  const handleAddToCart = () => {
+    if (!text.trim()) {
       onClose?.();
-    alert(" Vui lòng nhập nội dung khắc!");
-    return;
-  }
+      alert(" Vui lòng nhập nội dung khắc!");
+      return;
+    }
 
-  if (!variant) {
-    alert(" Không tìm thấy thông tin sản phẩm!");
-    return;
-  }
+    if (!variant) {
+      alert(" Không tìm thấy thông tin sản phẩm!");
+      return;
+    }
 
-  const extraPrice = engraving?.extraPrice || 0;
+    const extraPrice = engraving?.extraPrice || 0;
 
-  // ✅ Ưu tiên lấy ảnh theo thứ tự an toàn
-  const imageUrl =
-    variant.image ||
-    variant.thumbnail ||
-    variant.imageUrl ||
-    variant.images?.[0] ||
-    engraving.cleanImageUrl ||
-    engraving.imageUrl ||
-    engraving.previewImage ||
-    (variant.productImage && `${API_BASE_URL}${variant.productImage}`) ||
-    "";
+    // ✅ Ưu tiên lấy ảnh theo thứ tự an toàn
+    const imageUrl =
+      variant.image ||
+      variant.thumbnail ||
+      variant.imageUrl ||
+      variant.images?.[0] ||
+      engraving.cleanImageUrl ||
+      engraving.imageUrl ||
+      engraving.previewImage ||
+      (variant.productImage && `${API_BASE_URL}${variant.productImage}`) ||
+      "";
 
-  // ✅ Thêm vào giỏ
-  addToCart({
-    productId: product?.id || variant.productId, // 🆕 Dùng product (state)
-    variantId: variant.id,
-    name: variant.name || "Sản phẩm không tên",
-    price: variant.price || 0,
-    engravingText: text.trim(),
-    engravingFee: extraPrice,
-    imageUrl,
-    quantity: 1,
-  });
+    // ✅ Thêm vào giỏ
+    addToCart({
+      productId: product?.id || variant.productId, // 🆕 Dùng product (state)
+      variantId: variant.id,
+      name: variant.name || "Sản phẩm không tên",
+      price: variant.price || 0,
+      engravingText: text.trim(),
+      engravingFee: extraPrice,
+      imageUrl,
+      quantity: 1,
+    });
 
-  alert("✅ Đã thêm sản phẩm vào giỏ hàng!");
-  onClose?.();
-};
+    alert("✅ Đã thêm sản phẩm vào giỏ hàng!");
+    onClose?.();
+  };
 
 
 
@@ -143,9 +143,9 @@ const handleAddToCart = () => {
               style={{
                 left: `${engravingX}%`,
                 top: `${engravingY}%`,
-                fontFamily: `${engravingFont}, sans-serif`,
+                fontFamily: `${engravingFont}, sans-serif !important`,
                 color: engravingColor,
-                fontSize: `${engravingSize || 22}px`,
+                fontSize: `${engravingSize || 22}px !important`,
                 textShadow:
                   engravingColor === "#fff"
                     ? "1px 1px 2px rgba(0,0,0,0.6)"
@@ -154,6 +154,7 @@ const handleAddToCart = () => {
             >
               {text}
             </motion.div>
+
           </div>
 
           {/* Điều khiển và giá */}
@@ -171,7 +172,7 @@ const handleAddToCart = () => {
             <div className="price-box mt-3 p-3 rounded shadow-sm bg-light">
               <div className="d-flex justify-content-between fw-bold fs-5">
                 <span >Tổng cộng:</span>
-                <span style={{ color: "#651C17"}}>{totalPrice.toLocaleString()}₫</span>
+                <span style={{ color: "#651C17" }}>{totalPrice.toLocaleString()}₫</span>
               </div>
             </div>
 
@@ -179,7 +180,7 @@ const handleAddToCart = () => {
               <button className="vs-btn btn-primary" onClick={handleAddToCart}>
                 Thêm vào giỏ hàng
               </button>
-              <button className="vs-btn btn-secondary" style={{color:"#fff"}} onClick={onClose}>
+              <button className="vs-btn btn-secondary" style={{ color: "#fff" }} onClick={onClose}>
                 Hủy
               </button>
             </div>
