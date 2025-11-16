@@ -65,8 +65,8 @@ function Home() {
                 <i className="fa-solid fa-star"></i>
                 <i className="fa-solid fa-star"></i>
               </div>
-              <h2 className="offer-title">Tranh Trúc Chỉ</h2>
-              <p className="offer-price">Chỉ từ <span>800k</span></p>
+              <h2 className="offer-title">Quạt Phiêu Dao</h2>
+              <p className="offer-price">Chỉ từ <span>1,400,000đ</span></p>
               <Link className="vs-btn" to="/shop">Mua Ngay</Link>
             </div>
             <span className="shape-mockup element1 z-index1  d-xxl-block d-none" data-wow-delay="0.80s" style={{right: "0px", bottom: "-5px" }}><img src="assets/img/shapes/offer-shape1.png" alt="offer shape"/></span>
@@ -103,10 +103,10 @@ function Home() {
       <div className="row g-4 gx-40 align-items-center">
         <div className="col-xl-5">
           <div className="selling-content">
-            <h2 className="selling-title wow animate__fadeInUp" data-wow-delay="0.20s">Vườn Trúc Chỉ</h2>
-            <h4 className="author-name wow animate__fadeInUp" data-wow-delay="0.30s">Cùng đắm chìm vào không gian nghệ thuật của Trúc Chỉ Graden</h4>
+            <h2 className="selling-title wow animate__fadeInUp" data-wow-delay="0.20s">Hành trình của một tấm giấy Trúc Chỉ</h2>
+            <h4 className="author-name wow animate__fadeInUp" data-wow-delay="0.30s">Từ nguyên liệu tre mộc mạc đến một tác phẩm mang hồn nghệ thuật</h4>
           
-            <p className="selling-text wow animate__fadeInUp" data-wow-delay="0.50s">Giữa lòng thành phố, Vườn Trúc Chỉ là nơi nghệ thuật và thiên nhiên giao hòa. Từng tấm Trúc Chỉ được sinh ra từ ánh sáng, nước và bàn tay con người – kể lại câu chuyện về sự tĩnh lặng và sáng tạo.</p>
+            <p className="selling-text wow animate__fadeInUp" data-wow-delay="0.50s">Giấy Trúc Chỉ được tạo nên qua chuỗi công đoạn thủ công tỉ mỉ: Tre cùng các nguyên liệu tự nhiên khác (rơm, bèo, dứa,..) được xử lý và nấu mềm, nghiền thành bột, sau đó xeo thành từng tấm giấy thô. Khi giấy còn ướt, nghệ nhân dùng áp lực nước để tạo hình hoa văn ngay trên bề mặt, trước khi mang phơi khô và hoàn thiện. Mỗi tấm giấy vì vậy đều mang dấu ấn độc bản của bàn tay người thợ.</p>
 
           </div>
         </div>

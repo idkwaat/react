@@ -77,14 +77,40 @@ export default function Footer() {
                   </span>
                 </h3>
                 <p style={{ color: "#3C1E17" }}>
-                  <strong>Trúc Họa Viên LLC</strong> — nơi lưu giữ tinh hoa nghệ
-                  thuật thủ công Việt Nam. Chúng tôi tự hào mang đến những sản
-                  phẩm tinh tế, chan chứa hồn Việt.
+                  <strong>Trúc Họa Viên LLC</strong> — tôn vinh nghệ thuật thủ công Việt qua từng sản phẩm tinh xảo, giàu giá trị văn hoá.
                 </p>
                 <ul className="social-links">
-                  <li><a href="#"><i className="fab fa-facebook-f"></i></a></li>
-                  <li><a href="#"><i className="fab fa-instagram"></i></a></li>
-                  <li><a href="#"><i className="fa-brands fa-x-twitter"></i></a></li>
+                  <li>
+  <a
+    href="https://www.facebook.com/profile.php?id=61573447291270"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <i className="fab fa-facebook-f"></i>
+  </a>
+</li>
+
+<li>
+  <a
+    href="https://www.instagram.com/truchoavien_3/"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <i className="fab fa-instagram"></i>
+  </a>
+</li>
+
+<li>
+  <a
+    href="https://www.tiktok.com/@truchoavien103"
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <i className="fa-brands fa-tiktok"></i>
+  </a>
+</li>
+
+
                 </ul>
               </div>
             </div>
@@ -170,7 +196,7 @@ export default function Footer() {
                       style={{ marginRight: "5px", color: "#8B2F2F" }}
                     ></i>
                     <a href="tel:+84912345678" style={{ color: "#3C1E17" }}>
-                      +84 912 345 678
+                      0976775203
                     </a>
                   </li>
                   <li>

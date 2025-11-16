@@ -18,8 +18,7 @@ const HeroSection = () => {
                   className="hero-title wow animate__fadeInUp"
                   data-wow-delay="0.50s"
                 >
-                  Nơi ánh sáng và{" "}
-                  <span className="title-highlight">Nghệ thuật</span> trong từng tấm giấy.
+                  Họa Từ Vân Trúc, Sinh Hình Nước Non
                 </h1>
                 <p
                   className="hero-text wow animate__fadeInUp"
