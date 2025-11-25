@@ -17,19 +17,28 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 
 export default function AdminPage() {
   const [stats, setStats] = useState(null);
+
+  const [range, setRange] = useState("week"); // 🌟 range mặc định
   const [revenueChart, setRevenueChart] = useState(null);
   const [visitorChart, setVisitorChart] = useState(null);
 
+  // ----------------------------
+  // 📌 LOAD OVERVIEW
+  // ----------------------------
   useEffect(() => {
-    // 🔹 Tổng quan
     axios
       .get(`${API_BASE_URL}/api/dashboard/overview`)
       .then((res) => setStats(res.data))
       .catch((err) => console.error("Overview error:", err));
+  }, []);
 
-    // 💰 Biểu đồ doanh thu
+  // ----------------------------
+  // 📌 LOAD BIỂU ĐỒ KHI RANGE THAY ĐỔI
+  // ----------------------------
+  useEffect(() => {
+    // Biểu đồ doanh thu
     axios
-      .get(`${API_BASE_URL}/api/dashboard/revenue-chart`)
+      .get(`${API_BASE_URL}/api/dashboard/revenue-chart?range=${range}`)
       .then((res) => {
         setRevenueChart({
           labels: res.data.map((x) => x.date),
@@ -46,9 +55,9 @@ export default function AdminPage() {
       })
       .catch((err) => console.error("Revenue chart error:", err));
 
-    // 👁️ Biểu đồ lượt truy cập
+    // Biểu đồ truy cập
     axios
-      .get(`${API_BASE_URL}/api/dashboard/visit-chart`)
+      .get(`${API_BASE_URL}/api/dashboard/visit-chart?range=${range}`)
       .then((res) => {
         setVisitorChart({
           labels: res.data.map((x) => x.date),
@@ -64,13 +73,14 @@ export default function AdminPage() {
         });
       })
       .catch((err) => console.error("Visit chart error:", err));
-  }, []);
+  }, [range]);
 
+  // ----------------------------
   if (!stats) return <div className="text-center mt-5">Đang tải Dashboard...</div>;
+  // ----------------------------
 
   return (
     <>
-      {/* Header */}
       <div className="row">
         <div className="col-md-12 page-header">
           <div className="page-pretitle">Overview</div>
@@ -78,7 +88,10 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Thống kê tổng quan */}
+      {/* ============================== */}
+      {/* 🔹 THỐNG KÊ TỔNG QUAN */}
+      {/* ============================== */}
+
       <div className="row">
         {/* Đơn hàng */}
         <div className="col-sm-6 col-md-6 col-lg-3 mt-3">
@@ -111,15 +124,12 @@ export default function AdminPage() {
                 </div>
                 <div className="col-sm-8">
                   <p className="detail-subtitle">Doanh thu hôm nay</p>
-                  <span className="number">
-                    {stats.todayRevenue.toLocaleString()}₫
-                  </span>
+                  <span className="number">{stats.todayRevenue.toLocaleString()}₫</span>
                 </div>
               </div>
               <hr />
               <div className="stats">
-                <i className="fas fa-calendar"></i> Tổng:{" "}
-                {stats.totalRevenue.toLocaleString()}₫
+                <i className="fas fa-calendar"></i> Tổng: {stats.totalRevenue.toLocaleString()}₫
               </div>
             </div>
           </div>
@@ -168,57 +178,84 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Biểu đồ */}
+      {/* ============================== */}
+      {/* 🔹 LỰA CHỌN HIỂN THỊ RANGE */}
+      {/* ============================== */}
+      <div className="d-flex gap-2 mt-4">
+        <button
+          className={`btn ${range === "week" ? "btn-primary" : "btn-outline-primary"}`}
+          onClick={() => setRange("week")}
+        >
+          Tuần
+        </button>
+
+        <button
+          className={`btn ${range === "month" ? "btn-primary" : "btn-outline-primary"}`}
+          onClick={() => setRange("month")}
+        >
+          Tháng
+        </button>
+
+        <button
+          className={`btn ${range === "year" ? "btn-primary" : "btn-outline-primary"}`}
+          onClick={() => setRange("year")}
+        >
+          Năm
+        </button>
+
+        <button
+          className={`btn ${range === "all" ? "btn-primary" : "btn-outline-primary"}`}
+          onClick={() => setRange("all")}
+        >
+          Tất cả
+        </button>
+      </div>
+
+      {/* ============================== */}
+      {/* 🔹 BIỂU ĐỒ */}
+      {/* ============================== */}
+
       <div className="row mt-4">
         {/* Biểu đồ doanh thu */}
         <div className="col-md-6">
           <div className="card">
             <div className="content">
-              <h5>📈 Doanh thu 7 ngày gần nhất</h5>
+              <h5>📈 Doanh thu ({range})</h5>
+
               {revenueChart && (
                 <p className="text-muted mb-2">
-                  Tổng cộng:{" "}
+                  Tổng:{" "}
                   <strong>
-                    {revenueChart.datasets[0].data
-                      .reduce((a, b) => a + b, 0)
-                      .toLocaleString()}
-                    ₫
+                    {revenueChart.datasets[0].data.reduce((a, b) => a + b, 0).toLocaleString()}₫
                   </strong>
                 </p>
               )}
+
               <div className="canvas-wrapper">
-                {revenueChart ? (
-                  <Line data={revenueChart} height={180} />
-                ) : (
-                  <p>Đang tải biểu đồ...</p>
-                )}
+                {revenueChart ? <Line data={revenueChart} height={180} /> : <p>Đang tải...</p>}
               </div>
             </div>
           </div>
         </div>
 
-        {/* Biểu đồ lượt truy cập */}
+        {/* Biểu đồ truy cập */}
         <div className="col-md-6">
           <div className="card">
             <div className="content">
-              <h5>👁️‍🗨️ Lượt truy cập 7 ngày gần nhất</h5>
+              <h5>👁️‍🗨️ Lượt truy cập ({range})</h5>
+
               {visitorChart && (
                 <p className="text-muted mb-2">
-                  Tổng cộng:{" "}
+                  Tổng:{" "}
                   <strong>
-                    {visitorChart.datasets[0].data
-                      .reduce((a, b) => a + b, 0)
-                      .toLocaleString()}
+                    {visitorChart.datasets[0].data.reduce((a, b) => a + b, 0).toLocaleString()}
                   </strong>{" "}
                   lượt
                 </p>
               )}
+
               <div className="canvas-wrapper">
-                {visitorChart ? (
-                  <Line data={visitorChart} height={180} />
-                ) : (
-                  <p>Đang tải biểu đồ...</p>
-                )}
+                {visitorChart ? <Line data={visitorChart} height={180} /> : <p>Đang tải...</p>}
               </div>
             </div>
           </div>
