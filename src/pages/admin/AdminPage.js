@@ -18,15 +18,13 @@ const API_BASE_URL = process.env.REACT_APP_API_URL || "http://localhost:5186";
 export default function AdminPage() {
   const [stats, setStats] = useState(null);
 
-  const [range, setRange] = useState("week");
+  const [range, setRange] = useState("week"); // 🌟 range mặc định
   const [revenueChart, setRevenueChart] = useState(null);
   const [visitorChart, setVisitorChart] = useState(null);
 
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  // =============================
-  // LOAD OVERVIEW
-  // =============================
+  // ----------------------------
+  // 📌 LOAD OVERVIEW
+  // ----------------------------
   useEffect(() => {
     axios
       .get(`${API_BASE_URL}/api/dashboard/overview`)
@@ -34,10 +32,11 @@ export default function AdminPage() {
       .catch((err) => console.error("Overview error:", err));
   }, []);
 
-  // =============================
-  // LOAD CHART WHEN RANGE CHANGES
-  // =============================
+  // ----------------------------
+  // 📌 LOAD BIỂU ĐỒ KHI RANGE THAY ĐỔI
+  // ----------------------------
   useEffect(() => {
+    // Biểu đồ doanh thu
     axios
       .get(`${API_BASE_URL}/api/dashboard/revenue-chart?range=${range}`)
       .then((res) => {
@@ -53,8 +52,10 @@ export default function AdminPage() {
             },
           ],
         });
-      });
+      })
+      .catch((err) => console.error("Revenue chart error:", err));
 
+    // Biểu đồ truy cập
     axios
       .get(`${API_BASE_URL}/api/dashboard/visit-chart?range=${range}`)
       .then((res) => {
@@ -70,24 +71,16 @@ export default function AdminPage() {
             },
           ],
         });
-      });
+      })
+      .catch((err) => console.error("Visit chart error:", err));
   }, [range]);
 
+  // ----------------------------
   if (!stats) return <div className="text-center mt-5">Đang tải Dashboard...</div>;
-
-  // =============================
-  // DROPDOWN LABEL
-  // =============================
-  const labelMap = {
-    week: "Tuần",
-    month: "Tháng",
-    year: "Năm",
-    all: "Tất cả",
-  };
+  // ----------------------------
 
   return (
     <>
-      {/* HEADER */}
       <div className="row">
         <div className="col-md-12 page-header">
           <div className="page-pretitle">Overview</div>
@@ -95,32 +88,12 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* ------------------------------- */}
-      {/* 📌 COMPONENT RANGE — DROPDOWN FB */}
-      {/* ------------------------------- */}
-      <div className="fb-dropdown mt-3">
-        <button
-          className="fb-dropbtn"
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-        >
-          Tùy chỉnh: {labelMap[range]}
-          <span className="arrow">▾</span>
-        </button>
+      {/* ============================== */}
+      {/* 🔹 THỐNG KÊ TỔNG QUAN */}
+      {/* ============================== */}
 
-        {dropdownOpen && (
-          <div className="fb-dropdown-content">
-            <div onClick={() => { setRange("week"); setDropdownOpen(false); }}>Tuần</div>
-            <div onClick={() => { setRange("month"); setDropdownOpen(false); }}>Tháng</div>
-            <div onClick={() => { setRange("year"); setDropdownOpen(false); }}>Năm</div>
-            <div onClick={() => { setRange("all"); setDropdownOpen(false); }}>Tất cả</div>
-          </div>
-        )}
-      </div>
-
-      {/* ------------------------------- */}
-      {/* 📌 CARDS OVERVIEW */}
-      {/* ------------------------------- */}
-      <div className="row mt-3">
+      <div className="row">
+        {/* Đơn hàng */}
         <div className="col-sm-6 col-md-6 col-lg-3 mt-3">
           <div className="card">
             <div className="content">
@@ -134,12 +107,14 @@ export default function AdminPage() {
                 </div>
               </div>
               <hr />
-              <div className="stats"><i className="fas fa-calendar"></i> Tổng: {stats.totalOrders}</div>
+              <div className="stats">
+                <i className="fas fa-calendar"></i> Tổng: {stats.totalOrders}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Revenue */}
+        {/* Doanh thu */}
         <div className="col-sm-6 col-md-6 col-lg-3 mt-3">
           <div className="card">
             <div className="content">
@@ -160,7 +135,7 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Visits */}
+        {/* Lượt truy cập */}
         <div className="col-sm-6 col-md-6 col-lg-3 mt-3">
           <div className="card">
             <div className="content">
@@ -174,12 +149,14 @@ export default function AdminPage() {
                 </div>
               </div>
               <hr />
-              <div className="stats"><i className="fas fa-stopwatch"></i> Tổng: {stats.totalVisits}</div>
+              <div className="stats">
+                <i className="fas fa-stopwatch"></i> Tổng: {stats.totalVisits}
+              </div>
             </div>
           </div>
         </div>
 
-        {/* Users */}
+        {/* Người dùng */}
         <div className="col-sm-6 col-md-6 col-lg-3 mt-3">
           <div className="card">
             <div className="content">
@@ -193,20 +170,57 @@ export default function AdminPage() {
                 </div>
               </div>
               <hr />
-              <div className="stats"><i className="fas fa-user-check"></i> Active users</div>
+              <div className="stats">
+                <i className="fas fa-user-check"></i> Active users
+              </div>
             </div>
           </div>
         </div>
       </div>
 
-      {/* ------------------------------- */}
-      {/* 📌 CHARTS */}
-      {/* ------------------------------- */}
+      {/* ============================== */}
+      {/* 🔹 LỰA CHỌN HIỂN THỊ RANGE */}
+      {/* ============================== */}
+      <div className="d-flex gap-2 mt-4">
+        <button
+          className={`btn ${range === "week" ? "btn-primary" : "btn-outline-primary"}`}
+          onClick={() => setRange("week")}
+        >
+          Tuần
+        </button>
+
+        <button
+          className={`btn ${range === "month" ? "btn-primary" : "btn-outline-primary"}`}
+          onClick={() => setRange("month")}
+        >
+          Tháng
+        </button>
+
+        <button
+          className={`btn ${range === "year" ? "btn-primary" : "btn-outline-primary"}`}
+          onClick={() => setRange("year")}
+        >
+          Năm
+        </button>
+
+        <button
+          className={`btn ${range === "all" ? "btn-primary" : "btn-outline-primary"}`}
+          onClick={() => setRange("all")}
+        >
+          Tất cả
+        </button>
+      </div>
+
+      {/* ============================== */}
+      {/* 🔹 BIỂU ĐỒ */}
+      {/* ============================== */}
+
       <div className="row mt-4">
+        {/* Biểu đồ doanh thu */}
         <div className="col-md-6">
           <div className="card">
             <div className="content">
-              <h5>📈 Doanh thu ({labelMap[range]})</h5>
+              <h5>📈 Doanh thu ({range})</h5>
 
               {revenueChart && (
                 <p className="text-muted mb-2">
@@ -224,11 +238,11 @@ export default function AdminPage() {
           </div>
         </div>
 
-        {/* Visitors */}
+        {/* Biểu đồ truy cập */}
         <div className="col-md-6">
           <div className="card">
             <div className="content">
-              <h5>👁️ Lượt truy cập ({labelMap[range]})</h5>
+              <h5>👁️‍🗨️ Lượt truy cập ({range})</h5>
 
               {visitorChart && (
                 <p className="text-muted mb-2">
@@ -247,61 +261,6 @@ export default function AdminPage() {
           </div>
         </div>
       </div>
-
-      {/* ============================= */}
-      {/* 📌 CSS STYLE — Dropdown Facebook */}
-      {/* ============================= */}
-      <style>{`
-        .fb-dropdown {
-          position: relative;
-          display: inline-block;
-        }
-
-        .fb-dropbtn {
-          background: #fff;
-          border: 1px solid #ced0d4;
-          padding: 8px 14px;
-          border-radius: 6px;
-          font-size: 14px;
-          cursor: pointer;
-          min-width: 180px;
-          color: #1c1e21;
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-        }
-
-        .fb-dropbtn:hover {
-          background: #f0f2f5;
-        }
-
-        .fb-dropdown-content {
-          position: absolute;
-          background-color: #fff;
-          min-width: 180px;
-          border-radius: 6px;
-          margin-top: 6px;
-          box-shadow: 0px 4px 12px rgba(0,0,0,0.15);
-          border: 1px solid #ced0d4;
-          overflow: hidden;
-          z-index: 50;
-        }
-
-        .fb-dropdown-content div {
-          padding: 10px 14px;
-          cursor: pointer;
-          font-size: 14px;
-        }
-
-        .fb-dropdown-content div:hover {
-          background-color: #f0f2f5;
-        }
-
-        .arrow {
-          font-size: 12px;
-          margin-left: 4px;
-        }
-      `}</style>
     </>
   );
 }
